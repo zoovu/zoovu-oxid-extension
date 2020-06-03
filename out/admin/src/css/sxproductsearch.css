@@ -1,0 +1,30 @@
+.sxProgressBar {
+  position: relative;
+  width: 100px;
+  height: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: inline-block;
+  margin: 0px 0 -1px 4px;
+}
+
+.sxProgressBar .sxBarStatus {
+  position: absolute;
+  height: 100%;
+  /*background-color: #c02124; -> class: .export */ 
+  border-radius: 4px 0 0 4px;
+  padding: 0;
+}
+
+.sxProgressBar .sxBarStatus.sx100 {
+  border-radius: 4px 4px 4px 4px;
+}
+
+.sxHide {
+  display: none;
+}
+
+.sxUploadProgressItem, .sxProgressBar, .sxBarStatus {
+  display: inline-block;
+}
