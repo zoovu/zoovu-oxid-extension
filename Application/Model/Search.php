@@ -11,7 +11,7 @@ use Semknox\Core\SxCore;
 
 class Search extends Search_parent
 {
-    private $_sxCore, $_sxConfig, $_sxSearch, $_sxSearchResult;
+    private $_sxCore, $_sxConfig, $_sxSearch, $_sxSearchResponse;
     private $_oxRegistry;
 
     /**
@@ -55,11 +55,10 @@ class Search extends Search_parent
         $this->iActPage = ($this->iActPage < 0) ? 0 : $this->iActPage;
 
         // searching ..
-        $this->_sxSearchResult = $this->_sxSearch->query($sSearchParamForQuery)->search();
+        $this->_sxSearchResponse = $this->_sxSearch->query($sSearchParamForQuery)->search();
         $oxArticleIds = array();
-        foreach ($this->_sxSearchResult->getResults() as $sxArticleGroup) {
-            $oxid = $sxArticleGroup[0]["groupId"];
-            $oxArticleIds[] = $oxid;
+        foreach ($this->_sxSearchResponse->getResults() as $sxArticle) {
+            $oxArticleIds[] = $sxArticle->id();
         }
 
         $oArtList = new ArticleList;
@@ -83,11 +82,11 @@ class Search extends Search_parent
     {
         $iCnt = 0;
 
-        if($this->_sxSearchResult){
-            $iCnt = $this->_sxSearchResult->getTotalResults();
+        if($this->_sxSearchResponse){
+            $iCnt = $this->_sxSearchResponse->getTotalResults();
         } else {
             $this->getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer);
-            $iCnt = $this->_sxSearchResult->getTotalResults();
+            $iCnt = $this->_sxSearchResponse->getTotalResults();
         }
 
         return $iCnt;
