@@ -6,19 +6,13 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Application\Model\ShopList;
 use Semknox\Productsearch\Application\Model\ArticleList;
 use Semknox\Productsearch\Application\Model\ArticleTransformer;
+use Semknox\Productsearch\Application\Model\SxSetting;
+
 use Semknox\Core\SxConfig;
 use Semknox\Core\SxCore;
 
 class UploadController
 {
-    protected $_sxFolder = "log/semknox/";
-    protected $_sxUploadBatchSize = 200;
-    protected $_sxCollectBatchSize = 100;
-    protected $_sxRequestTimeout = 15;
-
-    protected $_sxSandboxApiUrl = "https://dev-api-v3.semknox.com/";
-    protected $_sxApiUrl = "https://dev-api-v3.semknox.com/";
-
     private $_sxCore, $_sxConfig, $_sxUploader;
     private $_oxRegistry, $_oxConfig, $_oxLang;
     
@@ -29,12 +23,15 @@ class UploadController
         $this->_oxConfig = $this->_oxRegistry->getConfig();
         $this->_oxLang = $this->_oxRegistry->getLang();
 
-        $configValues['apiUrl'] = (isset($configValues['sandbox']) && $configValues['sandbox']) ? $this->_sxSandboxApiUrl : $this->_sxApiUrl;
-        $configValues['productTransformer'] = ArticleTransformer::class;
-        $configValues['storagePath'] = $this->_oxRegistry->getConfig()->getConfigParam('sShopDir').$this->_sxFolder;
+        $this->_sxSetting = new SxSetting;
 
-        $configValues['initialUploadBatchSize'] = isset($configValues['uploadBatchSize']) ? $configValues['uploadBatchSize'] : $this->_sxUploadBatchSize;
-        $configValues['requestTimeout'] = isset($configValues['requestTimeout']) ? $configValues['requestTimeout'] : $this->_sxRequestTimeout;
+        $configValues['apiUrl'] = (isset($configValues['sandbox']) && $configValues['sandbox']) ? $this->_sxSetting->get('SandboxApiUrl') : $this->_sxSetting->get('ApiUrl');
+        $configValues['productTransformer'] = ArticleTransformer::class;
+        $configValues['storagePath'] = $this->_oxRegistry->getConfig()->getConfigParam('sShopDir'). $this->_sxSetting->get('Folder');
+
+        $configValues['initialUploadBatchSize'] = isset($configValues['uploadBatchSize']) ? $configValues['uploadBatchSize'] : $this->_sxSetting->get('UploadBatchSize');
+        $configValues['collectBatchSize'] = isset($configValues['collectBatchSize']) ? $configValues['collectBatchSize'] : $this->_sxSetting->get('CollectBatchSize');
+        $configValues['requestTimeout'] = isset($configValues['requestTimeout']) ? $configValues['requestTimeout'] : $this->_sxSetting->get('RequestTimeout');
 
         if($configValues['shopId']){
             $configValues['initialUploadIdentifier'] = $configValues['shopId'].'-'. $configValues['lang'];
@@ -174,13 +171,16 @@ class UploadController
 
                 $projectId = $this->_oxConfig->getConfigParam('sxProjectId' . $lang);
                 $apiKey = $this->_oxConfig->getConfigParam('sxApiKey' . $lang);
+                $sandbox = $this->_oxConfig->getConfigParam('sxIsSandbox' . $lang);
 
-                if (!$projectId || !$apiKey) continue;
+                $uploadActive = $this->_oxConfig->getConfigParam('sxUploadActive' . $lang);
+
+                if (!$uploadActive || !$projectId || !$apiKey) continue;
 
                 $sxShopConfigs[] = [
                     'projectId' => $projectId,
                     'apiKey' => $apiKey,
-                    'sandbox' => $this->_oxConfig->getConfigParam('sxIsSandbox'),
+                    'sandbox' => $sandbox,
 
                     'lang' => $lang,
                     'langId' => $langId,

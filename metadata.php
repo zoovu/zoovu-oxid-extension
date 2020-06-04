@@ -51,6 +51,8 @@ $aModule = array(
     'extend' => array(
         \OxidEsales\Eshop\Application\Model\Search::class => \Semknox\Productsearch\Application\Model\Search::class,
         \OxidEsales\Eshop\Application\Controller\SearchController::class => \Semknox\Productsearch\Application\Controller\SearchController::class
+        /*\OxidEsales\Eshop\Application\Model\ArticleList::class => \Semknox\Productsearch\Application\Model\ArticleList::class,*/
+        /*\OxidEsales\Eshop\Application\Controller\FrontendController:: => \Semknox\Productsearch\Application\Controller\FrontendController::class*/
     ),
     'templates' => array(
         'admin_sxproductsearch_ajax.tpl'   => 'semknox/semknox-oxid/Application/views/admin/tpl/admin_sxproductsearch_ajax.tpl',
@@ -62,7 +64,12 @@ $aModule = array(
             'block'=>'admin_bottomnavicustom',
             'file'=>'Application/views/admin/blocks/admin_bottomnavicustom.tpl'
         ),
-    )
+    ),
+    /*
+    'events' => array(
+        'onActivate' => null,//'SemknoxProductsearch_init::onActivate',
+        'onDeactivate' => null,//'SemknoxProductsearch_init::onDeactivate'
+    )*/
 );
 
 $settings = array();
@@ -88,24 +95,32 @@ if(function_exists('oxNew')){
             'value' => '',
             'position' => 2
         );
+
+        $settings[] = array(
+            'group' => 'SemknoxProductsearchLogin' . $oxid,
+            'name' => 'sxIsSandbox' . $oxid,
+            'type' => 'bool',
+            'value' => 'false',
+            'position' => 3
+        );
+
+        $settings[] = array(
+            'group' => 'SemknoxProductsearchLogin' . $oxid,
+            'name' => 'sxFrontendActive' . $oxid,
+            'type' => 'bool',
+            'value' => 'false',
+            'position' => 1
+        );
+
+        $settings[] = array(
+            'group' => 'SemknoxProductsearchLogin' . $oxid,
+            'name' => 'sxUploadActive' . $oxid,
+            'type' => 'bool',
+            'value' => 'false',
+            'position' => 1
+        );
     }
 }
-
-$settings[] = array(
-    'group' => 'SemknoxProductsearchSettings',
-    'name' => 'sxIsActive',
-    'type' => 'bool',
-    'value' => 'true',
-    'position' => 1
-);
-
-$settings[] = array(
-    'group' => 'SemknoxProductsearchSettings',
-    'name' => 'sxIsSandbox',
-    'type' => 'bool',
-    'value' => 'false',
-    'position' => 3
-);
 
 $settings[] = array(
     'group' => 'SemknoxProductsearchSettings',

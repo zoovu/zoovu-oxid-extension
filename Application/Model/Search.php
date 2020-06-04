@@ -2,17 +2,16 @@
 
 namespace Semknox\Productsearch\Application\Model;
 
-use \OxidEsales\Eshop\Core\Registry;
-
 use Semknox\Productsearch\Application\Model\ArticleList;
+use Semknox\Productsearch\Application\Model\SxSetting;
 
 use Semknox\Core\SxConfig;
 use Semknox\Core\SxCore;
 
 class Search extends Search_parent
 {
-    private $_sxCore, $_sxConfig, $_sxSearch, $_sxSearchResponse;
-    private $_oxRegistry;
+    private $_sxCore, $_sxConfigValues, $_sxConfig, $_sxSearch, $_sxSearchResponse;
+
 
     /**
      * Class constructor. Executes search lenguage setter
@@ -21,21 +20,39 @@ class Search extends Search_parent
     {
         parent::__construct();
 
-        $this->_oxRegistry = new Registry;
+        $this->setSxConfigValues();
+        if(!$this->_sxConfigValues) return;
 
-        $configValues = [
-            // required options
-            'projectId'    => '24',
-            'apiKey' => '85owx55emd2gmoh8dtx7y49so44fy745',
-            'apiUrl' => 'https://stage-magento-v3.semknox.com',
-        ];
-
-        $this->_sxConfig = new SxConfig($configValues);
+        $this->_sxConfig = new SxConfig($this->_sxConfigValues);
         $this->_sxCore = new SxCore($this->_sxConfig);
 
         $this->_sxSearch = $this->_sxCore->getSearch();
     }
 
+    public function setSxConfigValues()
+    {
+        $abbrLanguage = ucfirst(\OxidEsales\Eshop\Core\Registry::getLang()->getLanguageAbbr());
+
+        $sxProjectId = $this->getConfig()->getConfigParam('sxProjectId' . $abbrLanguage);
+        $sxApiKey = $this->getConfig()->getConfigParam('sxApiKey' . $abbrLanguage);
+
+        $sxFrontendActive = $this->getConfig()->getConfigParam('sxFrontendActive' . $abbrLanguage);
+
+        if($sxFrontendActive && $sxProjectId && $sxApiKey){
+
+            $sxSetting = new SxSetting;
+            $sxIsSandbox = $this->getConfig()->getConfigParam('sxIsSandbox' . $abbrLanguage);
+            $sxApiUrl = $sxIsSandbox ? $sxSetting->get('SandboxApiUrl') : $sxSetting->get('ApiUrl');
+
+            $this->_sxConfigValues = [
+                // required options
+                'projectId' => $sxProjectId,
+                'apiKey' => $sxApiKey,
+                'apiUrl' => $sxApiUrl,
+            ];
+        }
+
+    }
 
     /**
      * Returns a list of articles according to search parameters. Returns matched
@@ -50,6 +67,8 @@ class Search extends Search_parent
      */
     public function getSearchArticles($sSearchParamForQuery = false, $sInitialSearchCat = false, $sInitialSearchVendor = false, $sInitialSearchManufacturer = false, $sSortBy = false)
     {
+        if (!$this->_sxConfigValues) return parent::getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer);
+
         // sets active page
         $this->iActPage = (int) \OxidEsales\Eshop\Core\Registry::getConfig()->getRequestParameter('pgNr');
         $this->iActPage = ($this->iActPage < 0) ? 0 : $this->iActPage;
@@ -80,6 +99,8 @@ class Search extends Search_parent
      */
     public function getSearchArticleCount($sSearchParamForQuery = false, $sInitialSearchCat = false, $sInitialSearchVendor = false, $sInitialSearchManufacturer = false)
     {
+        if (!$this->_sxConfigValues) return parent::getSearchArticleCount($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer);
+
         $iCnt = 0;
 
         if($this->_sxSearchResponse){
