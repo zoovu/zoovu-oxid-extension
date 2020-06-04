@@ -10,8 +10,11 @@ $aLang = array(
   'SHOP_MODULE_sxApiKey' => 'API Schlüssel (API-Key)',
 
   'SHOP_MODULE_GROUP_SemknoxProductsearchSettings' => 'Einstellungen',
-  'SHOP_MODULE_sxIsActive' => 'Produktsuche aktivieren',
+
+  'SHOP_MODULE_sxFrontendActive' => 'Produktsuche im Frontend aktivieren',
+  'SHOP_MODULE_sxUploadActive' => 'Produktupload an SEMKNOX aktivieren',
   'SHOP_MODULE_sxIsSandbox' => 'Sandbox-Modus aktivieren',
+
   'SHOP_MODULE_sxStartInitialUpload' => 'Produktupload starten',
   'SHOP_MODULE_sxStopInitialUpload' => 'Produktupload abbrechen',
 	'SHOP_MODULE_sxCronTester' => 'Cron-Aufruf',
@@ -34,4 +37,8 @@ foreach ($oxLanguage->getLanguageArray() as $lang) {
   $aLang['SHOP_MODULE_GROUP_SemknoxProductsearchLogin' . $oxid] = $aLang['SHOP_MODULE_GROUP_SemknoxProductsearchLogin'] . ' - Sprache: ' . $language;
   $aLang['SHOP_MODULE_sxProjectId' . $oxid] = $aLang['SHOP_MODULE_sxProjectId'] . ' - Sprache: ' . $language;
   $aLang['SHOP_MODULE_sxApiKey' . $oxid] = $aLang['SHOP_MODULE_sxApiKey'] . ' - Sprache: ' . $language;
+
+  $aLang['SHOP_MODULE_sxIsSandbox' . $oxid] = $aLang['SHOP_MODULE_sxIsSandbox'] . ' - Sprache: ' . $language;
+  $aLang['SHOP_MODULE_sxFrontendActive' . $oxid] = $aLang['SHOP_MODULE_sxFrontendActive'] . ' - Sprache: ' . $language;
+  $aLang['SHOP_MODULE_sxUploadActive' . $oxid] = $aLang['SHOP_MODULE_sxUploadActive'] . ' - Sprache: ' . $language;
 }
