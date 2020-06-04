@@ -77,7 +77,7 @@ class Search extends Search_parent
         $this->_sxSearchResponse = $this->_sxSearch->query($sSearchParamForQuery)->search();
         $oxArticleIds = array();
         foreach ($this->_sxSearchResponse->getResults() as $sxArticle) {
-            $oxArticleIds[] = $sxArticle->id();
+            $oxArticleIds[] = $sxArticle->getId();
         }
 
         $oArtList = new ArticleList;
