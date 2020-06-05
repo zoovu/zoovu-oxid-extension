@@ -15,8 +15,11 @@ class UploadController
 {
     private $_sxCore, $_sxConfig, $_sxUploader;
     private $_oxRegistry, $_oxConfig, $_oxLang;
-    
 
+
+    /**
+     * Class constructor. 
+     */
     public function __construct($configValues)
     {
         $this->_oxRegistry = new Registry;
@@ -198,6 +201,11 @@ class UploadController
         return $sxShopConfigs;
     }
 
+    /**
+     * get languages
+     * 
+     * @return array
+     */
     protected function _getLanguages()
     {
         $languages = array();

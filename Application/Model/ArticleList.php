@@ -4,6 +4,9 @@ namespace Semknox\Productsearch\Application\Model;
 
 class ArticleList extends \OxidEsales\Eshop\Application\Model\ArticleList
 {
+
+    protected $_sxArticleListInterpretation;
+
     /**
      * Load all Article in pages articles
      *
@@ -33,6 +36,33 @@ class ArticleList extends \OxidEsales\Eshop\Application\Model\ArticleList
         $this->selectString($sSelect);
 
         return $this->count();
+    }
+
+    /**
+     * set article list interpretation text
+     * 
+     * @param string $content 
+     * @return void 
+     */
+    public function setArticleListInterpretation($content = '')
+    {
+        $this->_sxArticleListInterpretation = (string) $content;
+    }
+
+
+    /**
+     * set article list interpretation text
+     * 
+     * @return mixed 
+     */
+    public function getArticleListInterpretation()
+    {
+        if($this->_sxArticleListInterpretation)
+        {
+            return $this->_sxArticleListInterpretation;
+        } 
+
+        return '';
     }
 
 }

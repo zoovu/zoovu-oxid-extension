@@ -21,7 +21,7 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
 
 
     /**
-     * Constructor
+     * Class constructor. 
      */
     public function __construct()
     {
@@ -39,7 +39,9 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
 
     }
 
-
+    /**
+     * cronjob runner (checks what to do start/continue)
+     */
     protected function _cronRunner()
     {
         $sxUpload = new UploadController([]);

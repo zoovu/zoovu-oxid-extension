@@ -12,9 +12,11 @@ class Search extends Search_parent
 {
     private $_sxCore, $_sxConfigValues, $_sxConfig, $_sxSearch, $_sxSearchResponse;
 
+    private $_oxAbbrLanguage;
+
 
     /**
-     * Class constructor. Executes search lenguage setter
+     * Class constructor.
      */
     public function __construct()
     {
@@ -29,19 +31,24 @@ class Search extends Search_parent
         $this->_sxSearch = $this->_sxCore->getSearch();
     }
 
+    /**
+     * set Config values
+     * 
+     * @return void 
+     */
     public function setSxConfigValues()
     {
-        $abbrLanguage = ucfirst(\OxidEsales\Eshop\Core\Registry::getLang()->getLanguageAbbr());
+        $this->_oxAbbrLanguage = ucfirst(\OxidEsales\Eshop\Core\Registry::getLang()->getLanguageAbbr());
 
-        $sxProjectId = $this->getConfig()->getConfigParam('sxProjectId' . $abbrLanguage);
-        $sxApiKey = $this->getConfig()->getConfigParam('sxApiKey' . $abbrLanguage);
+        $sxProjectId = $this->getConfig()->getConfigParam('sxProjectId' . $this->_oxAbbrLanguage);
+        $sxApiKey = $this->getConfig()->getConfigParam('sxApiKey' . $this->_oxAbbrLanguage);
 
-        $sxFrontendActive = $this->getConfig()->getConfigParam('sxFrontendActive' . $abbrLanguage);
+        $sxFrontendActive = $this->getConfig()->getConfigParam('sxFrontendActive' . $this->_oxAbbrLanguage);
 
         if($sxFrontendActive && $sxProjectId && $sxApiKey){
 
             $sxSetting = new SxSetting;
-            $sxIsSandbox = $this->getConfig()->getConfigParam('sxIsSandbox' . $abbrLanguage);
+            $sxIsSandbox = $this->getConfig()->getConfigParam('sxIsSandbox' . $this->_oxAbbrLanguage);
             $sxApiUrl = $sxIsSandbox ? $sxSetting->get('SandboxApiUrl') : $sxSetting->get('ApiUrl');
 
             $this->_sxConfigValues = [
@@ -72,9 +79,19 @@ class Search extends Search_parent
         // sets active page
         $this->iActPage = (int) \OxidEsales\Eshop\Core\Registry::getConfig()->getRequestParameter('pgNr');
         $this->iActPage = ($this->iActPage < 0) ? 0 : $this->iActPage;
+        $this->iActPage++;
+
+        // load only articles which we show on screen
+        //setting default values to avoid possible errors showing article list
+        $iNrofCatArticles = $this->getConfig()->getConfigParam('iNrofCatArticles');
+        $iNrofCatArticles = $iNrofCatArticles ? $iNrofCatArticles : 10;
 
         // searching ..
-        $this->_sxSearchResponse = $this->_sxSearch->query($sSearchParamForQuery)->search();
+        $sxSearch = $this->_sxSearch->query($sSearchParamForQuery);
+        $sxSearch->setLimit($iNrofCatArticles);
+        $sxSearch->setPage($this->iActPage);
+
+        $this->_sxSearchResponse = $sxSearch->search();
         $oxArticleIds = array();
         foreach ($this->_sxSearchResponse->getResults() as $sxArticle) {
             $oxArticleIds[] = $sxArticle->getId();
@@ -82,6 +99,13 @@ class Search extends Search_parent
 
         $oArtList = new ArticleList;
         $oArtList->loadIds($oxArticleIds);
+
+        $sxAnswerActive = $this->getConfig()->getConfigParam('sxAnswerActive' . $this->_oxAbbrLanguage);
+        if($sxAnswerActive){
+            // set answer
+            $sxAnswerText = (string) $this->_sxSearchResponse->getAnswerText();
+            $oArtList->setArticleListInterpretation($sxAnswerText);
+        }
 
         return $oArtList;
     }

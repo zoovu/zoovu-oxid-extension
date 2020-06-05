@@ -2,8 +2,11 @@
 
 namespace Semknox\Productsearch\Application\Model;
 
+use InvalidArgumentException;
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\CategoryList;
+use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
+use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Registry;
 
 use Semknox\Core\Transformer\AbstractProductTransformer;
@@ -13,12 +16,18 @@ class ArticleTransformer extends AbstractProductTransformer
 
     protected $_product;
 
+    /**
+     * Class constructor.
+     */
     public function __construct(Article $oxProduct)
     {
         $this->_product = $oxProduct;
     }   
 
 
+    /**
+     * transform oxid article to semknox-product
+     */
     public function transform($transformerArgs = array())
     {
         //https://docs.oxid-esales.com/sourcecodedocumentation/6.1.4/class_oxid_esales_1_1_eshop_community_1_1_application_1_1_model_1_1_article.html
@@ -43,7 +52,14 @@ class ArticleTransformer extends AbstractProductTransformer
 
     }
 
-
+    /**
+     * get categories of product
+     * 
+     * @return array 
+     * @throws DatabaseConnectionException 
+     * @throws DatabaseErrorException 
+     * @throws InvalidArgumentException 
+     */
     protected function _getCategories()
     {
         $oxArticle = $this->_product;
@@ -73,6 +89,9 @@ class ArticleTransformer extends AbstractProductTransformer
 
     }
 
+    /**
+     * get images of product
+     */
     protected function _getImages()
     {
         $oxArticle = $this->_product;
@@ -109,6 +128,9 @@ class ArticleTransformer extends AbstractProductTransformer
         return $images;
     }
 
+    /**
+     * gert attributes of product
+     */
     protected function _getAttributes()
     {
         $oxRegistry = new Registry;

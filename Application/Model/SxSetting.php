@@ -9,7 +9,7 @@ class SxSetting {
     protected $_sxCollectBatchSize = 100;
     protected $_sxRequestTimeout = 15;
 
-    protected $_sxSandboxApiUrl = "https://dev-api-v3.semknox.com/";
+    protected $_sxSandboxApiUrl = "https://stage-oxid-v3.semknox.com/";
     protected $_sxApiUrl = "https://api-v3.semknox.com/";
 
     /**

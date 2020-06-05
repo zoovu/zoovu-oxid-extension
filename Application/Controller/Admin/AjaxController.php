@@ -18,8 +18,7 @@ class AjaxController extends \OxidEsales\Eshop\Application\Controller\Admin\Admi
     private $_oxRegistry, $_oxConfig;
 
     /**
-     * 
-     * Constructor
+     * Class constructor. 
      */
     public function __construct()
     {
@@ -40,9 +39,12 @@ class AjaxController extends \OxidEsales\Eshop\Application\Controller\Admin\Admi
         return $this->_sThisTemplate;
     }
 
+    /**
+     * get status
+     */
     public function getStatus()
     {
-        //http://semknox-oxid.local/index.php?cl=sxproductsearch_ajax&fnc=geStatus
+        //http://[url]/index.php?cl=sxproductsearch_ajax&fnc=geStatus
         
         $responseData = array();
 
@@ -81,16 +83,29 @@ class AjaxController extends \OxidEsales\Eshop\Application\Controller\Admin\Admi
 
     }
 
+    /**
+     * start upload
+     */
     public function startUpload()
     {
         return $this->_controlUpload(__FUNCTION__, false);
     }
 
+    /**
+     * stop upload
+     */
     public function stopUpload()
     {
         return $this->_controlUpload(__FUNCTION__, true);
     }
 
+    /**
+     * upload action
+     * 
+     * @param mixed $action 
+     * @param bool $isRunningCondition 
+     * @return void 
+     */
     protected function _controlUpload( $action , $isRunningCondition = false)
     {
         $shopId = (int) $this->_oxConfig->getRequestParameter('shopId');
