@@ -67,6 +67,11 @@ $aModule = array(
             'block' => 'search_header',
             'file' => 'Application/views/blocks/search_header.tpl'
         ),
+        array(
+            'template' => 'widget/header/search.tpl',
+            'block' => 'widget_header_search_form',
+            'file' => 'Application/views/blocks/widget_header_search_form.tpl'
+        ),
     ),
 );
 
