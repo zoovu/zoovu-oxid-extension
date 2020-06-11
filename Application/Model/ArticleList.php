@@ -6,6 +6,9 @@ class ArticleList extends \OxidEsales\Eshop\Application\Model\ArticleList
 {
 
     protected $_sxArticleListInterpretation;
+    protected $_sxAvailableSortingOptions;
+
+    public $_isSxArticleList = true;
 
     /**
      * Load all Article in pages articles
@@ -51,7 +54,7 @@ class ArticleList extends \OxidEsales\Eshop\Application\Model\ArticleList
 
 
     /**
-     * set article list interpretation text
+     * get article list interpretation text
      * 
      * @return mixed 
      */
@@ -63,6 +66,32 @@ class ArticleList extends \OxidEsales\Eshop\Application\Model\ArticleList
         } 
 
         return '';
+    }
+
+    /**
+     * set available sorting options
+     * 
+     * @param string $content 
+     * @return void 
+     */
+    public function setAvailableSortingOptions($options = array())
+    {
+        $this->_sxAvailableSortingOptions = $options;
+    }
+
+
+    /**
+     * get available sorting options
+     * 
+     * @return array 
+     */
+    public function getAvailableSortingOptions()
+    {
+        if ($this->_sxAvailableSortingOptions) {
+            return $this->_sxAvailableSortingOptions;
+        }
+
+        return array();
     }
 
 }

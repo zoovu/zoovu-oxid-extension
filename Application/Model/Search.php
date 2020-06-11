@@ -51,11 +51,15 @@ class Search extends Search_parent
             $sxIsSandbox = $this->getConfig()->getConfigParam('sxIsSandbox' . $this->_oxAbbrLanguage);
             $sxApiUrl = $sxIsSandbox ? $sxSetting->get('SandboxApiUrl') : $sxSetting->get('ApiUrl');
 
+            $sxRequestTimeout = (int) $this->getConfig()->getConfigParam('sxRequestTimeout');
+            $sxRequestTimeout = $sxRequestTimeout ? $sxRequestTimeout : $sxSetting->get('RequestTimeout');
+
             $this->_sxConfigValues = [
                 // required options
                 'projectId' => $sxProjectId,
                 'apiKey' => $sxApiKey,
                 'apiUrl' => $sxApiUrl,
+                'requestTimeout' => $sxRequestTimeout,
             ];
         }
 
@@ -74,7 +78,10 @@ class Search extends Search_parent
      */
     public function getSearchArticles($sSearchParamForQuery = false, $sInitialSearchCat = false, $sInitialSearchVendor = false, $sInitialSearchManufacturer = false, $sSortBy = false)
     {
-        if (!$this->_sxConfigValues) return parent::getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer);
+        if (!$this->_sxConfigValues){
+            $sSortBy = $sSortBy == "``" ? false : $sSortBy;
+            return parent::getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer, $sSortBy);
+        }
 
         // sets active page
         $this->iActPage = (int) \OxidEsales\Eshop\Core\Registry::getConfig()->getRequestParameter('pgNr');
@@ -93,19 +100,28 @@ class Search extends Search_parent
 
         $this->_sxSearchResponse = $sxSearch->search();
         $oxArticleIds = array();
-        foreach ($this->_sxSearchResponse->getResults() as $sxArticle) {
+        foreach ($this->_sxSearchResponse->getProducts() as $sxArticle) {
             $oxArticleIds[] = $sxArticle->getId();
         }
 
         $oArtList = new ArticleList;
         $oArtList->loadIds($oxArticleIds);
 
+        // set search interpretation text
         $sxAnswerActive = $this->getConfig()->getConfigParam('sxAnswerActive' . $this->_oxAbbrLanguage);
         if($sxAnswerActive){
             // set answer
             $sxAnswerText = (string) $this->_sxSearchResponse->getAnswerText();
             $oArtList->setArticleListInterpretation($sxAnswerText);
         }
+
+        // set available sorting options
+        $sxAvailableSortingOptions = array();
+        foreach($this->_sxSearchResponse->getAvailableSortingOptions() as $option){
+            $sxAvailableSortingOptions[$option->getKey()] = $option->getKey().'_'.$option->getName();
+        }
+        if(empty($sxAvailableSortingOptions)) $sxAvailableSortingOptions = [ 11 => 'sxtranslated_11_Test absteigend', 22 => 'sxtranslated_22_Name aufsteigend'];
+        $oArtList->setAvailableSortingOptions($sxAvailableSortingOptions);
 
         return $oArtList;
     }
@@ -128,15 +144,13 @@ class Search extends Search_parent
         $iCnt = 0;
 
         if($this->_sxSearchResponse){
-            $iCnt = $this->_sxSearchResponse->getTotalResults();
+            $iCnt = $this->_sxSearchResponse->getTotalProductResults();
         } else {
             $this->getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer);
-            $iCnt = $this->_sxSearchResponse->getTotalResults();
+            $iCnt = $this->_sxSearchResponse->getTotalProductsResults();
         }
 
         return $iCnt;
     }
-
-
 
 }

@@ -4,7 +4,7 @@
 [{oxstyle include=$oViewConf->getModuleUrl('sxproductsearch','out/unibox/unibox-2.0.3.min.css')}]
 
 <script type="text/javascript" src="[{$oViewConf->getModuleUrl('sxproductsearch','out/unibox/unibox-2.0.3.min.js')}]"></script>
-<script>
+<!--script>
 sxQuery("#searchParam").unibox({
     // these are the required:
     suggestUrl: 'https://dev-api-v3.semknox.com/search/suggestions?query=*&limitBrand=2&limitSearch=3&limitCategory=3&limitProduct=5&limitContent=3&projectId=23&apiKey=to7aor7o0k726h8hw5t7v8d4023j1g68', // the URL where to get the search suggests
@@ -75,4 +75,4 @@ sxQuery("#searchParam").unibox({
     },
     searchBoxContainer: sxQuery("#searchParam").parent() // the search box's parent
 });
-</script>
+</script-->
