@@ -51,7 +51,7 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
         foreach ($sxShopConfigs as $key => $shopConfig) {
 
             if ($this->_currentHour == $shopConfig['cronjobHour'] && $this->_currentMinute == $shopConfig['cronjobMinute']) {
-                $sxUpload = new UploadController($shopConfig);
+                $sxUpload->setConfig($shopConfig);
                 $sxUpload->startUpload();
 
                 unset($sxShopConfigs[$key]); // not directly continue;
@@ -62,7 +62,7 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
         // check if Uploads needs to be continued (always just one job per cronrun!)
         foreach ($sxShopConfigs as $shopConfig) {
 
-            $sxUpload = new UploadController($shopConfig);
+            $sxUpload->setConfig($shopConfig);
             
             if($sxUpload->isRunning()){
                 $sxUpload->continueUpload();

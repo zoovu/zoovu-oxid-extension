@@ -23,7 +23,7 @@ class AjaxController extends \OxidEsales\Eshop\Application\Controller\Admin\Admi
     public function __construct()
     {
         $this->_oxRegistry = new Registry;
-        $this->_sxUpload = new UploadController([]);
+        $this->_sxUpload = new UploadController();
         $this->_oxConfig = $this->_oxRegistry->getConfig();
     }
 
@@ -48,6 +48,7 @@ class AjaxController extends \OxidEsales\Eshop\Application\Controller\Admin\Admi
         
         $responseData = array();
 
+        $this->_sxUpload->setConfig();
         $shopConfigs = $this->_sxUpload->getShopConfigs();
 
         foreach($shopConfigs as $shop){
@@ -113,17 +114,19 @@ class AjaxController extends \OxidEsales\Eshop\Application\Controller\Admin\Admi
 
         if ($shopId && $shopLang) {
 
-            $configValues = [
-                'shopId' => $shopId,
-                'lang' => ucfirst($shopLang)
-            ];
+            $shopConfigs = $this->_sxUpload->getShopConfigs();
 
-            $this->_sxUpload = new UploadController($configValues);
+            $configValues = isset($shopConfigs[$shopId.'_'. ucfirst($shopLang)]) ? $shopConfigs[$shopId . '_' . ucfirst($shopLang)]: false;
+            
+            if($configValues){
 
-            $isRunning = $isRunningCondition ? $this->_sxUpload->isRunning() : !$this->_sxUpload->isRunning();
+                $this->_sxUpload->setConfig($configValues);
 
-            if ($isRunning) {
-                $this->_sxUpload->{$action}();
+                $isRunning = $isRunningCondition ? $this->_sxUpload->isRunning() : !$this->_sxUpload->isRunning();
+
+                if ($isRunning) {
+                    $this->_sxUpload->{$action}();
+                }
             }
         }
 

@@ -3,6 +3,8 @@
 namespace Semknox\Productsearch\Application\Controller;
 
 use OxidEsales\Eshop\Core\Registry;
+use Semknox\Productsearch\Application\Model\SxHelper;
+
 
 class SearchController extends SearchController_parent
 {
@@ -14,10 +16,26 @@ class SearchController extends SearchController_parent
     public function getSearchHeader()
     {
         // fallback, if not active for current shop
-        if (!$this->_aArticleList->_isSxArticleList) return '';
+        if (!$this->_aArticleList->isSxArticleList) return '';
 
-        return $this->_aArticleList->getArticleListInterpretation();       
+        return $this->_aArticleList->getArticleListInterpretation();
     }
+
+
+    /**
+     * Template variable getter. Returns sorting columns
+     *
+     * @return array
+     */
+    public function getSortColumns()
+    {
+        // fallback, if not active for current shop
+        if (!$this->_aArticleList->isSxArticleList) return parent::getSortColumns();
+
+        return $this->_aArticleList->getAvailableSortingOptions();
+    }
+
+
 
     /**
      * Returns default category sorting for selected category
@@ -33,41 +51,4 @@ class SearchController extends SearchController_parent
         return ['sortby' => $sortBy, 'sortdir' => $sortOrder];
     }
 
-
-    /**
-     * Template variable getter. Returns sorting columns
-     *
-     * @return array
-     */
-    public function getSortColumns()
-    {
-        // fallback, if not active for current shop
-        if (!$this->_aArticleList->_isSxArticleList) return parent::getSortColumns();
-
-        return $this->_aArticleList->getAvailableSortingOptions();
-    }
-
-    /**
-     * disable oxid sorting dropdown
-     * @return mixed 
-     */
-    /*
-    public function showSorting()
-    {
-        if (!$this->_aArticleList->_isSxArticleList) return parent::showSorting();
-
-        return true;//false;
-    }
-    */
-
-    /**
-     * enable semknox sorting dropdown (if oxid sorting is active)
-     * @return bool 
-     */
-    /*
-    public function showSxSorting()
-    {
-        return parent::showSorting();
-    }
-    */
 }

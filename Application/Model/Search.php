@@ -3,14 +3,15 @@
 namespace Semknox\Productsearch\Application\Model;
 
 use Semknox\Productsearch\Application\Model\ArticleList;
-use Semknox\Productsearch\Application\Model\SxSetting;
+use Semknox\Productsearch\Application\Model\SxHelper;
+use OxidEsales\Eshop\Core\Registry;
 
 use Semknox\Core\SxConfig;
 use Semknox\Core\SxCore;
 
 class Search extends Search_parent
 {
-    private $_sxCore, $_sxConfigValues, $_sxConfig, $_sxSearch, $_sxSearchResponse;
+    private $_sxCore, $_sxConfigValues, $_sxConfig, $_sxSearch, $_sxSearchResponse, $_sxHelper;
 
     private $_oxAbbrLanguage;
 
@@ -21,6 +22,8 @@ class Search extends Search_parent
     public function __construct()
     {
         parent::__construct();
+
+        $this->_sxHelper = new SxHelper();
 
         $this->setSxConfigValues();
         if(!$this->_sxConfigValues) return;
@@ -38,21 +41,21 @@ class Search extends Search_parent
      */
     public function setSxConfigValues()
     {
-        $this->_oxAbbrLanguage = ucfirst(\OxidEsales\Eshop\Core\Registry::getLang()->getLanguageAbbr());
+        $oxRegistry = new Registry();
+        $this->_oxAbbrLanguage = ucfirst($oxRegistry->getLang()->getLanguageAbbr());
 
-        $sxProjectId = $this->getConfig()->getConfigParam('sxProjectId' . $this->_oxAbbrLanguage);
-        $sxApiKey = $this->getConfig()->getConfigParam('sxApiKey' . $this->_oxAbbrLanguage);
-
-        $sxFrontendActive = $this->getConfig()->getConfigParam('sxFrontendActive' . $this->_oxAbbrLanguage);
+        $sxProjectId = $this->_sxHelper->get('sxProjectId' . $this->_oxAbbrLanguage);
+        $sxApiKey = $this->_sxHelper->get('sxApiKey' . $this->_oxAbbrLanguage);
+        $sxFrontendActive = $this->_sxHelper->get('sxFrontendActive' . $this->_oxAbbrLanguage);
 
         if($sxFrontendActive && $sxProjectId && $sxApiKey){
 
-            $sxSetting = new SxSetting;
-            $sxIsSandbox = $this->getConfig()->getConfigParam('sxIsSandbox' . $this->_oxAbbrLanguage);
-            $sxApiUrl = $sxIsSandbox ? $sxSetting->get('SandboxApiUrl') : $sxSetting->get('ApiUrl');
+            $sxIsSandbox = $this->_sxHelper->get('sxIsSandbox' . $this->_oxAbbrLanguage);
+            $sxApiUrl = $sxIsSandbox ? $this->_sxHelper->get('sxSandboxApiUrl') : $this->_sxHelper->get('sxApiUrl');
 
-            $sxRequestTimeout = (int) $this->getConfig()->getConfigParam('sxRequestTimeout');
-            $sxRequestTimeout = $sxRequestTimeout ? $sxRequestTimeout : $sxSetting->get('RequestTimeout');
+            $oxShopId = $oxRegistry->getConfig()->getShopId();
+
+            $sxRequestTimeout = (int) $this->_sxHelper->get('sxRequestTimeout');
 
             $this->_sxConfigValues = [
                 // required options
@@ -60,6 +63,10 @@ class Search extends Search_parent
                 'apiKey' => $sxApiKey,
                 'apiUrl' => $sxApiUrl,
                 'requestTimeout' => $sxRequestTimeout,
+
+                // for masterConfig routine (merge multiple subshops with same products)
+                'userGroup' => $oxShopId, // maybe better because more the semknox meaning?
+                'masterConfigIdentifier' => strtolower($this->_oxAbbrLanguage) // something like this?
             ];
         }
 
@@ -79,9 +86,15 @@ class Search extends Search_parent
     public function getSearchArticles($sSearchParamForQuery = false, $sInitialSearchCat = false, $sInitialSearchVendor = false, $sInitialSearchManufacturer = false, $sSortBy = false)
     {
         if (!$this->_sxConfigValues){
-            $sSortBy = $sSortBy == "``" ? false : $sSortBy;
+            $sSortBy = is_array($sSortBy) ? $sSortBy : false;
             return parent::getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer, $sSortBy);
         }
+
+        $oArtList = new ArticleList;
+
+        // is semknox ArticleList
+        $oArtList->isSxArticleList = true;
+
 
         // sets active page
         $this->iActPage = (int) \OxidEsales\Eshop\Core\Registry::getConfig()->getRequestParameter('pgNr');
@@ -98,13 +111,18 @@ class Search extends Search_parent
         $sxSearch->setLimit($iNrofCatArticles);
         $sxSearch->setPage($this->iActPage);
 
+        // sort
+        if(is_array($sSortBy)){
+            $option = $this->_sxHelper->decodeSortOption($sSortBy['sortby'], ['sort' => $sSortBy['sortby']]);
+            //$sxSearch->sortBy($option->getKey(), $option->getSort());
+        }
+
         $this->_sxSearchResponse = $sxSearch->search();
         $oxArticleIds = array();
         foreach ($this->_sxSearchResponse->getProducts() as $sxArticle) {
             $oxArticleIds[] = $sxArticle->getId();
         }
 
-        $oArtList = new ArticleList;
         $oArtList->loadIds($oxArticleIds);
 
         // set search interpretation text
@@ -118,9 +136,14 @@ class Search extends Search_parent
         // set available sorting options
         $sxAvailableSortingOptions = array();
         foreach($this->_sxSearchResponse->getAvailableSortingOptions() as $option){
-            $sxAvailableSortingOptions[$option->getKey()] = $option->getKey().'_'.$option->getName();
+            $sxAvailableSortingOptions[$option->getKey()] = $this->_sxHelper->encodeSortOption($option);
         }
-        if(empty($sxAvailableSortingOptions)) $sxAvailableSortingOptions = [ 11 => 'sxtranslated_11_Test absteigend', 22 => 'sxtranslated_22_Name aufsteigend'];
+
+        /// todo: remove... just for testing!!!!!!!!!!!!!!!!!!!!!
+        if(empty($sxAvailableSortingOptions)){
+            $sxAvailableSortingOptions = [11 => 'sxoption_11_FakeTest absteigend', 22 => 'sxoption_22_FakeName aufsteigend'];
+        }
+
         $oArtList->setAvailableSortingOptions($sxAvailableSortingOptions);
 
         return $oArtList;

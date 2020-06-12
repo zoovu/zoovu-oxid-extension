@@ -6,7 +6,7 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Application\Model\ShopList;
 use Semknox\Productsearch\Application\Model\ArticleList;
 use Semknox\Productsearch\Application\Model\ArticleTransformer;
-use Semknox\Productsearch\Application\Model\SxSetting;
+use Semknox\Productsearch\Application\Model\SxHelper;
 
 use Semknox\Core\SxConfig;
 use Semknox\Core\SxCore;
@@ -20,31 +20,29 @@ class UploadController
     /**
      * Class constructor. 
      */
-    public function __construct($configValues)
+    public function __construct()
     {
         $this->_oxRegistry = new Registry;
         $this->_oxConfig = $this->_oxRegistry->getConfig();
         $this->_oxLang = $this->_oxRegistry->getLang();
 
-        $this->_sxSetting = new SxSetting;
+        $this->_sxHelper = new SxHelper;    
+    }
 
-        $configValues['apiUrl'] = (isset($configValues['sandbox']) && $configValues['sandbox']) ? $this->_sxSetting->get('SandboxApiUrl') : $this->_sxSetting->get('ApiUrl');
+
+    public function setConfig($configValues = [])
+    {
+
+        // really needed 
         $configValues['productTransformer'] = ArticleTransformer::class;
-        $configValues['storagePath'] = $this->_oxRegistry->getConfig()->getConfigParam('sShopDir'). $this->_sxSetting->get('Folder');
+        $defaultValues['storagePath'] = $this->_oxConfig->getConfigParam('sShopDir') . $this->_sxHelper->get('sxFolder');
 
-        $configValues['initialUploadBatchSize'] = isset($configValues['uploadBatchSize']) ? $configValues['uploadBatchSize'] : $this->_sxSetting->get('UploadBatchSize');
-        $configValues['collectBatchSize'] = isset($configValues['collectBatchSize']) ? $configValues['collectBatchSize'] : $this->_sxSetting->get('CollectBatchSize');
-        $configValues['requestTimeout'] = isset($configValues['requestTimeout']) ? $configValues['requestTimeout'] : $this->_sxSetting->get('RequestTimeout');
-
-        if($configValues['shopId']){
-            $configValues['initialUploadIdentifier'] = $configValues['shopId'].'-'. $configValues['lang'];
-        }
+        $configValues = array_merge($defaultValues, $configValues);
 
         $this->_sxConfig = new SxConfig($configValues);
         $this->_sxCore = new SxCore($this->_sxConfig);
-
         $this->_sxUploader = $this->_sxCore->getInitialUploader();
-    
+
     }
 
     /**
@@ -174,26 +172,31 @@ class UploadController
 
                 $projectId = $this->_oxConfig->getConfigParam('sxProjectId' . $lang);
                 $apiKey = $this->_oxConfig->getConfigParam('sxApiKey' . $lang);
-                $sandbox = $this->_oxConfig->getConfigParam('sxIsSandbox' . $lang);
+                $sandbox = $this->_sxHelper->get('sxIsSandbox' . $lang);
 
                 $uploadActive = $this->_oxConfig->getConfigParam('sxUploadActive' . $lang);
 
                 if (!$uploadActive || !$projectId || !$apiKey) continue;
 
-                $sxShopConfigs[] = [
+                $sxShopConfigs[$shopId.'_'. $lang] = [
                     'projectId' => $projectId,
                     'apiKey' => $apiKey,
                     'sandbox' => $sandbox,
 
+                    'apiUrl' => $sandbox ? $this->_sxHelper->get('sxSandboxApiUrl') : $this->_sxHelper->get('sxApiUrl'),
+
                     'lang' => $lang,
                     'langId' => $langId,
                     'shopId' => $shopId,
-                    'cronjobHour' => (int) $this->_oxConfig->getConfigParam('sxCronjobHour'),
-                    'cronjobMinute' => (int) $this->_oxConfig->getConfigParam('sxCronjobMinute'),
+                    'cronjobHour' => (int) $this->_sxHelper->get('sxCronjobHour'),
+                    'cronjobMinute' => (int) $this->_sxHelper->get('sxCronjobMinute'),
 
-                    'collectBatchSize' => (int) $this->_oxConfig->getConfigParam('sxCollectBatchSize'),
-                    'uploadBatchSize' => (int) $this->_oxConfig->getConfigParam('sxUploadBatchSize'),
-                    'requestTimeout' => (int) $this->_oxConfig->getConfigParam('sxRequestTimeout')
+                    'collectBatchSize' => (int) $this->_sxHelper->get('sxCollectBatchSize'),
+                    'uploadBatchSize' => (int) $this->_sxHelper->get('sxUploadBatchSize'),
+                    'requestTimeout' => (int) $this->_sxHelper->get('sxRequestTimeout'),
+                    'initialUploadBatchSize' => (int) $this->_sxHelper->get('sxUploadBatchSize'),
+
+                    'initialUploadIdentifier' => $shopId.'-'. $lang,
                 ];
             }
         }

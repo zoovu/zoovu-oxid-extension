@@ -2,13 +2,15 @@
 
 namespace Semknox\Productsearch\Application\Model;
 
+use Semknox\Productsearch\Application\Model\SxHelper;
+
 class ArticleList extends \OxidEsales\Eshop\Application\Model\ArticleList
 {
 
     protected $_sxArticleListInterpretation;
     protected $_sxAvailableSortingOptions;
 
-    public $_isSxArticleList = true;
+    public $isSxArticleList = false;
 
     /**
      * Load all Article in pages articles
@@ -92,6 +94,25 @@ class ArticleList extends \OxidEsales\Eshop\Application\Model\ArticleList
         }
 
         return array();
+    }
+
+
+    /**
+     * fixes customSorting for non Search pages
+     * 
+     * @param string $sqlSorting 
+     * @return void 
+     */
+    public function setCustomSorting($sqlSorting)
+    {
+        $sxHelper = new SxHelper();
+
+        if($sxHelper->isEncodedOption(ltrim($sqlSorting, '`'))){
+            $sqlSorting = false;
+        }
+
+        return parent::setCustomSorting($sqlSorting);
+
     }
 
 }
