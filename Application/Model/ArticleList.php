@@ -107,7 +107,9 @@ class ArticleList extends \OxidEsales\Eshop\Application\Model\ArticleList
     {
         $sxHelper = new SxHelper();
 
-        if($sxHelper->isEncodedOption(ltrim($sqlSorting, '`'))){
+        $trimedsqlSorting = ltrim($sqlSorting, '`');
+
+        if(!$sqlSorting || !$trimedsqlSorting || $sxHelper->isEncodedOption($trimedsqlSorting)){
             $sqlSorting = false;
         }
 

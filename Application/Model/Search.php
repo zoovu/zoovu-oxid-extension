@@ -44,30 +44,36 @@ class Search extends Search_parent
         $oxRegistry = new Registry();
         $this->_oxAbbrLanguage = ucfirst($oxRegistry->getLang()->getLanguageAbbr());
 
-        $sxProjectId = $this->_sxHelper->get('sxProjectId' . $this->_oxAbbrLanguage);
-        $sxApiKey = $this->_sxHelper->get('sxApiKey' . $this->_oxAbbrLanguage);
         $sxFrontendActive = $this->_sxHelper->get('sxFrontendActive' . $this->_oxAbbrLanguage);
 
-        if($sxFrontendActive && $sxProjectId && $sxApiKey){
+        if($sxFrontendActive){
 
             $sxIsSandbox = $this->_sxHelper->get('sxIsSandbox' . $this->_oxAbbrLanguage);
             $sxApiUrl = $sxIsSandbox ? $this->_sxHelper->get('sxSandboxApiUrl') : $this->_sxHelper->get('sxApiUrl');
+
+            $sxProjectId = $this->_sxHelper->get('sxProjectId' . $this->_oxAbbrLanguage);
+            $sxApiKey = $this->_sxHelper->get('sxApiKey' . $this->_oxAbbrLanguage);
 
             $oxShopId = $oxRegistry->getConfig()->getShopId();
 
             $sxRequestTimeout = (int) $this->_sxHelper->get('sxRequestTimeout');
 
-            $this->_sxConfigValues = [
+            $sxConfigValues = [
                 // required options
                 'projectId' => $sxProjectId,
                 'apiKey' => $sxApiKey,
                 'apiUrl' => $sxApiUrl,
                 'requestTimeout' => $sxRequestTimeout,
-
-                // for masterConfig routine (merge multiple subshops with same products)
-                'userGroup' => $oxShopId, // maybe better because more the semknox meaning?
-                'masterConfigIdentifier' => strtolower($this->_oxAbbrLanguage) // something like this?
+                'subShopId' => $oxShopId,
             ];
+
+            $sxConfigValues = $this->_sxHelper->getMasterConfig($sxConfigValues);
+
+            // since its possible to set login data by masterConfig, this check has to be the last one
+            if($sxConfigValues['projectId'] && $sxConfigValues['apiKey']){
+                $this->_sxConfigValues = $sxConfigValues;
+            }
+
         }
 
     }
@@ -113,8 +119,8 @@ class Search extends Search_parent
 
         // sort
         if(is_array($sSortBy)){
-            $option = $this->_sxHelper->decodeSortOption($sSortBy['sortby'], ['sort' => $sSortBy['sortby']]);
-            //$sxSearch->sortBy($option->getKey(), $option->getSort());
+            $option = $this->_sxHelper->decodeSortOption($sSortBy['sortby'], ['sort' => $sSortBy['sortdir']]);
+            $sxSearch->sortBy($option->getKey(), $option->getSort());
         }
 
         $this->_sxSearchResponse = $sxSearch->search();
@@ -141,7 +147,7 @@ class Search extends Search_parent
 
         /// todo: remove... just for testing!!!!!!!!!!!!!!!!!!!!!
         if(empty($sxAvailableSortingOptions)){
-            $sxAvailableSortingOptions = [11 => 'sxoption_11_FakeTest absteigend', 22 => 'sxoption_22_FakeName aufsteigend'];
+            $sxAvailableSortingOptions = [11 => 'sxoption_11_FAKE-Test', 22 => 'sxoption_22_FAKE-Name'];
         }
 
         $oArtList->setAvailableSortingOptions($sxAvailableSortingOptions);

@@ -176,9 +176,9 @@ class UploadController
 
                 $uploadActive = $this->_oxConfig->getConfigParam('sxUploadActive' . $lang);
 
-                if (!$uploadActive || !$projectId || !$apiKey) continue;
+                if (!$uploadActive) continue;
 
-                $sxShopConfigs[$shopId.'_'. $lang] = [
+                $currentShopConfig = [
                     'projectId' => $projectId,
                     'apiKey' => $apiKey,
                     'sandbox' => $sandbox,
@@ -198,6 +198,13 @@ class UploadController
 
                     'initialUploadIdentifier' => $shopId.'-'. $lang,
                 ];
+
+                $currentShopConfig = $this->_sxHelper->getMasterConfig($currentShopConfig);
+
+                // since its possible to set login data by masterConfig, this check has to be the last one
+                if ($currentShopConfig['projectId'] && $currentShopConfig['apiKey']) {
+                    $sxShopConfigs[$shopId . '_' . $lang] = $currentShopConfig;
+                }
             }
         }
 

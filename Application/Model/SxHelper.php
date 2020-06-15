@@ -16,6 +16,8 @@ class SxHelper {
     protected $_sxSandboxApiUrl = "https://stage-oxid-v3.semknox.com/";
     protected $_sxApiUrl = "https://api-v3.semknox.com/";
 
+    protected $_sxMasterConfig = false;
+
     /**
      * Get a value
      *
@@ -39,6 +41,40 @@ class SxHelper {
             : $default;
     }
 
+    /**
+     * get and merges masterconfig values 
+     * 
+     * @param array $configValues 
+     * @return array 
+     */
+    public function getMasterConfig(array $configValues = [])
+    {
+        $masterConfigPath = Registry::getConfig()->getLogsDir() . "semknox/masterConfig.json";
+
+        // performance
+        if(is_array($this->_sxMasterConfig)) return $this->_sxMasterConfig;
+
+        if(file_exists($masterConfigPath) && $masterConfig = file_get_contents($masterConfigPath))
+        {
+
+            $masterConfig = json_decode($masterConfig, true);
+
+             // performance
+            $this->_sxMasterConfig = $masterConfig;
+
+            if ($masterConfig) {
+                $configValues = array_merge($configValues, $masterConfig);
+            }
+
+            if (isset($masterConfig['projectId']) && isset($masterConfig['apiKey'])) {
+                // for masterConfig routine (merge multiple subshops with same products)
+                $configValues['userGroup'] = $configValues['subShopId'];
+            }
+
+        }
+
+        return $configValues;
+    }
 
     /**
      * check if string is an encoded semknox option

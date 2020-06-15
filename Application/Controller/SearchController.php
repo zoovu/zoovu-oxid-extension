@@ -51,4 +51,21 @@ class SearchController extends SearchController_parent
         return ['sortby' => $sortBy, 'sortdir' => $sortOrder];
     }
 
+
+
+    public function getSortingSql($ident)
+    {
+        $sorting = $this->getSorting($this->getSortIdent());
+        $sortBy = $sorting['sortby'];
+
+        if (SxHelper::isEncodedOption($sortBy)) {
+            // acitve semknox search shop
+            return $sorting;
+        }
+
+        // fallback, if not active for current shop
+        $sortingSql = parent::getSortingSql($ident);
+        return $sortingSql == '``' ? false : $sortingSql;
+    }
+
 }
