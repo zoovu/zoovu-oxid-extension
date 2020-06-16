@@ -4,10 +4,14 @@ namespace Semknox\Productsearch\Application\Model;
 
 use Semknox\Productsearch\Application\Model\ArticleList;
 use Semknox\Productsearch\Application\Model\SxHelper;
-use OxidEsales\Eshop\Core\Registry;
 
-use Semknox\Core\SxConfig;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Application\Model\AttributeList;
+use OxidEsales\Eshop\Application\Model\Attribute;
+
 use Semknox\Core\SxCore;
+use Semknox\Core\SxConfig;
+use Semknox\Core\Services\Search\Filters\RangeFilter;
 
 class Search extends Search_parent
 {
@@ -92,7 +96,7 @@ class Search extends Search_parent
     public function getSearchArticles($sSearchParamForQuery = false, $sInitialSearchCat = false, $sInitialSearchVendor = false, $sInitialSearchManufacturer = false, $sSortBy = false)
     {
         if (!$this->_sxConfigValues){
-            $sSortBy = is_array($sSortBy) ? $sSortBy : false;
+            $sSortBy = !is_array($sSortBy) ? (string) $sSortBy : false;
             return parent::getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer, $sSortBy);
         }
 
@@ -117,6 +121,18 @@ class Search extends Search_parent
         $sxSearch->setLimit($iNrofCatArticles);
         $sxSearch->setPage($this->iActPage);
 
+        // filter
+        $filter = Registry::getConfig()->getRequestParameter('attrfilter', []);
+        foreach($filter as $filterId => $options){
+            if(!$options) continue;
+
+            if(!is_array($options)){
+                $options = [ (string) $options ];
+            }
+
+            $sxSearch->addFilter($filterId, $options);
+        }
+
         // sort
         if(is_array($sSortBy)){
             $option = $this->_sxHelper->decodeSortOption($sSortBy['sortby'], ['sort' => $sSortBy['sortdir']]);
@@ -138,6 +154,33 @@ class Search extends Search_parent
             $sxAnswerText = (string) $this->_sxSearchResponse->getAnswerText();
             $oArtList->setArticleListInterpretation($sxAnswerText);
         }
+
+        // get active filter
+        //$sxActiveFilter = $sxSearch->getActiveFilters();
+        //var_dump($sxActiveFilter);
+
+        // set available filter
+        $sxAvailableFilters = new AttributeList();
+        foreach ($this->_sxSearchResponse->getAvailableFilters() as $filter) {
+
+            // oxid does not support range filter
+            if($filter instanceof RangeFilter) continue;
+
+            $attribute = new Attribute();
+
+            $attribute->setTitle($filter->getName());
+            $attribute->setId($filter->getId());
+
+            foreach ($filter->getOptions() as $option) {
+                $attribute->addValue($option->getName());
+            }
+
+            
+
+            $sxAvailableFilters->add($attribute);
+        }
+        $oArtList->setAvailableFilters($sxAvailableFilters);
+
 
         // set available sorting options
         $sxAvailableSortingOptions = array();

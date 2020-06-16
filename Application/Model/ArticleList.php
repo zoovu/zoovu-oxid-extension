@@ -70,6 +70,35 @@ class ArticleList extends \OxidEsales\Eshop\Application\Model\ArticleList
         return '';
     }
 
+
+    /**
+     * set available filters
+     * 
+     * @param string $content 
+     * @return void 
+     */
+    public function setAvailableFilters($filters = array())
+    {
+        $this->_sxAvailableFilters = $filters;
+    }
+
+
+
+    /**
+     * get available filters
+     * 
+     * @return array 
+     */
+    public function getAvailableFilters()
+    {
+        if ($this->_sxAvailableFilters) {
+            return $this->_sxAvailableFilters;
+        }
+
+        return array();
+    }
+
+
     /**
      * set available sorting options
      * 

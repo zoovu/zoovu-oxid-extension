@@ -2,7 +2,9 @@
 
 namespace Semknox\Productsearch\Application\Controller;
 
+use OxidEsales\Eshop\Application\Controller\ArticleListController;
 use OxidEsales\Eshop\Core\Registry;
+
 use Semknox\Productsearch\Application\Model\SxHelper;
 
 
@@ -35,7 +37,7 @@ class SearchController extends SearchController_parent
         return $this->_aArticleList->getAvailableSortingOptions();
     }
 
-
+   
 
     /**
      * Returns default category sorting for selected category
@@ -48,7 +50,11 @@ class SearchController extends SearchController_parent
         $sortBy = $request->getRequestParameter($this->getSortOrderByParameterName());
         $sortOrder = $request->getRequestParameter($this->getSortOrderParameterName());
 
-        return ['sortby' => $sortBy, 'sortdir' => $sortOrder];
+        if ($sortBy && $sortOrder && SxHelper::isEncodedOption($sortBy)) {
+            return ['sortby' => $sortBy, 'sortdir' => $sortOrder];
+        }
+
+        return parent::getUserSelectedSorting();
     }
 
 
@@ -66,6 +72,30 @@ class SearchController extends SearchController_parent
         // fallback, if not active for current shop
         $sortingSql = parent::getSortingSql($ident);
         return $sortingSql == '``' ? false : $sortingSql;
+    }
+
+
+    /**
+     * get attributeList for filtering
+     * 
+     * @return mixed 
+     */
+    public function getAttributes()
+    {
+        return $this->_aArticleList->getAvailableFilters();
+    }
+
+
+
+    /**
+     * Stores chosen category filter into session.
+     *
+     * Session variables:
+     * <b>session_attrfilter</b>
+     */
+    public function executefilter()
+    {
+        return ArticleListController::executefilter();
     }
 
 }
