@@ -57,6 +57,7 @@ $aModule = [
         'sxproductsearch_cron' => Semknox\Productsearch\Application\Controller\CronController::class
     ],
     'extend' => [
+        \OxidEsales\Eshop\Application\Model\Article::class => \Semknox\Productsearch\Application\Model\Article::class,
         \OxidEsales\Eshop\Application\Model\ArticleList::class => \Semknox\Productsearch\Application\Model\ArticleList::class,
         \OxidEsales\Eshop\Application\Model\Search::class => \Semknox\Productsearch\Application\Model\Search::class,
         \OxidEsales\Eshop\Application\Controller\FrontendController::class => \Semknox\Productsearch\Application\Controller\FrontendController::class,

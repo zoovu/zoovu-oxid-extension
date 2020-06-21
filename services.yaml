@@ -1,9 +1,0 @@
-services:
-
-  _defaults:
-    public: false
-    autowire: true
-
-  Semknox\Productsearch\Events\ArticleUpdateEventSubscriber:
-    class: Semknox\Productsearch\Events\ArticleUpdateEventSubscriber
-    tags: ['kernel.event_subscriber']

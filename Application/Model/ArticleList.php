@@ -4,7 +4,7 @@ namespace Semknox\Productsearch\Application\Model;
 
 use Semknox\Productsearch\Application\Model\SxHelper;
 
-class ArticleList extends \OxidEsales\Eshop\Application\Model\ArticleList
+class ArticleList extends ArticleList_parent
 {
 
     protected $_sxArticleListInterpretation;

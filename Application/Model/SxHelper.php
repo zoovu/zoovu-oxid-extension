@@ -8,7 +8,8 @@ use OxidEsales\Eshop\Core\Registry;
 
 class SxHelper {
 
-    protected $_sxFolder = "log/semknox/";
+    protected $_sxFolder = "semknox/";
+
     protected $_sxUploadBatchSize = 200;
     protected $_sxCollectBatchSize = 100;
     protected $_sxRequestTimeout = 15;
@@ -17,6 +18,24 @@ class SxHelper {
     protected $_sxApiUrl = "https://api-v3.semknox.com/";
 
     protected $_sxMasterConfig = false;
+    protected $_sxMasterConfigPath = "semknox/masterConfig.json";
+
+    protected $_sxDeleteQueuePath = "semknox/delete-queue/";
+    protected $_sxUpdateQueuePath = "semknox/update-queue/";
+
+
+    public function __construct()
+    {
+        $logsDir = Registry::getConfig()->getLogsDir();
+
+        $this->_sxFolder = $logsDir . $this->_sxFolder;
+
+        $this->_sxMasterConfigPath = $logsDir . $this->_sxMasterConfigPath;
+
+        $this->_sxDeleteQueuePath = $logsDir . $this->_sxDeleteQueuePath;
+        $this->_sxUpdateQueuePath = $logsDir . $this->_sxUpdateQueuePath;
+    }
+
 
     /**
      * Get a value
@@ -49,7 +68,7 @@ class SxHelper {
      */
     public function getMasterConfig(array $configValues = [])
     {
-        $masterConfigPath = Registry::getConfig()->getLogsDir() . "semknox/masterConfig.json";
+        $masterConfigPath = $this->_sxMasterConfigPath;
 
         // performance
         if(is_array($this->_sxMasterConfig)) return $this->_sxMasterConfig;
@@ -121,6 +140,38 @@ class SxHelper {
         $optionData = array_merge($optionData, $additionalData);
 
         return new SortingOption($optionData);
+    }
+
+
+    public function addToUpdateQueue($articleId)
+    {
+        $this->_addToQueue($articleId, $this->_sxUpdateQueuePath);
+    }
+
+
+    public function addToDeleteQueue($articleId)
+    {
+        $this->_removeFromQueue($articleId, $this->_sxUpdateQueuePath);
+
+        $this->_addToQueue($articleId, $this->_sxDeleteQueuePath);
+    }
+
+    protected function _addToQueue($articleId, $path)
+    {
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        touch($path . $articleId);
+        
+    }
+
+    protected function _removeFromQueue($articleId, $path)
+    {
+        if (file_exists($path . $articleId)) {
+            unlink($path . $articleId);
+        }
+
     }
 
 }
