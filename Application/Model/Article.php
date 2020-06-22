@@ -2,7 +2,7 @@
 
 namespace Semknox\Productsearch\Application\Model;
 
-use Semknox\Productsearch\Application\Model\SxHelper;
+use Semknox\Productsearch\Application\Model\SxQueue;
 use OxidEsales\Eshop\Core\Registry;
 
 class Article extends Article_parent
@@ -40,12 +40,22 @@ class Article extends Article_parent
 
         if(!isset($articleId)) return;
 
-        $sxHelper = new SxHelper();
+        $sxQueue = new SxQueue();
         if($action == ACTION_DELETE){
-            $sxHelper->addToDeleteQueue($articleId);
+            $sxQueue->set('delete');
+            $sxQueue->addArticle($articleId);
+
+            $sxQueue->set('update');
+            $sxQueue->removeArticle($articleId);
+
         } else {
-            $sxHelper->addToUpdateQueue($articleId);
+            $sxQueue->set('update');
+            $sxQueue->addArticle($articleId);
+
+            $sxQueue->set('delete');
+            $sxQueue->removeArticle($articleId);
         }
+
 
     }
 

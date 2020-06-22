@@ -8,6 +8,7 @@ use OxidEsales\Eshop\Application\Model\ShopList;
 use Semknox\Productsearch\Application\Controller\UploadController;
 use Semknox\Productsearch\Application\Model\ArticleList;
 use Semknox\Productsearch\Application\Model\ArticleTransformer;
+use Semknox\Productsearch\Application\Model\SxQueue;
 
 class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendController
 {
@@ -47,16 +48,32 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
         $sxUpload = new UploadController([]);
         $sxShopConfigs = $sxUpload->getShopConfigs();
 
+        $initialUploadStarted = false;
+
         // check if Uploads needs to be startet
         foreach ($sxShopConfigs as $key => $shopConfig) {
 
             if ($this->_currentHour == $shopConfig['cronjobHour'] && $this->_currentMinute == $shopConfig['cronjobMinute']) {
                 $sxUpload->setConfig($shopConfig);
-                $sxUpload->startUpload();
+                $sxUpload->startFullUpload();
 
                 unset($sxShopConfigs[$key]); // not directly continue;
-            }
 
+                $initialUploadStarted = true;
+            }
+        }
+
+        if($initialUploadStarted){
+            // empty queue
+            $sxQueue = new SxQueue();
+
+            // empty update queue
+            $sxQueue->set('update');
+            $sxQueue->empty();
+
+            // empty delete queue
+            $sxQueue->set('delete');
+            $sxQueue->empty();
         }
 
         // check if Uploads needs to be continued (always just one job per cronrun!)
@@ -65,7 +82,7 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
             $sxUpload->setConfig($shopConfig);
             
             if($sxUpload->isRunning()){
-                $sxUpload->continueUpload();
+                $sxUpload->continueFullUpload();
                 break; // (always just one job per cronrun!)
             }
 

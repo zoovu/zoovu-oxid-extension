@@ -49,14 +49,15 @@ class UploadController
      * start new product upload
      * 
      */
-    public function startUpload()
-    {       
+    public function startFullUpload()
+    {
         $oxArticleList = new ArticleList;
         $oxArticleQty = $oxArticleList->getAllArticlesCount();
 
         $this->_sxUploader->startCollecting([
             'expectedNumberOfProducts' => $oxArticleQty
         ]);
+
     }
 
 
@@ -64,7 +65,7 @@ class UploadController
      * continue running product upload
      * 
      */
-    public function continueUpload()
+    public function continueFullUpload()
     {
 
         if($this->_sxUploader->isCollecting()){
@@ -114,7 +115,7 @@ class UploadController
      * stop running product upload
      * 
      */
-    public function stopUpload()
+    public function stopFullUpload()
     {
         if($this->isRunning()){
             $this->_sxUploader->abort();

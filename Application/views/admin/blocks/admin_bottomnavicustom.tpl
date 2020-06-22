@@ -5,7 +5,7 @@
 		<li id="sxStatusPending[{$language->oxid}]" class="sxHide">
 			<a 	href="javascript: void(0)" 
 				class="sxUploadAction"
-				onClick="sxAjaxControllerClick('[{$oViewConf->getSelfLink()}]cl=sxproductsearch_ajax&fnc=startUpload&shopId=[{$shopid}]&shopLang=[{$language->oxid}]')">
+				onClick="sxAjaxControllerClick('[{$oViewConf->getSelfLink()}]cl=sxproductsearch_ajax&fnc=startFullUpload&shopId=[{$shopid}]&shopLang=[{$language->oxid}]')">
 				[{oxmultilang ident="SHOP_MODULE_sxStartInitialUpload"}] ([{$language->name}])
 			</a> |
 		</li>
@@ -16,7 +16,7 @@
 			</div>
 			<a 	href="javascript: void(0)"
 				class="sxUploadAction"
-				onClick="sxAjaxControllerClick('[{$oViewConf->getSelfLink()}]cl=sxproductsearch_ajax&fnc=stopUpload&shopId=[{$shopid}]&shopLang=[{$language->oxid}]')">
+				onClick="sxAjaxControllerClick('[{$oViewConf->getSelfLink()}]cl=sxproductsearch_ajax&fnc=stopFullUpload&shopId=[{$shopid}]&shopLang=[{$language->oxid}]')">
 				[{oxmultilang ident="SHOP_MODULE_sxStopInitialUpload"}] ([{$language->name}])
 			</a> |
 		</li>

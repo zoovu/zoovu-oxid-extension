@@ -8,7 +8,7 @@ use OxidEsales\Eshop\Core\Registry;
 
 class SxHelper {
 
-    protected $_sxFolder = "semknox/";
+    protected $_sxFolder = "log/semknox/";
 
     protected $_sxUploadBatchSize = 200;
     protected $_sxCollectBatchSize = 100;
@@ -28,7 +28,7 @@ class SxHelper {
     {
         $logsDir = Registry::getConfig()->getLogsDir();
 
-        $this->_sxFolder = $logsDir . $this->_sxFolder;
+        //$this->_sxFolder = $logsDir . $this->_sxFolder;
 
         $this->_sxMasterConfigPath = $logsDir . $this->_sxMasterConfigPath;
 
@@ -140,38 +140,6 @@ class SxHelper {
         $optionData = array_merge($optionData, $additionalData);
 
         return new SortingOption($optionData);
-    }
-
-
-    public function addToUpdateQueue($articleId)
-    {
-        $this->_addToQueue($articleId, $this->_sxUpdateQueuePath);
-    }
-
-
-    public function addToDeleteQueue($articleId)
-    {
-        $this->_removeFromQueue($articleId, $this->_sxUpdateQueuePath);
-
-        $this->_addToQueue($articleId, $this->_sxDeleteQueuePath);
-    }
-
-    protected function _addToQueue($articleId, $path)
-    {
-        if (!file_exists($path)) {
-            mkdir($path, 0777, true);
-        }
-
-        touch($path . $articleId);
-        
-    }
-
-    protected function _removeFromQueue($articleId, $path)
-    {
-        if (file_exists($path . $articleId)) {
-            unlink($path . $articleId);
-        }
-
     }
 
 }

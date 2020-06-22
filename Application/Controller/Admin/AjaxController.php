@@ -4,6 +4,7 @@ namespace Semknox\Productsearch\Application\Controller\Admin;
 
 use Semknox\Productsearch\Application\Controller\UploadController;
 use OxidEsales\Eshop\Core\Registry;
+use Semknox\Productsearch\Application\Model\SxHelper;
 
 
 
@@ -87,17 +88,17 @@ class AjaxController extends \OxidEsales\Eshop\Application\Controller\Admin\Admi
     /**
      * start upload
      */
-    public function startUpload()
+    public function startFullUpload()
     {
-        return $this->_controlUpload(__FUNCTION__, false);
+        return $this->_controlFullUpload(__FUNCTION__, false);
     }
 
     /**
      * stop upload
      */
-    public function stopUpload()
+    public function stopFullUpload()
     {
-        return $this->_controlUpload(__FUNCTION__, true);
+        return $this->_controlFullUpload(__FUNCTION__, true);
     }
 
     /**
@@ -107,7 +108,7 @@ class AjaxController extends \OxidEsales\Eshop\Application\Controller\Admin\Admi
      * @param bool $isRunningCondition 
      * @return void 
      */
-    protected function _controlUpload( $action , $isRunningCondition = false)
+    protected function _controlFullUpload( $action , $isRunningCondition = false)
     {
         $shopId = (int) $this->_oxConfig->getRequestParameter('shopId');
         $shopLang = $this->_oxConfig->getRequestParameter('shopLang');
