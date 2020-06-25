@@ -13,7 +13,7 @@ use Semknox\Core\SxCore;
 
 class UploadController
 {
-    private $_sxCore, $_sxConfig, $_sxUploader;
+    private $_sxCore, $_sxConfig, $_sxUploader, $_sxUpdater;
     private $_oxRegistry, $_oxConfig, $_oxLang;
 
 
@@ -42,6 +42,7 @@ class UploadController
         $this->_sxConfig = new SxConfig($configValues);
         $this->_sxCore = new SxCore($this->_sxConfig);
         $this->_sxUploader = $this->_sxCore->getInitialUploader();
+        $this->_sxUpdater = $this->_sxCore->getProductUpdater();
 
     }
 
@@ -89,8 +90,14 @@ class UploadController
             $oxArticleList = new ArticleList;
             $oxArticleList->loadAllArticles($pageSize, $page);
 
+            // check if groupId is set
+            $transformerArgs = [];
+            if($userGroup = $this->_sxConfig->get('userGroup')){
+                $transformerArgs['userGroup'] = (string) $userGroup;
+            }
+
             foreach ($oxArticleList as $oxArticle) {
-                $this->_sxUploader->addProduct($oxArticle);
+                $this->_sxUploader->addProduct($oxArticle, $transformerArgs);
             }
 
             // if ready, start uploading
@@ -153,6 +160,8 @@ class UploadController
      */
     public function getShopConfigs()
     {
+        $currentLanguage = $this->_oxLang->getBaseLanguage();
+
         $oxShopList = new ShopList;
         $oxShopList->getIdTitleList();
 
@@ -195,9 +204,8 @@ class UploadController
                     'collectBatchSize' => (int) $this->_sxHelper->get('sxCollectBatchSize'),
                     'uploadBatchSize' => (int) $this->_sxHelper->get('sxUploadBatchSize'),
                     'requestTimeout' => (int) $this->_sxHelper->get('sxRequestTimeout'),
-                    'initialUploadBatchSize' => (int) $this->_sxHelper->get('sxUploadBatchSize'),
 
-                    'initialUploadIdentifier' => $shopId.'-'. $lang,
+                    'storeIdentifier' => $shopId.'-'. $lang,
                 ];
 
                 $currentShopConfig = $this->_sxHelper->getMasterConfig($currentShopConfig);
@@ -208,6 +216,10 @@ class UploadController
                 }
             }
         }
+
+        // reset to current language
+        $this->_oxLang->setBaseLanguage($currentLanguage);
+        $this->_oxLang->resetBaseLanguage();
 
         return $sxShopConfigs;
     }
@@ -226,6 +238,54 @@ class UploadController
         }
 
         return $languages;
+    }
+
+
+
+    /**
+     * add articles to update (single)
+     * 
+     */
+    public function addArticleUpdates($oxArticleIds)
+    {
+        // check if groupId is set
+        $transformerArgs = [];
+        if ($userGroup = $this->_sxConfig->get('userGroup')) {
+            $transformerArgs['userGroup'] = (string) $userGroup;
+        }
+
+        // set Store
+        $this->_oxConfig->setShopId($this->_sxConfig->get('shopId'));
+        $this->_oxConfig->reinitialize(); // empty cache
+
+        // set Language
+        $this->_oxLang->setBaseLanguage($this->_sxConfig->get('langId'));
+
+        $oxArticleList = new ArticleList;
+        $oxArticleList->loadIds($oxArticleIds);
+
+        foreach ($oxArticleList as $oxArticle) {
+            $this->_sxUpdater->addProduct($oxArticle, $transformerArgs);
+        }
+
+    }
+
+
+    /**
+     * send article updates
+     * 
+     */
+    public function sendUpdate()
+    {
+        $productsSent = $this->_sxUpdater->sendUploadBatch();
+
+        if($productsSent){
+            $logger = $this->_oxRegistry->getLogger();
+            $logger->debug($productsSent . ' products sent to SEMKNOX.', [__CLASS__, __FUNCTION__]);
+        }
+
+        return $productsSent;
+
     }
 
 

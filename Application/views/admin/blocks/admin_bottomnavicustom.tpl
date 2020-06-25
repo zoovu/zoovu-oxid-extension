@@ -21,7 +21,7 @@
 			</a> |
 		</li>
 	[{/foreach}]
-	<li>
+	<li class="sxHide" id="sxCronCall">
 		<a href="/?cl=sxproductsearch_cron" target="blank">
 			[{oxmultilang ident="SHOP_MODULE_sxCronTester"}]
 		</a> |

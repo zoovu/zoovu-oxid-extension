@@ -71,23 +71,26 @@ class SxHelper {
         $masterConfigPath = $this->_sxMasterConfigPath;
 
         // performance
-        if(is_array($this->_sxMasterConfig)) return $this->_sxMasterConfig;
+        if(!is_array($this->_sxMasterConfig)){
 
-        if(file_exists($masterConfigPath) && $masterConfig = file_get_contents($masterConfigPath))
-        {
-
-            $masterConfig = json_decode($masterConfig, true);
-
-             // performance
-            $this->_sxMasterConfig = $masterConfig;
-
-            if ($masterConfig) {
-                $configValues = array_merge($configValues, $masterConfig);
+            if(file_exists($masterConfigPath) && $masterConfig = file_get_contents($masterConfigPath)){
+                $masterConfig = json_decode($masterConfig, true);
+                $this->_sxMasterConfig = $masterConfig;
+            } else {
+                $this->_sxMasterConfig = [];
             }
 
-            if (isset($masterConfig['projectId']) && isset($masterConfig['apiKey'])) {
+        } 
+
+        if($this->_sxMasterConfig && is_array($this->_sxMasterConfig))
+        {
+
+            $masterConfig = $this->_sxMasterConfig;
+            $configValues = array_merge($configValues, $masterConfig);
+
+            if (isset($masterConfig['projectId']) && isset($masterConfig['apiKey']) && isset($configValues['shopId'])) {
                 // for masterConfig routine (merge multiple subshops with same products)
-                $configValues['userGroup'] = $configValues['subShopId'];
+                $configValues['userGroup'] = $configValues['shopId'].'-'.$configValues['lang'];
             }
 
         }

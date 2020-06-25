@@ -46,7 +46,8 @@ class ArticleTransformer extends AbstractProductTransformer
 
         $sxArticle['images'] = $this->_getImages();
 
-        $sxArticle['attributes'] = $this->_getAttributes();
+        $userGroup = isset($transformerArgs['userGroup']) ? $transformerArgs['userGroup'] : null;
+        $sxArticle['attributes'] = $this->_getAttributes($userGroup);
 
         return $sxArticle;
 
@@ -131,7 +132,7 @@ class ArticleTransformer extends AbstractProductTransformer
     /**
      * gert attributes of product
      */
-    protected function _getAttributes()
+    protected function _getAttributes($userGroup = null)
     {
         $oxRegistry = new Registry;
         $oxLanguage = $oxRegistry->getLang();
@@ -212,6 +213,12 @@ class ArticleTransformer extends AbstractProductTransformer
                 'value' => $oxAttribute->oxattribute__oxvalue->value
             ];            
     
+        }
+
+        if($userGroup){
+            foreach($attributes as &$attribute){
+                $attribute['userGroups'] = [ $userGroup ];
+            }
         }
         
         return $attributes;

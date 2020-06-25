@@ -1,12 +1,16 @@
-console.log('sxproductsearch.js loaded');
+if (document.getElementById('module_deactivate')) {
+    // check Status if module is activated
+    sxCheckUploadStatus();
+    setInterval(sxCheckUploadStatus, 3000);
 
-
-// check Status
-sxCheckUploadStatus();
-setInterval(sxCheckUploadStatus, 3000);
+    var sxCronCallButton = document.getElementById('sxCronCall');
+    sxCronCallButton.classList.remove('sxHide');
+}
 
 
 function sxCheckUploadStatus() {
+
+    if (document.hidden) return;
 
     // get status overview
     var url = document.getElementById('sxUploadStatusUrl');

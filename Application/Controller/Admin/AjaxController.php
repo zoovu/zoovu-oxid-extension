@@ -57,7 +57,6 @@ class AjaxController extends \OxidEsales\Eshop\Application\Controller\Admin\Admi
             $responseData[$shopIdentifier]['phase'] = 'PENDING';
         }
 
-
         if(count($responseData)){
 
             $status = $this->_sxUpload->getStatus();

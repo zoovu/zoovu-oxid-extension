@@ -82,11 +82,6 @@ $aModule = [
             'template' => 'page/search/search.tpl',
             'block' => 'search_top_listlocator',
             'file' => 'Application/views/blocks/search_top_listlocator.tpl'
-        ],
-        [
-            'template' => 'widget/header/search.tpl',
-            'block' => 'widget_header_search_form',
-            'file' => 'Application/views/blocks/widget_header_search_form.tpl'
         ]
     ]
 ];

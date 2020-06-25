@@ -45,10 +45,12 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
      */
     protected function _cronRunner()
     {
+        $sxQueue = new SxQueue();
         $sxUpload = new UploadController([]);
         $sxShopConfigs = $sxUpload->getShopConfigs();
 
         $initialUploadStarted = false;
+        $initialUploadRunning = false;
 
         // check if Uploads needs to be startet
         foreach ($sxShopConfigs as $key => $shopConfig) {
@@ -64,8 +66,6 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
         }
 
         if($initialUploadStarted){
-            // empty queue
-            $sxQueue = new SxQueue();
 
             // empty update queue
             $sxQueue->set('update');
@@ -74,7 +74,7 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
             // empty delete queue
             $sxQueue->set('delete');
             $sxQueue->empty();
-        }
+        } 
 
         // check if Uploads needs to be continued (always just one job per cronrun!)
         foreach ($sxShopConfigs as $shopConfig) {
@@ -83,8 +83,29 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
             
             if($sxUpload->isRunning()){
                 $sxUpload->continueFullUpload();
+                $initialUploadRunning = true;
                 break; // (always just one job per cronrun!)
             }
+
+        }
+
+        // do incremental updates
+        if(!$initialUploadRunning){
+
+            if( $oxArticleIds = $sxQueue->getArticles(10)){
+                
+                foreach ($sxShopConfigs as $shopConfig) {
+                    $sxUpload->setConfig($shopConfig);
+                    $sxUpload->addArticleUpdates($oxArticleIds);
+                }
+
+                $sxQueue->removeArticle($oxArticleIds);
+            }
+
+            foreach ($sxShopConfigs as $shopConfig) {
+                $sxUpload->setConfig($shopConfig);
+                $sxUpload->sendUpdate();
+            }          
 
         }
 

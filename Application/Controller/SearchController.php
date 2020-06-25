@@ -10,6 +10,7 @@ use Semknox\Productsearch\Application\Model\SxHelper;
 
 class SearchController extends SearchController_parent
 {
+
     /**
      * get search page headline
      * 
@@ -96,6 +97,23 @@ class SearchController extends SearchController_parent
     public function executefilter()
     {
         return ArticleListController::executefilter();
+    }
+
+    /**
+     * Reset filter.
+     */
+    public function resetFilter()
+    {
+        return ArticleListController::resetFilter();
+
+
+        /*
+        $activeCategory = Registry::getConfig()->getRequestParameter('cnid');
+        $sessionFilter = Registry::getSession()->getVariable('session_attrfilter');
+
+        unset($sessionFilter[$activeCategory]);
+        Registry::getSession()->setVariable('session_attrfilter', $sessionFilter);
+        */
     }
 
 }

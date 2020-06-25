@@ -2,16 +2,18 @@
 
 namespace Semknox\Productsearch\Application\Model;
 
+use Exception;
 use Semknox\Productsearch\Application\Model\ArticleList;
 use Semknox\Productsearch\Application\Model\SxHelper;
 
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Application\Model\AttributeList;
 use OxidEsales\Eshop\Application\Model\Attribute;
-
 use Semknox\Core\SxCore;
 use Semknox\Core\SxConfig;
 use Semknox\Core\Services\Search\Filters\RangeFilter;
+use Semknox\Core\Services\Search\Filters\CollectionFilter;
+use Semknox\Core\Services\Search\Filters\Option;
 
 class Search extends Search_parent
 {
@@ -68,7 +70,8 @@ class Search extends Search_parent
                 'apiKey' => $sxApiKey,
                 'apiUrl' => $sxApiUrl,
                 'requestTimeout' => $sxRequestTimeout,
-                'subShopId' => $oxShopId,
+                'shopId' => $oxShopId,
+                'lang' => $this->_oxAbbrLanguage,
             ];
 
             $sxConfigValues = $this->_sxHelper->getMasterConfig($sxConfigValues);
@@ -139,7 +142,22 @@ class Search extends Search_parent
             $sxSearch->sortBy($option->getKey(), $option->getSort());
         }
 
-        $this->_sxSearchResponse = $sxSearch->search();
+        // set userGroup
+        if(isset($this->_sxConfigValues['userGroup'])){
+            $sxSearch->setUserGroup($this->_sxConfigValues['userGroup']);
+        }
+
+
+        // do search...
+        try{
+            $this->_sxSearchResponse = $sxSearch->search();
+        } catch(Exception $e){
+            // fallback
+            $this->_sxConfigValues = null;
+            return parent::getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer, $sSortBy);
+        }
+
+
         $oxArticleIds = array();
         foreach ($this->_sxSearchResponse->getProducts() as $sxArticle) {
             $oxArticleIds[] = $sxArticle->getId();
@@ -155,29 +173,32 @@ class Search extends Search_parent
             $oArtList->setArticleListInterpretation($sxAnswerText);
         }
 
-        // get active filter
-        //$sxActiveFilter = $sxSearch->getActiveFilters();
-        //var_dump($sxActiveFilter);
-
         // set available filter
         $sxAvailableFilters = new AttributeList();
         foreach ($this->_sxSearchResponse->getAvailableFilters() as $filter) {
 
             // oxid does not support range filter
-            if($filter instanceof RangeFilter) continue;
+            if ($filter instanceof RangeFilter) {
+                continue;
+            } 
 
             $attribute = new Attribute();
-
             $attribute->setTitle($filter->getName());
-            $attribute->setId($filter->getId());
+            $attribute->setId($filter->getName()); // since api changed
 
-            foreach ($filter->getOptions() as $option) {
+            foreach($filter->getOptions() as $option) {
                 $attribute->addValue($option->getName());
+
+                if($option->isActive()){
+                    $attribute->setActiveValue($option->getName());
+                }
+
             }
 
-            
+            if($filter->getOptions()){
+                $sxAvailableFilters->add($attribute); 
+            }
 
-            $sxAvailableFilters->add($attribute);
         }
         $oArtList->setAvailableFilters($sxAvailableFilters);
 
@@ -187,11 +208,7 @@ class Search extends Search_parent
         foreach($this->_sxSearchResponse->getAvailableSortingOptions() as $option){
             $sxAvailableSortingOptions[$option->getKey()] = $this->_sxHelper->encodeSortOption($option);
         }
-
-        /// todo: remove... just for testing!!!!!!!!!!!!!!!!!!!!!
-        if(empty($sxAvailableSortingOptions)){
-            $sxAvailableSortingOptions = [11 => 'sxoption_11_FAKE-Test', 22 => 'sxoption_22_FAKE-Name'];
-        }
+        
 
         $oArtList->setAvailableSortingOptions($sxAvailableSortingOptions);
 

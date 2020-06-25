@@ -18,6 +18,12 @@ class SxQueue {
         $this->set($this->_queue);
     }
 
+    /**
+     * set current queue 
+     * 
+     * @param string $queue delete|update
+     * @return void 
+     */
     public function set($queue = 'update')
     {
         $this->_queue = $queue;
@@ -29,8 +35,13 @@ class SxQueue {
         }
     }
 
-
-    public function addArticle($articleId)
+    /**
+     * add article to queue
+     * 
+     * @param mixed $articleIds int|array
+     * @return void 
+     */
+    public function addArticle($articleIds)
     {
         $path = $this->_queuePath;
 
@@ -38,18 +49,57 @@ class SxQueue {
             mkdir($path, 0777, true);
         }
 
-        touch($path . $articleId);
-    }
+        if(!is_array($articleIds)) $articleIds = [$articleIds];
 
-    public function removeArticle($articleId)
-    {
-        $path = $this->_queuePath;
-
-        if (file_exists($path . $articleId)) {
-            unlink($path . $articleId);
+        foreach($articleIds as $articleId){
+            touch($path . $articleId);
         }
     }
 
+    /**
+     * get articles from queue
+     * 
+     * @param int $qty 
+     * @return array 
+     */
+    public function getArticles($qty = 20)
+    {
+        $path = $this->_queuePath;
+
+        if (!file_exists($path)) {
+            return [];
+        }
+
+        $articleIds = array_diff(scandir($path), array('..', '.'));
+
+        return array_slice($articleIds, 0, $qty);
+    }
+
+    /**
+     * remove articles from queue
+     * 
+     * @param mixed $articleIds  int|array
+     * @return void 
+     */
+    public function removeArticle($articleIds)
+    {
+        $path = $this->_queuePath;
+
+        if (!is_array($articleIds)) $articleIds = [$articleIds];
+
+        foreach ($articleIds as $articleId) {
+            if (file_exists($path . $articleId)) {
+                unlink($path . $articleId);
+            }
+        }
+
+    }
+
+    /**
+     * empty queue
+     * 
+     * @return void 
+     */
     public function empty()
     {
         $path = $this->_queuePath;
