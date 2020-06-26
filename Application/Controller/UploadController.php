@@ -20,13 +20,15 @@ class UploadController
     /**
      * Class constructor. 
      */
-    public function __construct()
+    public function __construct($configValues = [])
     {
         $this->_oxRegistry = new Registry;
         $this->_oxConfig = $this->_oxRegistry->getConfig();
         $this->_oxLang = $this->_oxRegistry->getLang();
 
         $this->_sxHelper = new SxHelper;    
+
+        $this->setConfig($configValues);
     }
 
 

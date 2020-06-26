@@ -58,11 +58,12 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
         foreach ($sxShopConfigs as $key => $shopConfig) {
 
             if ($this->_currentHour == $shopConfig['cronjobHour'] && $this->_currentMinute == $shopConfig['cronjobMinute']) {
-                $sxUpload->setConfig($shopConfig);
+                $sxUpload = new UploadController($shopConfig);
+
+                if($sxUpload->isRunning()) continue;
+
                 $sxUpload->startFullUpload();
-
                 unset($sxShopConfigs[$key]); // not directly continue;
-
                 $initialUploadStarted = true;
             }
         }
@@ -82,7 +83,7 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
         // >>> check if !!!COLLECTING!!! needs to be continued (always just one job per cronrun!)
         foreach ($sxShopConfigs as $shopConfig) {
 
-            $sxUpload->setConfig($shopConfig);
+            $sxUpload = new UploadController($shopConfig);
 
             if($sxUpload->isRunning() && !$sxUpload->isReadyToUpload()){ // !!!COLLECTING!!!
                 $sxUpload->continueFullUpload();
@@ -98,7 +99,7 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
         if(!$initialUploadCollectingRunning){
             foreach ($sxShopConfigs as $shopConfig) {
 
-                $sxUpload->setConfig($shopConfig);
+                $sxUpload = new UploadController($shopConfig);
 
                 if ($sxUpload->isRunning() && $sxUpload->isReadyToUpload() && !$sxUpload->isReadyToFinalize()) { // !!!UPLOADING!!!
                     $sxUpload->continueFullUpload();
@@ -118,7 +119,7 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
 
             foreach ($sxShopConfigs as $shopConfig) {
 
-                $sxUpload->setConfig($shopConfig);
+                $sxUpload = new UploadController($shopConfig);
 
                 if ($sxUpload->isRunning() && $sxUpload->isReadyToUpload() && $sxUpload->isReadyToFinalize()) { // !!!FINALIZE UPLOADING!!!
                     $sxUpload->finalizeFullUpload($signalSent);
@@ -137,7 +138,7 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
             if( $oxArticleIds = $sxQueue->getArticles(10)){
                 
                 foreach ($sxShopConfigs as $shopConfig) {
-                    $sxUpload->setConfig($shopConfig);
+                    $sxUpload = new UploadController($shopConfig);
                     $sxUpload->addArticleUpdates($oxArticleIds);
                 }
 
@@ -145,7 +146,7 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
             }
 
             foreach ($sxShopConfigs as $shopConfig) {
-                $sxUpload->setConfig($shopConfig);
+                $sxUpload = new UploadController($shopConfig);
                 $sxUpload->sendUpdate();
             }          
 
