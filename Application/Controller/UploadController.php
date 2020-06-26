@@ -109,12 +109,20 @@ class UploadController
             // uploading
 
             // continue uploading...
-            if($this->_sxUploader->sendUploadBatch() <= 0){
-                $this->_sxUploader->finalizeUpload();
-            }
+            $this->_sxUploader->sendUploadBatch();
 
         }
 
+    }
+
+
+    /**
+     * finalize running product upload
+     * 
+     */
+    public function finalizeFullUpload($signalApi = true)
+    {
+        $this->_sxUploader->finalizeUpload($signalApi);
     }
 
 
@@ -138,6 +146,53 @@ class UploadController
     public function isRunning()
     {
         return $this->_sxUploader->isRunning();
+    }
+
+
+    /**
+     * collecting finished, ready to upload
+     * 
+     */
+    public function isReadyToUpload()
+    {
+        if($shopStatus = $this->getCurrentShopStatus()){
+            return $shopStatus->getPhase() == "UPLOADING" && $shopStatus->getCollectingProgress() >= 100;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * uploading finished, ready to finalize
+     * 
+     */
+    public function isReadyToFinalize()
+    {
+        if ($shopStatus = $this->getCurrentShopStatus()) {
+            return $shopStatus->getPhase() == "UPLOADING" && $shopStatus->getCollectingProgress() >= 100 && $shopStatus->getUploadingProgress() >= 100;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * get status of alle uploads
+     * 
+     */
+    public function getCurrentShopStatus()
+    {
+        $shopId = $this->_sxConfig->get('shopId');
+        $lang = $this->_sxConfig->get('lang');
+
+        $status = $this->getStatus();
+
+        if ($shopId && $lang && isset($status[$shopId . '-' . $lang])) {
+            return $status[$shopId . '-' . $lang];
+        } 
+
+        return false;
     }
 
 
@@ -223,6 +278,7 @@ class UploadController
 
         return $sxShopConfigs;
     }
+
 
     /**
      * get languages

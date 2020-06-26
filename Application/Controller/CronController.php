@@ -51,6 +51,8 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
 
         $initialUploadStarted = false;
         $initialUploadRunning = false;
+        $initialUploadCollectingRunning = false;
+        $initialUploadUploadingRunning = false;
 
         // check if Uploads needs to be startet
         foreach ($sxShopConfigs as $key => $shopConfig) {
@@ -76,17 +78,57 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
             $sxQueue->empty();
         } 
 
-        // check if Uploads needs to be continued (always just one job per cronrun!)
+        // [-1-] collecting for all shops
+        // >>> check if !!!COLLECTING!!! needs to be continued (always just one job per cronrun!)
         foreach ($sxShopConfigs as $shopConfig) {
 
             $sxUpload->setConfig($shopConfig);
-            
-            if($sxUpload->isRunning()){
+
+            if($sxUpload->isRunning() && !$sxUpload->isReadyToUpload()){ // !!!COLLECTING!!!
                 $sxUpload->continueFullUpload();
                 $initialUploadRunning = true;
+                $initialUploadCollectingRunning = true;
                 break; // (always just one job per cronrun!)
             }
 
+        }
+
+        // [-2-] uploading for all shops
+        // >>>> check if !!!UPLOADING!!! needs to be continued (always just one job per cronrun!)
+        if(!$initialUploadCollectingRunning){
+            foreach ($sxShopConfigs as $shopConfig) {
+
+                $sxUpload->setConfig($shopConfig);
+
+                if ($sxUpload->isRunning() && $sxUpload->isReadyToUpload() && !$sxUpload->isReadyToFinalize()) { // !!!UPLOADING!!!
+                    $sxUpload->continueFullUpload();
+                    $initialUploadRunning = true;
+                    $initialUploadUploadingRunning = true;
+                    break; // (always just one job per cronrun!)
+                }
+            }
+        }
+
+
+        // [-3-] finalizing for all shops !!!AT ONCE!!!
+        // >>> check if !!!FINALIZE UPLOADING!!! needs to be continued (always just one job per cronrun!)
+        if (!$initialUploadCollectingRunning && !$initialUploadUploadingRunning) {
+
+            $signalSent = true;
+
+            foreach ($sxShopConfigs as $shopConfig) {
+
+                $sxUpload->setConfig($shopConfig);
+
+                if ($sxUpload->isRunning() && $sxUpload->isReadyToUpload() && $sxUpload->isReadyToFinalize()) { // !!!FINALIZE UPLOADING!!!
+                    $sxUpload->finalizeFullUpload($signalSent);
+                    $initialUploadRunning = true;
+
+                    if(isset($shopConfig['userGroup'])){
+                        $signalSent = false;
+                    };
+                }
+            }
         }
 
         // do incremental updates
