@@ -1,0 +1,8 @@
+{
+    "projectId": "...",
+    "apiKey": "...",
+    "cronjobHour": "17",
+    "cronjobMinute": "54",
+    "collectBatchSize": "500",
+    "uploadBatchSize": "500"
+}
