@@ -60,4 +60,26 @@ class Article extends Article_parent
     }
 
 
+    public function getLinkedSubshops()
+    {
+        return array('test');
+        /*
+        $oxMapId = $this->
+        $offset = ($page < 1) ? 0 : (($page - 1) * $pageSize);
+
+        $sSelect = "SELECT * FROM oxarticles2shop WHERE oxactive = 1 AND oxhidden = 0";
+
+        if ($shopId) {
+            $sSelect .= " AND oxshopid = '$shopId'";
+        }
+
+        $sSelect .= " ORDER BY oxartnum LIMIT $pageSize";
+
+        if ($offset) $sSelect .= " OFFSET $offset";
+
+        $this->selectString($sSelect);
+        */
+    }
+
+
 }

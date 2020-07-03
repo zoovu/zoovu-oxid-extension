@@ -18,15 +18,21 @@ class ArticleList extends ArticleList_parent
      * @param int $pageSize number of articles to get per page
      * @param int $page nr page to get
      */
-    public function loadAllArticles($pageSize = 50, $page = 1)
+    public function loadAllArticles($pageSize = 50, $page = 1, $shopId = null)
     {
         $offset = ($page < 1) ? 0 : (($page - 1) * $pageSize);
 
-        $sSelect = "SELECT * FROM oxarticles ORDER BY oxartnum LIMIT $pageSize";
+        $sSelect = "SELECT * FROM oxarticles WHERE oxactive = 1 AND oxhidden = 0";
 
-        if($offset) $sSelect .= " OFFSET $offset";
+        if ($shopId) {
+            $sSelect .= " AND oxshopid = '$shopId'";
+        }
 
-        $this->selectString( $sSelect );
+        $sSelect .= " ORDER BY oxartnum LIMIT $pageSize";
+
+        if ($offset) $sSelect .= " OFFSET $offset";
+
+        $this->selectString($sSelect);
     }
 
 
@@ -34,13 +40,15 @@ class ArticleList extends ArticleList_parent
      * get quantity of all articles
      *
      */
-    public function getAllArticlesCount()
+    public function getAllArticlesCount($shopId = null)
     {
-        $sSelect = "SELECT * FROM oxarticles";
+        $sSelect = "SELECT COUNT(*) FROM oxarticles WHERE oxactive = 1 AND oxhidden = 0";
 
-        $this->selectString($sSelect);
+        if($shopId){
+            $sSelect .= " AND oxshopid = '$shopId' ";
+        }
 
-        return $this->count();
+        return \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->getOne($sSelect);
     }
 
     /**

@@ -46,8 +46,18 @@ class ArticleTransformer extends AbstractProductTransformer
 
         $sxArticle['images'] = $this->_getImages();
 
-        $userGroup = isset($transformerArgs['userGroup']) ? $transformerArgs['userGroup'] : null;
-        $sxArticle['attributes'] = $this->_getAttributes($userGroup);
+        $userGroups = isset($transformerArgs['userGroup']) ? $transformerArgs['userGroup'] : array();
+        $userGroups = !is_array($userGroups) ? [$userGroups] : $userGroups;
+
+        $userGroups = array_merge($oxArticle->getLinkedSubshops());
+        
+        $sxArticle['attributes'] = $this->_getAttributes($userGroups);
+
+        if($userGroups){
+            $sxArticle['settings'] = [
+                'includeUserGroups' => $userGroups,
+            ];
+        }
 
         return $sxArticle;
 
@@ -132,7 +142,7 @@ class ArticleTransformer extends AbstractProductTransformer
     /**
      * gert attributes of product
      */
-    protected function _getAttributes($userGroup = null)
+    protected function _getAttributes($userGroups = array())
     {
         $oxRegistry = new Registry;
         $oxLanguage = $oxRegistry->getLang();
@@ -215,9 +225,9 @@ class ArticleTransformer extends AbstractProductTransformer
     
         }
 
-        if($userGroup){
+        if($userGroups){
             foreach($attributes as &$attribute){
-                $attribute['userGroups'] = [ $userGroup ];
+                $attribute['userGroups'] = $userGroups;
             }
         }
         

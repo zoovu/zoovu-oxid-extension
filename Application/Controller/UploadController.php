@@ -54,13 +54,14 @@ class UploadController
      */
     public function startFullUpload()
     {
+        $shopId = $this->_sxConfig->get('shopId') ? $this->_sxConfig->get('shopId') : null;
+
         $oxArticleList = new ArticleList;
-        $oxArticleQty = $oxArticleList->getAllArticlesCount();
+        $oxArticleQty = $oxArticleList->getAllArticlesCount($shopId);
 
         $this->_sxUploader->startCollecting([
             'expectedNumberOfProducts' => $oxArticleQty
         ]);
-
     }
 
 
@@ -71,7 +72,7 @@ class UploadController
     public function continueFullUpload()
     {
 
-        if($this->_sxUploader->isCollecting()){
+        if ($this->_sxUploader->isCollecting()) {
             // collecting
 
             $sxLang = $this->_sxConfig->get('lang');
@@ -79,7 +80,8 @@ class UploadController
             $sxCollectBatchSize = $this->_sxConfig->get('collectBatchSize');
 
             // set Store
-            $this->_oxConfig->setShopId($this->_sxConfig->get('shopId'));
+            $shopId = $this->_sxConfig->get('shopId');
+            $this->_oxConfig->setShopId($shopId);
             $this->_oxConfig->reinitialize(); // empty cache
 
             // set Language
@@ -90,11 +92,11 @@ class UploadController
             $page = ((int) $this->_sxUploader->getNumberOfCollected() / $pageSize) + 1;
 
             $oxArticleList = new ArticleList;
-            $oxArticleList->loadAllArticles($pageSize, $page);
+            $oxArticleList->loadAllArticles($pageSize, $page, $shopId);
 
             // check if groupId is set
             $transformerArgs = [];
-            if($userGroup = $this->_sxConfig->get('userGroup')){
+            if ($userGroup = $this->_sxConfig->get('userGroup')) {
                 $transformerArgs['userGroup'] = (string) $userGroup;
             }
 
@@ -103,18 +105,15 @@ class UploadController
             }
 
             // if ready, start uploading
-            if(count($oxArticleList) < $pageSize){
+            if (count($oxArticleList) < $pageSize) {
                 $this->_sxUploader->startUploading();
             }
-
         } else {
             // uploading
 
             // continue uploading...
             $this->_sxUploader->sendUploadBatch();
-
         }
-
     }
 
 
