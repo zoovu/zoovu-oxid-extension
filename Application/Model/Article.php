@@ -38,16 +38,15 @@ class Article extends Article_parent
             }
         }
 
-        if(!isset($articleId)) return;
+        if (!isset($articleId)) return;
 
         $sxQueue = new SxQueue();
-        if($action == ACTION_DELETE){
+        if ($action == ACTION_DELETE) {
             $sxQueue->set('delete');
             $sxQueue->addArticle($articleId);
 
             $sxQueue->set('update');
             $sxQueue->removeArticle($articleId);
-
         } else {
             $sxQueue->set('update');
             $sxQueue->addArticle($articleId);
@@ -55,31 +54,25 @@ class Article extends Article_parent
             $sxQueue->set('delete');
             $sxQueue->removeArticle($articleId);
         }
-
-
     }
 
 
-    public function getLinkedSubshops()
+    public function getLinkedSubshops($lang = null)
     {
-        return array('test');
-        /*
-        $oxMapId = $this->
-        $offset = ($page < 1) ? 0 : (($page - 1) * $pageSize);
+        $subShopIds = [];
+        $lang = $lang ? '-' . $lang : '';
 
-        $sSelect = "SELECT * FROM oxarticles2shop WHERE oxactive = 1 AND oxhidden = 0";
+        // articlaMapId
+        $articleMapId = (string) $this->oxarticles__oxmapid;
+        if (!$articleMapId) return $subShopIds;
 
-        if ($shopId) {
-            $sSelect .= " AND oxshopid = '$shopId'";
+        $sSelect = "SELECT oxshopid FROM oxarticles2shop WHERE oxmapobjectid = $articleMapId";
+
+        $result = \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->select($sSelect);
+        foreach ($result->fetchAll() as $row) {
+            $subShopIds[] = $row[0] . $lang;
         }
 
-        $sSelect .= " ORDER BY oxartnum LIMIT $pageSize";
-
-        if ($offset) $sSelect .= " OFFSET $offset";
-
-        $this->selectString($sSelect);
-        */
+        return $subShopIds;
     }
-
-
 }

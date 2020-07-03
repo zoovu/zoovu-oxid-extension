@@ -22,7 +22,7 @@ class ArticleTransformer extends AbstractProductTransformer
     public function __construct(Article $oxProduct)
     {
         $this->_product = $oxProduct;
-    }   
+    }
 
 
     /**
@@ -49,18 +49,18 @@ class ArticleTransformer extends AbstractProductTransformer
         $userGroups = isset($transformerArgs['userGroup']) ? $transformerArgs['userGroup'] : array();
         $userGroups = !is_array($userGroups) ? [$userGroups] : $userGroups;
 
-        $userGroups = array_merge($oxArticle->getLinkedSubshops());
-        
+        $lang = isset($transformerArgs['lang']) ? $transformerArgs['lang'] : null;
+        $userGroups = array_merge($oxArticle->getLinkedSubshops($lang));
+
         $sxArticle['attributes'] = $this->_getAttributes($userGroups);
 
-        if($userGroups){
+        if ($userGroups) {
             $sxArticle['settings'] = [
                 'includeUserGroups' => $userGroups,
             ];
         }
 
         return $sxArticle;
-
     }
 
     /**
@@ -79,17 +79,17 @@ class ArticleTransformer extends AbstractProductTransformer
 
         $categorieIds = $oxArticle->getCategoryIds();
 
-        foreach($categorieIds as $oxid){
+        foreach ($categorieIds as $oxid) {
 
             $oxCategoryList->buildTree($oxid);
             $path = array();
 
-            foreach($oxCategoryList->getPath() as $oxCategory){
+            foreach ($oxCategoryList->getPath() as $oxCategory) {
                 $title = $oxCategory->getTitle();
                 $path[] = $title;
-            } 
+            }
 
-            if(empty($path)) continue;
+            if (empty($path)) continue;
 
             $categories[] = [
                 'path' => $path,
@@ -97,7 +97,6 @@ class ArticleTransformer extends AbstractProductTransformer
         }
 
         return $categories;
-
     }
 
     /**
@@ -109,8 +108,8 @@ class ArticleTransformer extends AbstractProductTransformer
         $sxImages = $oxArticle->getPictureGallery();
         $images = array();
 
-        if(isset($sxImages['Pics'])){
-            foreach($sxImages['Pics'] as $image){
+        if (isset($sxImages['Pics'])) {
+            foreach ($sxImages['Pics'] as $image) {
                 $images[] = [
                     'url' => $image,
                     'type' => 'SMALL'
@@ -211,27 +210,25 @@ class ArticleTransformer extends AbstractProductTransformer
         // quantity ... kg/euro
         $attributes[] = [
             'key' => $oxLanguage->translateString('QUANTITY'),
-            'value' => $oxArticle->oxarticles__oxunitquantity->value 
+            'value' => $oxArticle->oxarticles__oxunitquantity->value
         ];
 
         // oxid attributes
-        foreach($oxArticle->getAttributes() as $oxAttribute){
-           
+        foreach ($oxArticle->getAttributes() as $oxAttribute) {
+
             // todo: not working in other languages!
             $attributes[] = [
                 'key' => $oxAttribute->oxattribute__oxtitle->value,
                 'value' => $oxAttribute->oxattribute__oxvalue->value
-            ];            
-    
+            ];
         }
 
-        if($userGroups){
-            foreach($attributes as &$attribute){
+        if ($userGroups) {
+            foreach ($attributes as &$attribute) {
                 $attribute['userGroups'] = $userGroups;
             }
         }
-        
+
         return $attributes;
     }
-
 }

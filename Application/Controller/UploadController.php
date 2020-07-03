@@ -26,7 +26,7 @@ class UploadController
         $this->_oxConfig = $this->_oxRegistry->getConfig();
         $this->_oxLang = $this->_oxRegistry->getLang();
 
-        $this->_sxHelper = new SxHelper;    
+        $this->_sxHelper = new SxHelper;
 
         $this->setConfig($configValues);
     }
@@ -45,7 +45,6 @@ class UploadController
         $this->_sxCore = new SxCore($this->_sxConfig);
         $this->_sxUploader = $this->_sxCore->getInitialUploader();
         $this->_sxUpdater = $this->_sxCore->getProductUpdater();
-
     }
 
     /**
@@ -95,10 +94,13 @@ class UploadController
             $oxArticleList->loadAllArticles($pageSize, $page, $shopId);
 
             // check if groupId is set
-            $transformerArgs = [];
+            $transformerArgs = [
+                'lang' => $sxLang,
+            ];
             if ($userGroup = $this->_sxConfig->get('userGroup')) {
                 $transformerArgs['userGroup'] = (string) $userGroup;
             }
+
 
             foreach ($oxArticleList as $oxArticle) {
                 $this->_sxUploader->addProduct($oxArticle, $transformerArgs);
@@ -133,10 +135,9 @@ class UploadController
      */
     public function stopFullUpload()
     {
-        if($this->isRunning()){
+        if ($this->isRunning()) {
             $this->_sxUploader->abort();
         }
-
     }
 
 
@@ -156,7 +157,7 @@ class UploadController
      */
     public function isReadyToUpload()
     {
-        if($shopStatus = $this->getCurrentShopStatus()){
+        if ($shopStatus = $this->getCurrentShopStatus()) {
             return $shopStatus->getPhase() == "UPLOADING" && $shopStatus->getCollectingProgress() >= 100;
         }
 
@@ -191,7 +192,7 @@ class UploadController
 
         if ($shopId && $lang && isset($status[$shopId . '-' . $lang])) {
             return $status[$shopId . '-' . $lang];
-        } 
+        }
 
         return false;
     }
@@ -261,7 +262,7 @@ class UploadController
                     'uploadBatchSize' => (int) $this->_sxHelper->get('sxUploadBatchSize'),
                     'requestTimeout' => (int) $this->_sxHelper->get('sxRequestTimeout'),
 
-                    'storeIdentifier' => $shopId.'-'. $lang,
+                    'storeIdentifier' => $shopId . '-' . $lang,
                 ];
 
                 $currentShopConfig = $this->_sxHelper->getMasterConfig($currentShopConfig);
@@ -324,7 +325,6 @@ class UploadController
         foreach ($oxArticleList as $oxArticle) {
             $this->_sxUpdater->addProduct($oxArticle, $transformerArgs);
         }
-
     }
 
 
@@ -336,14 +336,11 @@ class UploadController
     {
         $productsSent = $this->_sxUpdater->sendUploadBatch();
 
-        if($productsSent){
+        if ($productsSent) {
             $logger = $this->_oxRegistry->getLogger();
             $logger->debug($productsSent . ' products sent to SEMKNOX.', [__CLASS__, __FUNCTION__]);
         }
 
         return $productsSent;
-
     }
-
-
 }
