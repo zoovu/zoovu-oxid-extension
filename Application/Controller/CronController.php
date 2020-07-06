@@ -45,6 +45,7 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
      */
     protected function _cronRunner()
     {
+        $startTime = time();
         $sxQueue = new SxQueue();
         $sxUpload = new UploadController([]);
         $sxShopConfigs = $sxUpload->getShopConfigs();
@@ -152,7 +153,7 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
 
         }
 
-        $this->sxResponse = ['status' => 'success'];
+        $this->sxResponse = ['status' => 'success','duration' => time()-$startTime];
 
     }
 

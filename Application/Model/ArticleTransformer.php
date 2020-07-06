@@ -42,15 +42,17 @@ class ArticleTransformer extends AbstractProductTransformer
 
         $sxArticle['productUrl'] = $oxArticle->getLink();
 
-        $sxArticle['categories'] = $this->_getCategories();
-
+        if(!isset($transformerArgs['disableCategories'])){
+            $sxArticle['categories'] = $this->_getCategories();
+        }
+        
         $sxArticle['images'] = $this->_getImages();
 
         $userGroups = isset($transformerArgs['userGroup']) ? $transformerArgs['userGroup'] : array();
         $userGroups = !is_array($userGroups) ? [$userGroups] : $userGroups;
 
         $lang = isset($transformerArgs['lang']) ? $transformerArgs['lang'] : null;
-        $userGroups = array_merge($oxArticle->getLinkedSubshops($lang));
+        $userGroups = array_merge($userGroups, $oxArticle->getLinkedSubshops($lang));
 
         $sxArticle['attributes'] = $this->_getAttributes($userGroups);
 

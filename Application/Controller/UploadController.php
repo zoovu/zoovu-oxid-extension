@@ -58,9 +58,11 @@ class UploadController
         $oxArticleList = new ArticleList;
         $oxArticleQty = $oxArticleList->getAllArticlesCount($shopId);
 
-        $this->_sxUploader->startCollecting([
-            'expectedNumberOfProducts' => $oxArticleQty
-        ]);
+        if($oxArticleQty){
+            $this->_sxUploader->startCollecting([
+                'expectedNumberOfProducts' => $oxArticleQty
+            ]);
+        }
     }
 
 
@@ -99,6 +101,9 @@ class UploadController
             ];
             if ($userGroup = $this->_sxConfig->get('userGroup')) {
                 $transformerArgs['userGroup'] = (string) $userGroup;
+            }
+            if ($this->_sxConfig->get('disableCategories', false)) {
+                $transformerArgs['disableCategories'] = true;
             }
 
 
