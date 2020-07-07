@@ -8,7 +8,7 @@ use OxidEsales\Eshop\Core\Registry;
 
 class SxHelper {
 
-    protected $_sxFolder = "log/semknox/";
+    protected $_sxFolder = "export/semknox/";
 
     protected $_sxUploadBatchSize = 200;
     protected $_sxCollectBatchSize = 100;
@@ -18,22 +18,23 @@ class SxHelper {
     protected $_sxApiUrl = "https://api-v3.semknox.com/";
 
     protected $_sxMasterConfig = false;
-    protected $_sxMasterConfigPath = "semknox/masterConfig.json";
+    protected $_sxMasterConfigPath = "masterConfig.json";
 
-    protected $_sxDeleteQueuePath = "semknox/delete-queue/";
-    protected $_sxUpdateQueuePath = "semknox/update-queue/";
+    protected $_sxDeleteQueuePath = "delete-queue/";
+    protected $_sxUpdateQueuePath = "update-queue/";
 
 
     public function __construct()
     {
-        $logsDir = Registry::getConfig()->getLogsDir();
+        $workingDir = Registry::getConfig()->getLogsDir().'../'. $this->_sxFolder;
 
         //$this->_sxFolder = $logsDir . $this->_sxFolder;
 
-        $this->_sxMasterConfigPath = $logsDir . $this->_sxMasterConfigPath;
+        $this->_sxMasterConfigPath = $workingDir . $this->_sxMasterConfigPath;
 
-        $this->_sxDeleteQueuePath = $logsDir . $this->_sxDeleteQueuePath;
-        $this->_sxUpdateQueuePath = $logsDir . $this->_sxUpdateQueuePath;
+        $this->_sxDeleteQueuePath = $workingDir . $this->_sxDeleteQueuePath;
+        $this->_sxUpdateQueuePath = $workingDir . $this->_sxUpdateQueuePath;
+
     }
 
 
