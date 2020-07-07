@@ -73,6 +73,7 @@ class UploadController
     public function continueFullUpload()
     {
 
+        
         if ($this->_sxUploader->isCollecting()) {
             // collecting
 
@@ -113,7 +114,12 @@ class UploadController
 
             // if ready, start uploading
             if (count($oxArticleList) < $pageSize) {
-                $this->_sxUploader->startUploading();
+                $response = $this->_sxUploader->startUploading();
+
+                if($response['status'] !== 'success'){
+                    $logger = $this->_oxRegistry->getLogger();
+                    $logger->error($response['message'], [__CLASS__, __FUNCTION__]);
+                }
             }
         } else {
             // uploading
@@ -130,7 +136,12 @@ class UploadController
      */
     public function finalizeFullUpload($signalApi = true)
     {
-        $this->_sxUploader->finalizeUpload($signalApi);
+        $response = $this->_sxUploader->finalizeUpload($signalApi);
+
+        if ($response['status'] !== 'success') {
+            $logger = $this->_oxRegistry->getLogger();
+            $logger->error($response['message'], [__CLASS__, __FUNCTION__]);
+        }
     }
 
 

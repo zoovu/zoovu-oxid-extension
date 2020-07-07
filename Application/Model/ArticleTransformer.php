@@ -42,9 +42,15 @@ class ArticleTransformer extends AbstractProductTransformer
 
         $sxArticle['productUrl'] = $oxArticle->getLink();
 
+        $categories = [
+            [
+                'path' => ['unknown']
+            ]
+        ];
         if(!isset($transformerArgs['disableCategories'])){
-            $sxArticle['categories'] = $this->_getCategories();
+           $categories = $this->_getCategories();
         }
+        $sxArticle['categories'] = $categories;
         
         $sxArticle['images'] = $this->_getImages();
 
