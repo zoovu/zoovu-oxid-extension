@@ -8,7 +8,7 @@ use OxidEsales\Eshop\Application\Model\CategoryList;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Registry;
-
+use OxidEsales\Eshop\Application\Model\Category;
 use Semknox\Core\Transformer\AbstractProductTransformer;
 
 class ArticleTransformer extends AbstractProductTransformer
@@ -71,6 +71,7 @@ class ArticleTransformer extends AbstractProductTransformer
         return $sxArticle;
     }
 
+
     /**
      * get categories of product
      * 
@@ -80,6 +81,43 @@ class ArticleTransformer extends AbstractProductTransformer
      * @throws InvalidArgumentException 
      */
     protected function _getCategories()
+    {
+        $oxArticle = $this->_product;
+
+        $categories = [];
+
+        foreach($oxArticle->getCategoryIds() as $oxCategoryId){
+
+            $oxCategory = new Category;
+            $oxCategory->load($oxCategoryId);
+            if(!$oxCategory) continue;
+
+            $categoryPath = [];
+
+            while($oxCategory){
+                $categoryPath[] = $oxCategory->getTitle();
+                $oxCategory = $oxCategory->getParentCategory();
+            }
+
+            $categories[] = [
+                'path' => array_reverse($categoryPath)
+            ];
+            
+        }
+
+        return $categories;
+    }
+
+
+    /**
+     * get categories of product
+     * 
+     * @return array 
+     * @throws DatabaseConnectionException 
+     * @throws DatabaseErrorException 
+     * @throws InvalidArgumentException 
+     */
+    protected function _getCategoriesSlow()
     {
         $oxArticle = $this->_product;
         $oxCategoryList = new CategoryList;
