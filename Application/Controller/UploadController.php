@@ -118,14 +118,20 @@ class UploadController
 
                 if($response['status'] !== 'success'){
                     $logger = $this->_oxRegistry->getLogger();
-                    $logger->error($response['message'], [__CLASS__, __FUNCTION__]);
+                    $logger->error($response['satus'].': '.$response['message'], [__CLASS__, __FUNCTION__]);
                 }
             }
+
         } else {
             // uploading
 
             // continue uploading...
-            $this->_sxUploader->sendUploadBatch();
+            $response = $this->_sxUploader->sendUploadBatch();
+
+            if($response === false){
+                $logger = $this->_oxRegistry->getLogger();
+                $logger->error('Failure in upload batch', [__CLASS__, __FUNCTION__]);
+            }
         }
     }
 

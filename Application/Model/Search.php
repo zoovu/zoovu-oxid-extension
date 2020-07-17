@@ -19,7 +19,7 @@ class Search extends Search_parent
 {
     private $_sxCore, $_sxConfigValues, $_sxConfig, $_sxSearch, $_sxSearchResponse, $_sxHelper;
 
-    private $_oxAbbrLanguage;
+    private $_oxAbbrLanguage, $_oxRegistry;
 
 
     /**
@@ -38,6 +38,8 @@ class Search extends Search_parent
         $this->_sxCore = new SxCore($this->_sxConfig);
 
         $this->_sxSearch = $this->_sxCore->getSearch();
+
+        $this->_oxRegistry = new Registry();
     }
 
     /**
@@ -154,6 +156,10 @@ class Search extends Search_parent
         } catch(Exception $e){
             // fallback
             $this->_sxConfigValues = null;
+
+            $logger = $this->_oxRegistry->getLogger();
+            $logger->error($e->getMessage(), [__CLASS__, __FUNCTION__]);
+
             return parent::getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer, $sSortBy);
         }
 

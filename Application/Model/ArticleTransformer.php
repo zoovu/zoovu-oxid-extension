@@ -47,7 +47,7 @@ class ArticleTransformer extends AbstractProductTransformer
                 'path' => ['unknown']
             ]
         ];
-        if(!isset($transformerArgs['disableCategories'])){
+        if(!isset($transformerArgs['disableCategories']) || !$transformerArgs['disableCategories']){
            $categories = $this->_getCategories();
         }
         $sxArticle['categories'] = $categories;
@@ -275,6 +275,19 @@ class ArticleTransformer extends AbstractProductTransformer
             }
         }
 
-        return $attributes;
+        // recheck if every attribute has a key
+        foreach($attributes as $key => $value){
+            if(!$value['key'] || !strlen(trim($value['key']))){
+                unset($attributes[$key]);
+                continue;
+            }
+
+            if (!$value['value'] || !strlen(trim($value['value']))) {
+                unset($attributes[$key]);
+                continue;
+            }
+        }
+
+        return array_values($attributes); // array values... because removing elements makes transforms array to assoziative array => error in validator
     }
 }
