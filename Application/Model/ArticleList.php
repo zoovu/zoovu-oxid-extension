@@ -35,6 +35,36 @@ class ArticleList extends ArticleList_parent
         $this->selectString($sSelect);
     }
 
+    /**
+     * Load the list by article ids
+     *
+     * @param array $aIds Article ID array
+     *
+     * @return null;
+     */
+    public function loadIdsByGivenOrder($aIds)
+    {
+        if (!count($aIds)) {
+            $this->clear();
+            return;
+        }
+
+        $oBaseObject = $this->getBaseObject();
+        $sArticleTable = $oBaseObject->getViewName();
+        $sArticleFields = $oBaseObject->getSelectFields();
+
+        $oxIdsSql = implode(',', \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->quoteArray($aIds));
+
+        $sSelect = "select $sArticleFields from $sArticleTable ";
+        $sSelect .= "where $sArticleTable.oxid in ( " . $oxIdsSql . " ) and ";
+        $sSelect .= $oBaseObject->getSqlActiveSnippet();
+
+        $sSelect .= " order by FIELD(`oxid`,$oxIdsSql)";
+
+        $this->selectString($sSelect);
+    }
+
+
 
     /**
      * get quantity of all articles

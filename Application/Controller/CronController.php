@@ -139,6 +139,9 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
             if( $oxArticleIds = $sxQueue->getArticles(10)){
                 
                 foreach ($sxShopConfigs as $shopConfig) {
+
+                    if(!$shopConfig['sxIncrementalUpdatesActive']) continue;
+
                     $sxUpload = new UploadController($shopConfig);
                     $sxUpload->addArticleUpdates($oxArticleIds);
                 }
@@ -147,6 +150,9 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
             }
 
             foreach ($sxShopConfigs as $shopConfig) {
+
+                if(!$shopConfig['sxIncrementalUpdatesActive']) continue;
+
                 $sxUpload = new UploadController($shopConfig);
                 $sxUpload->sendUpdate();
             }          

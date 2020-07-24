@@ -38,7 +38,12 @@ class Article extends Article_parent
             }
         }
 
-        if (!isset($articleId)) return;
+        $sxHelper = new SxHelper();
+
+        $lang = \OxidEsales\Eshop\Core\Registry::getLang()->getLanguageAbbr($this->getLanguage());
+        $masterConfig = $sxHelper->getMasterConfig([], $lang);
+
+        if (!isset($articleId) || (isset($masterConfig['sxIncrementalUpdatesActive']) && !$masterConfig['sxIncrementalUpdatesActive'])) return;
 
         $sxQueue = new SxQueue();
         if ($action == ACTION_DELETE) {

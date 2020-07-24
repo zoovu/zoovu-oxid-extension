@@ -285,9 +285,15 @@ class UploadController
                     'requestTimeout' => (int) $this->_sxHelper->get('sxRequestTimeout'),
 
                     'storeIdentifier' => $shopId . '-' . $lang,
+
+                    // shopsystem settings
+                    'sxFrontendActive' => $this->_sxHelper->get('sxFrontendActive', true),
+                    'sxUploadActive' => $this->_sxHelper->get('sxUploadActive', true),
+                    'sxIncrementalUpdatesActive' => $this->_sxHelper->get('sxIncrementalUpdatesActive', true),
+                    'sxAnswerActive' => $this->_sxHelper->get('sxAnswerActive', true),
                 ];
 
-                $currentShopConfig = $this->_sxHelper->getMasterConfig($currentShopConfig);
+                $currentShopConfig = $this->_sxHelper->getMasterConfig($currentShopConfig, $lang);
 
                 // since its possible to set login data by masterConfig, this check has to be the last one
                 if ($currentShopConfig['projectId'] && $currentShopConfig['apiKey']) {

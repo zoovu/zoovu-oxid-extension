@@ -26,7 +26,7 @@ $aModule = [
         Your previous configuration <b>WONT</b> be lost during this process!
         <br/><br/>
         <b style="display: block; margin: 0 0 5px 0">Global configuration (<i>masterConfig.json</i>)</b>
-        Via the file <i>/log/semknox/masterConfig.json</i> module settings can be globally overwritten. The values set there apply to <b>ALL active shops and languages</b> (in which the module is activated). 
+        Via the file <i>/export/semknox/masterConfigLANGUAGE.json</i>, while LANGUAGE has to be replaced with the Language shortcut (e.g. <i>masterConfigEn.json</i>), module settings can be globally overwritten <b>per language</b>. The values set there apply to <b>ALL active shops and languages</b> (in which the module is activated). 
         If the values <i>apiKey</i> and <i>projectId</i> are set in this file, all records are synchronized with only one account at SEMKNOX. In this case, different values are realized via different <i>userGroups</i> (corresponds to the oxide <i>ShopIds</i>). The same applies to the search in the frontend.',
         'de' =>
         'Oxid Modul zur Integration und Verwendung der SEMKNOX Produktsuche.
@@ -44,7 +44,7 @@ $aModule = [
         Ihre bisherige Konfiguration geht bei diesem Vorgang <b>NICHT</b> verloren!
         <br/><br/>
         <b style="display: block; margin: 0 0 5px 0">Globale Konfiguration auf Dateiebene (<i>masterConfig.json</i>)</b>
-        Über die Datei <i>/log/semknox/masterConfig.json</i> können Moduleinstellungen global überschreiben. Die dort gesetzen Werte gelten für <b>ALLE aktiven Shops und Sprachen</b> (in denen das Modul aktiviert ist). 
+        Über die Datei <i>/export/semknox/masterConfigSPRACHE.json</i>, wobei SPRACHE mit dem Sprachkürzel der Sprache ersetzt werden muss (z.B. <i>masterConfigDe.json</i>), können Moduleinstellungen global <b>für jede Sprache</b> überschrieben werden. Die dort gesetzen Werte gelten für <b>ALLE aktiven Shops und Sprachen</b> (in denen das Modul aktiviert ist). 
         <br/>Werden in dieser Datei die Werte <i>apiKey</i> und <i>projectId</i> gesetzt, so werden die Datensätze mit nur einem einzigen Account bei SEMKNOX synchronisiert. Abweiche Werte werden in diesem Fall über verschieden <i>userGroups</i> (entspricht den Oxid <i>ShopIds</i>) realisiert. Gleiches gilt für die Suche im Frontend.'
     ],
     'thumbnail' => 'logo.png',
@@ -123,7 +123,7 @@ if(function_exists('oxNew')){
             'name' => 'sxFrontendActive' . $oxid,
             'type' => 'bool',
             'value' => 'false',
-            'position' => 1
+            'position' => 4
         );
 
         $settings[] = array(
@@ -131,7 +131,15 @@ if(function_exists('oxNew')){
             'name' => 'sxUploadActive' . $oxid,
             'type' => 'bool',
             'value' => 'false',
-            'position' => 1
+            'position' => 5
+        );
+
+        $settings[] = array(
+            'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
+            'name' => 'sxIncrementalUpdatesActive' . $oxid,
+            'type' => 'bool',
+            'value' => 'false',
+            'position' => 6
         );
 
         $settings[] = array(
@@ -139,7 +147,7 @@ if(function_exists('oxNew')){
             'name' => 'sxAnswerActive' . $oxid,
             'type' => 'bool',
             'value' => 'false',
-            'position' => 1
+            'position' => 7
         );
     }
 }

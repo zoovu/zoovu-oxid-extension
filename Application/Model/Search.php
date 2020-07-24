@@ -76,7 +76,7 @@ class Search extends Search_parent
                 'lang' => $this->_oxAbbrLanguage,
             ];
 
-            $sxConfigValues = $this->_sxHelper->getMasterConfig($sxConfigValues);
+            $sxConfigValues = $this->_sxHelper->getMasterConfig($sxConfigValues, $this->_oxAbbrLanguage);
 
             // since its possible to set login data by masterConfig, this check has to be the last one
             if($sxConfigValues['projectId'] && $sxConfigValues['apiKey']){
@@ -169,7 +169,7 @@ class Search extends Search_parent
             $oxArticleIds[] = $sxArticle->getId();
         }
 
-        $oArtList->loadIds($oxArticleIds);
+        $oArtList->loadIdsByGivenOrder($oxArticleIds);
 
         // set search interpretation text
         $sxAnswerActive = $this->getConfig()->getConfigParam('sxAnswerActive' . $this->_oxAbbrLanguage);

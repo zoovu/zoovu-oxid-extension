@@ -15,10 +15,10 @@ class SxHelper {
     protected $_sxRequestTimeout = 15;
 
     protected $_sxSandboxApiUrl = "https://stage-oxid-v3.semknox.com/";
-    protected $_sxApiUrl = "https://api-v3.semknox.com/";
+    protected $_sxApiUrl = "https://api-oxid-v3.semknox.com/";
 
     protected $_sxMasterConfig = false;
-    protected $_sxMasterConfigPath = "masterConfig.json";
+    protected $_sxMasterConfigPath = "masterConfig%s.json";
 
     protected $_sxDeleteQueuePath = "delete-queue/";
     protected $_sxUpdateQueuePath = "update-queue/";
@@ -50,7 +50,7 @@ class SxHelper {
     {
         // check if availalbe in config
         $oxRegistry = Registry::getConfig();
-        $value = $oxRegistry->getConfigParam($key);
+        $value = trim($oxRegistry->getConfigParam($key));
         if($value) return $value;
 
         // check preset values or take default
@@ -67,26 +67,27 @@ class SxHelper {
      * @param array $configValues 
      * @return array 
      */
-    public function getMasterConfig(array $configValues = [])
+    public function getMasterConfig(array $configValues = [], $lang = '')
     {
-        $masterConfigPath = $this->_sxMasterConfigPath;
+        $lang = ucfirst(strtolower($lang));
+        $masterConfigPath = sprintf($this->_sxMasterConfigPath, $lang);
 
         // performance
-        if(!is_array($this->_sxMasterConfig)){
+        if(!is_array($this->_sxMasterConfig[$lang])){
 
             if(file_exists($masterConfigPath) && $masterConfig = file_get_contents($masterConfigPath)){
                 $masterConfig = json_decode($masterConfig, true);
-                $this->_sxMasterConfig = $masterConfig;
+                $this->_sxMasterConfig[$lang] = $masterConfig;
             } else {
-                $this->_sxMasterConfig = [];
+                $this->_sxMasterConfig[$lang] = [];
             }
 
         } 
 
-        if($this->_sxMasterConfig && is_array($this->_sxMasterConfig))
+        if($this->_sxMasterConfig[$lang] && is_array($this->_sxMasterConfig[$lang]))
         {
 
-            $masterConfig = $this->_sxMasterConfig;
+            $masterConfig = $this->_sxMasterConfig[$lang];
             $configValues = array_merge($configValues, $masterConfig);
 
             if (isset($masterConfig['projectId']) && isset($masterConfig['apiKey']) && isset($configValues['shopId'])) {
