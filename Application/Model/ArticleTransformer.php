@@ -2,6 +2,7 @@
 
 namespace Semknox\Productsearch\Application\Model;
 
+use Codeception\Lib\Generator\Shared\Classname;
 use InvalidArgumentException;
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\CategoryList;
@@ -10,6 +11,7 @@ use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Application\Model\Category;
 use Semknox\Core\Transformer\AbstractProductTransformer;
+use OxidEsales\Eshop\Core\Field;
 
 class ArticleTransformer extends AbstractProductTransformer
 {
@@ -189,90 +191,118 @@ class ArticleTransformer extends AbstractProductTransformer
      */
     protected function _getAttributes($userGroups = array())
     {
+
         $oxRegistry = new Registry;
         $oxLanguage = $oxRegistry->getLang();
 
         $oxArticle = $this->_product;
         $attributes = array();
 
+        $lang = [
+            'OXUNITNAME' => $oxLanguage->translateString('OXUNITQUANTITY'),
+            'OXUNITQUANTITY' => $oxLanguage->translateString('QUANTITY'),
+        ];
+
+
+        foreach ($oxArticle as $key => $field) {
+
+            if (is_object($field) && $field instanceof Field) {
+                $translationKey = strtoupper(str_replace('oxarticles__', '', $key));
+                $translatedKey = isset($lang[$translationKey]) ? $lang[$translationKey] : $oxLanguage->translateString($translationKey);
+
+                if ($translationKey == $translatedKey) continue;
+
+                $attributes[$key] = [
+                    'key' => $translatedKey,
+                    'value' => isset($value[$translationKey]) ? $value[$translationKey] : (string) $field,
+                ];
+            } else {
+    
+                $attributes[$key] = [
+                    'key' => $key,
+                    'value' => (string) $field,
+                ];
+            }
+        }
+
         // description
-        $attributes[] = [
+        $attributes['oxarticles__oxlongdesc'] = [
             'key' => $oxLanguage->translateString('DESCRIPTION'),
             'value' => (string) $oxArticle->getLongDescription()
         ];
 
         // price
         $sxPrice = $oxArticle->getPrice();
-        $attributes[] = [
-            'key' => $oxLanguage->translateString('PRICE'),
+        $attributes['oxarticles__oxprice'] = [
+            'key' => $oxLanguage->translateString('OXPRICE'),
             'value' => $sxPrice->getPrice()
         ];
 
-        $attributes[] = [
-            'key' => $oxLanguage->translateString('SX_price_brutto'),
+        $attributes['oxarticles__oxbprice'] = [
+            'key' => $oxLanguage->translateString('OXBPRICE'),
             'value' => $sxPrice->getBruttoPrice()
         ];
 
-        $attributes[] = [
+        $attributes['oxarticles__oxnprice'] = [
             'key' => $oxLanguage->translateString('SX_price_netto'),
             'value' => $sxPrice->getNettoPrice()
         ];
 
-        $attributes[] = [
+        $attributes['oxarticles__oxvat'] = [
             'key' => $oxLanguage->translateString('SX_price_vat'),
             'value' => $sxPrice->getVat()
         ];
 
-        // weight
-        $attributes[] = [
-            'key' => $oxLanguage->translateString('WEIGHT'),
-            'value' => $oxArticle->getWeight()
-        ];
-
-        // width
-        $attributes[] = [
-            'key' => $oxLanguage->translateString('OXWIDTH'),
-            'value' => $oxArticle->oxarticles__oxwidth->value
-        ];
-
-        // height
-        $attributes[] = [
-            'key' => $oxLanguage->translateString('OXHEIGHT'),
-            'value' => $oxArticle->oxarticles__oxheight->value
-        ];
-
-        // length
-        $attributes[] = [
-            'key' => $oxLanguage->translateString('OXLENGTH'),
-            'value' => $oxArticle->oxarticles__oxlength->value
-        ];
-
-        // unitquantity ... kg/euro
-        $attributes[] = [
-            'key' => $oxLanguage->translateString('OXUNITQUANTITY'),
-            'value' => $oxArticle->oxarticles__oxunitname->value
-        ];
-
-        // quantity ... kg/euro
-        $attributes[] = [
-            'key' => $oxLanguage->translateString('QUANTITY'),
-            'value' => $oxArticle->oxarticles__oxunitquantity->value
-        ];
-
-        // oxid attributes
+        
+        // oxid attributes (Varianten artikel)
         foreach ($oxArticle->getAttributes() as $oxAttribute) {
 
+            $key = 'oxattribute_'.$oxAttribute->oxattribute__oxid;
+
             // todo: not working in other languages!
-            $attributes[] = [
+            $attributes[$key] = [
                 'key' => $oxAttribute->oxattribute__oxtitle->value,
                 'value' => $oxAttribute->oxattribute__oxvalue->value
             ];
         }
 
+        // get manufacturer
+        if ($manufacturer = $oxArticle->getManufacturer()) {
+            $attributes['oxarticles__oxmanufacturer'] = [
+                'key' => $oxLanguage->translateString('MANUFACTURER'),
+                'value' => $manufacturer->oxmanufacturers__oxtitle
+            ];
+        }
+
+        // get supplier / vendor
+        if ($vendor = $oxArticle->getVendor()) {
+            $attributes['oxarticles__oxvendor'] = [
+                'key' => $oxLanguage->translateString('VENDOR'),
+                'value' => $vendor->oxvendor__oxtitle
+            ];
+        }
+
+
         if ($userGroups) {
             foreach ($attributes as &$attribute) {
                 $attribute['userGroups'] = $userGroups;
             }
+        }
+
+
+        // check if parent value exists for empty fields
+        if($oxParentArticle = $oxArticle->getParentArticle()){
+
+            foreach ($attributes as $key => $attribute) {
+
+                // if value is not empty... do nothing
+                if($attribute['value'] && $attribute['value'] != '0000-00-00') continue;
+
+                $attribute['value'] = (string) $oxParentArticle->{$key} ? (string) $oxParentArticle->{$key} : $attribute['value'];
+
+                $attributes[$key] = $attribute;
+            }
+
         }
 
         // recheck if every attribute has a key
@@ -282,9 +312,23 @@ class ArticleTransformer extends AbstractProductTransformer
                 continue;
             }
 
-            if (!$value['value'] || !strlen(trim($value['value']))) {
+            if(in_array($value['value'],["0000-00-00 00:00:00", "0000-00-00"])) $value['value'] = null;
+
+            if ((!$value['value'] || !strlen(trim($value['value']))) && $value['value']  !== '0') {
                 unset($attributes[$key]);
                 continue;
+            }
+
+            $attributes[$key]['value'] = (string) $attributes[$key]['value']; // api expects always strings!!
+
+        }
+
+
+        // transform to boolean
+        $isBoolean = ['oxarticles__oxactive', 'oxarticles__oxhidden', 'oxarticles__oxremindactive', 'oxarticles__oxissearch', 'oxarticles__oxisconfigurable', 'oxarticles__oxnonmaterial', 'oxarticles__oxfreeshipping', 'oxarticles__oxblfixedprice', 'oxarticles__oxskipdiscounts', 'oxarticles__oxshowcustomagreement'];
+        foreach ($isBoolean as $key) {
+            if(isset($attributes[$key])){
+                $attributes[$key]['value'] = $attributes[$key]['value'] == 0 ? 'false' : 'true'; // api expects strings! boolval($attributes[$key]['value']);
             }
         }
 
