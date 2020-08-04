@@ -62,7 +62,7 @@ class ArticleTransformer extends AbstractProductTransformer
         $lang = isset($transformerArgs['lang']) ? $transformerArgs['lang'] : null;
         $userGroups = array_merge($userGroups, $oxArticle->getLinkedSubshops($lang));
 
-        $sxArticle['attributes'] = $this->_getAttributes($userGroups);
+        $sxArticle['attributes'] = $this->_getAttributes($userGroups, $transformerArgs);
 
         if ($userGroups) {
             $sxArticle['settings'] = [
@@ -189,7 +189,7 @@ class ArticleTransformer extends AbstractProductTransformer
     /**
      * gert attributes of product
      */
-    protected function _getAttributes($userGroups = array())
+    protected function _getAttributes($userGroups = array(), $transformerArgs = array())
     {
 
         $oxRegistry = new Registry;
@@ -337,6 +337,19 @@ class ArticleTransformer extends AbstractProductTransformer
         foreach($ignore as $key){
             if(isset($attributes[$key])) unset($attributes[$key]);
         }
+
+        // add currency
+        if(isset($transformerArgs['currency'])){
+            $addCurrency = ['oxarticles__oxprice', 'oxarticles__oxnprice', 'oxarticles__oxpricea', 'oxarticles__oxpriceb', 'oxarticles__oxpricec', 'oxarticles__oxbprice', 'oxarticles__oxtprice', 'oxarticles__oxvarminprice', 'oxarticles__oxvarmaxprice' ];
+            
+            foreach($addCurrency as $key){
+                if (isset($attributes[$key])) $attributes[$key]['value'] .= ' '. $transformerArgs['currency'];
+            }
+        }
+
+        echo '<pre>';
+        var_dump($attributes);
+        die;
 
         return array_values($attributes); // array values... because removing elements makes transforms array to assoziative array => error in validator
     }

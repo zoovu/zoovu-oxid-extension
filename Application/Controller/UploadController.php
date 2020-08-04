@@ -96,9 +96,21 @@ class UploadController
             $oxArticleList = new ArticleList;
             $oxArticleList->loadAllArticles($pageSize, $page, $shopId);
 
+            // get default currency 
+            $currencySymbol = '';
+            foreach($this->_oxConfig->getConfigParam('aCurrencies') as $currencyEntry){
+
+                $currency = explode('@', $currencyEntry);
+                if((int) trim($currency[1]) == 1){
+                    $currencySymbol = trim($currency[0]);
+                    break;
+                }
+            }
+
             // check if groupId is set
             $transformerArgs = [
                 'lang' => $sxLang,
+                'currency' => $currencySymbol
             ];
             if ($userGroup = $this->_sxConfig->get('userGroup')) {
                 $transformerArgs['userGroup'] = (string) $userGroup;
