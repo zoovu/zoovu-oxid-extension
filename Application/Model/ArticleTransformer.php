@@ -332,6 +332,12 @@ class ArticleTransformer extends AbstractProductTransformer
             }
         }
 
+        // ignore for semknox api (email 2020-08-04)
+        $ignore = ['oxarticles__oxactive', 'oxarticles__oxmanufacturerid', 'oxarticles__oxissearch', 'oxarticles__oxremindactive', 'oxarticles__oxremindamount', 'oxarticles__oxskipdiscounts'];
+        foreach($ignore as $key){
+            if(isset($attributes[$key])) unset($attributes[$key]);
+        }
+
         return array_values($attributes); // array values... because removing elements makes transforms array to assoziative array => error in validator
     }
 }
