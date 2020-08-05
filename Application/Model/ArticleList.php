@@ -120,6 +120,17 @@ class ArticleList extends ArticleList_parent
         $this->_sxAvailableFilters = $filters;
     }
 
+    /**
+     * set available range filters
+     * 
+     * @param string $content 
+     * @return void 
+     */
+    public function setAvailableRangeFilters($filters = array())
+    {
+        $this->_sxAvailableRangeFilters = $filters;
+    }
+
 
 
     /**
@@ -131,6 +142,20 @@ class ArticleList extends ArticleList_parent
     {
         if ($this->_sxAvailableFilters) {
             return $this->_sxAvailableFilters;
+        }
+
+        return array();
+    }
+
+    /**
+     * get available range filters
+     * 
+     * @return array 
+     */
+    public function getAvailableRangeFilters()
+    {
+        if ($this->_sxAvailableRangeFilters) {
+            return $this->_sxAvailableRangeFilters;
         }
 
         return array();

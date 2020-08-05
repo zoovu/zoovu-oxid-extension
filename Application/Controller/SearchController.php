@@ -86,6 +86,16 @@ class SearchController extends SearchController_parent
         return $this->_aArticleList->getAvailableFilters();
     }
 
+    /**
+     * get attributeList for filtering range attributes
+     * 
+     * @return mixed 
+     */
+    public function getRangeAttributes()
+    { 
+        return $this->_aArticleList->getAvailableRangeFilters();
+    }
+
 
 
     /**

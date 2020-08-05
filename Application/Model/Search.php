@@ -181,12 +181,8 @@ class Search extends Search_parent
 
         // set available filter
         $sxAvailableFilters = new AttributeList();
+        $sxAvailableRangeFilters = new AttributeList();
         foreach ($this->_sxSearchResponse->getAvailableFilters() as $filter) {
-
-            // oxid does not support range filter
-            if ($filter instanceof RangeFilter) {
-                continue;
-            } 
 
             $attribute = new Attribute();
             $attribute->setTitle($filter->getName());
@@ -201,12 +197,17 @@ class Search extends Search_parent
 
             }
 
-            if($filter->getOptions()){
+            if(!$filter->getOptions()) continue;
+                
+            if($filter->getType() == 'RANGE'){
+                $sxAvailableRangeFilters->add($attribute); 
+            } else {
                 $sxAvailableFilters->add($attribute); 
             }
 
         }
         $oArtList->setAvailableFilters($sxAvailableFilters);
+        $oArtList->setAvailableRangeFilters($sxAvailableRangeFilters);
 
 
         // set available sorting options
