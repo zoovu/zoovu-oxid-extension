@@ -61,6 +61,7 @@ class ArticleTransformer extends AbstractProductTransformer
 
         $lang = isset($transformerArgs['lang']) ? $transformerArgs['lang'] : null;
         $userGroups = array_merge($userGroups, $oxArticle->getLinkedSubshops($lang));
+        $userGroups = array_unique($userGroups);
 
         $sxArticle['attributes'] = $this->_getAttributes($userGroups, $transformerArgs);
 
@@ -252,7 +253,6 @@ class ArticleTransformer extends AbstractProductTransformer
             'key' => $oxLanguage->translateString('SX_price_vat'),
             'value' => $sxPrice->getVat()
         ];
-
         
         // oxid attributes (Varianten artikel)
         foreach ($oxArticle->getAttributes() as $oxAttribute) {
@@ -323,7 +323,6 @@ class ArticleTransformer extends AbstractProductTransformer
 
         }
 
-
         // transform to boolean
         $isBoolean = ['oxarticles__oxactive', 'oxarticles__oxhidden', 'oxarticles__oxremindactive', 'oxarticles__oxissearch', 'oxarticles__oxisconfigurable', 'oxarticles__oxnonmaterial', 'oxarticles__oxfreeshipping', 'oxarticles__oxblfixedprice', 'oxarticles__oxskipdiscounts', 'oxarticles__oxshowcustomagreement'];
         foreach ($isBoolean as $key) {
@@ -333,7 +332,7 @@ class ArticleTransformer extends AbstractProductTransformer
         }
 
         // ignore for semknox api (email 2020-08-04)
-        $ignore = ['oxarticles__oxactive', 'oxarticles__oxmanufacturerid', 'oxarticles__oxissearch', 'oxarticles__oxremindactive', 'oxarticles__oxremindamount', 'oxarticles__oxskipdiscounts'];
+        $ignore = ['oxarticles__oxvarminprice', 'oxarticles__oxactive', 'oxarticles__oxmanufacturerid', 'oxarticles__oxissearch', 'oxarticles__oxremindactive', 'oxarticles__oxremindamount', 'oxarticles__oxskipdiscounts'];
         foreach($ignore as $key){
             if(isset($attributes[$key])) unset($attributes[$key]);
         }
@@ -346,10 +345,6 @@ class ArticleTransformer extends AbstractProductTransformer
                 if (isset($attributes[$key])) $attributes[$key]['value'] .= ' '. $transformerArgs['currency'];
             }
         }
-
-        echo '<pre>';
-        var_dump($attributes);
-        die;
 
         return array_values($attributes); // array values... because removing elements makes transforms array to assoziative array => error in validator
     }
