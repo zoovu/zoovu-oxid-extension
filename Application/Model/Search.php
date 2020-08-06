@@ -88,6 +88,16 @@ class Search extends Search_parent
     }
 
     /**
+     * get Config values
+     * 
+     * @return void 
+     */
+    public function getSxConfigValues()
+    {
+        return $this->_sxConfigValues;
+    }
+
+    /**
      * Returns a list of articles according to search parameters. Returns matched
      *
      * @param string $sSearchParamForQuery       query parameter

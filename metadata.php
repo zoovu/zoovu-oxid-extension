@@ -61,6 +61,7 @@ $aModule = [
         \OxidEsales\Eshop\Application\Model\ArticleList::class => \Semknox\Productsearch\Application\Model\ArticleList::class,
         \OxidEsales\Eshop\Application\Model\Search::class => \Semknox\Productsearch\Application\Model\Search::class,
         \OxidEsales\Eshop\Application\Controller\SearchController::class => \Semknox\Productsearch\Application\Controller\SearchController::class,
+        \OxidEsales\Eshop\Core\ViewConfig::class => \Semknox\Productsearch\Core\ViewConfig::class,
         \OxidEsales\Eshop\Core\Language::class => \Semknox\Productsearch\Core\Language::class
     ],
     'templates' => [
@@ -92,6 +93,11 @@ $aModule = [
             'template' => 'widget/locator/attributes.tpl',
             'block' => 'widget_locator_attributes',
             'file' => 'Application/views/blocks/widget_locator_attributes.tpl'
+        ],
+        [
+            'template' => 'widget/header/search.tpl',
+            'block' => 'widget_header_search_form',
+            'file' => 'Application/views/blocks/widget_header_search_form.tpl'
         ]
     ]
 ];
