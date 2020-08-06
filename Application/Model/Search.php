@@ -193,6 +193,8 @@ class Search extends Search_parent
                 $minValue = $filter->getMin();
                 $maxValue = $filter->getMax();
 
+                if($minValue == $maxValue) continue;
+
                 $attribute->addValue($minValue.'___'. $maxValue);
 
                 $minValue = $filter->getActiveMin() ? $filter->getActiveMin() : $minValue;
