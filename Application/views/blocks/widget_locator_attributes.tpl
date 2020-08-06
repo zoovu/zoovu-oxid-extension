@@ -7,10 +7,8 @@
     <form method="post" action="[{$oViewConf->getSelfActionLink()}]" name="_filterlistSx" id="filterListSx">
     [{foreach from=$oView->getRangeAttributes() item=oFilterAttr key=sAttrID name=attr}]
         <div class="sxRangeFilter" id="attributeFilter[[{$sAttrID}]]">
-            <p>
-                <label>[{$oFilterAttr->getTitle()}]: </label>
-                <div class="slider" id="attributeFilter[[{$sAttrID}]]"></div>
-            </p>
+            <label>[{$oFilterAttr->getTitle()}]: </label>
+            <div class="slider" id="attributeFilter[[{$sAttrID}]]"></div>
             <script type="text/javascript">
                 [{foreach from=$oFilterAttr->getValues() item=sValue}]
                     [{assign var="valueRange" value="___"|explode:$sValue}]
