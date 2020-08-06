@@ -2,6 +2,7 @@
 
 <script type="text/javascript" src="[{$oViewConf->getModuleUrl('sxproductsearch','out/lib/nouislider/nouislider.min.js')}]"></script>
 <link rel="stylesheet" type="text/css" href="[{$oViewConf->getModuleUrl('sxproductsearch','out/lib/nouislider/nouislider.min.css')}]" />
+<link rel="stylesheet" type="text/css" href="[{$oViewConf->getModuleUrl('sxproductsearch','out/css/sxproductsearch.css')}]" />
 [{if $oView->getRangeAttributes()}]
     <form method="post" action="[{$oViewConf->getSelfActionLink()}]" name="_filterlistSx" id="filterListSx">
     <div class="listFilter js-fnSubmit clear">
@@ -29,13 +30,5 @@
             </div>
         [{/foreach}]
     </div>
-    <style>
-        .noUi-tooltip {
-            display: none;
-        }
-        .noUi-active .noUi-tooltip {
-            display: block;
-        }
-    </style>
     </form>
 [{/if}]
