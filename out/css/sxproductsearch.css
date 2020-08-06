@@ -16,8 +16,9 @@
     display: -webkit-inline-box;
     display: -ms-inline-flexbox;
     display: inline-flex;
-    padding: 10px;
-    margin: 0 0 10px 0;
+    height: 30px;
+    margin: 5px 0;
+    padding: 0 10px;
         -webkit-box-align: center;
             -ms-flex-align: center;
                 align-items: center;
@@ -38,9 +39,17 @@
 	-webkit-box-shadow: none;
 	        box-shadow: none;
 }
-.listRefine {
+.noUi-horizontal .noUi-handle {
+    height: 30px;
+    top: -7px;
+}
+.list-filter.clearfix {
+    padding-bottom: 15px;
 	border-bottom: 1px solid #eee;
 	margin-bottom: 40px;
+}
+.list-filter .btn {
+    margin: 5px 0;
 }
 .noUi-handle {
 	border-color: #ccc;

@@ -7,6 +7,6 @@ function sxRangeFilterAction(values, handle, unencoded, tap, positions, noUiSlid
     // positions: Left offset of the handles (array);
     // noUiSlider: slider public Api (noUiSlider);
 
-    document.getElementById(this.target.getAttribute('id') + '_input').value = values[0] + '___' + values[1];
+    document.getElementsByName("attrfilter[" + this.target.getAttribute('id') + "]")[0].value = values[0] + '___' + values[1];
     document.getElementById('filterList').submit();
 }

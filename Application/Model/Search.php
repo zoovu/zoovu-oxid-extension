@@ -137,6 +137,7 @@ class Search extends Search_parent
             } elseif(stripos($options, '___') > 0) {
                 // range filter
                 $options = explode('___', (string) $options);
+                $options = [$options[0], $options[1]];
             }
 
             $sxSearch->addFilter($filterId, $options);
@@ -199,16 +200,33 @@ class Search extends Search_parent
 
                 if($minValue == $maxValue) continue;
 
-                $attribute->addValue($minValue.'___'. $maxValue);
+                // find out what steps to take
+                $suffix = 'integer';
+                foreach ($filter->getOptions() as $option) {
+                    $value = $option->getName();
 
-                $minValue = $filter->getActiveMin() ? $filter->getActiveMin() : $minValue;
-                $maxValue = $filter->getActiveMax() ? $filter->getActiveMax() : $maxValue;
+                    if( (int) $value != $value){
+                        $suffix = 'float';
+                        break;
+                    }
+                }
+    
 
-                $attribute->setActiveValue($minValue . '___' . $maxValue);
+                // add one value to initialize slider
+                $attribute->addValue($minValue.'___'. $maxValue.'___'. $suffix);
+                $attribute->setActiveValue($filter->getActiveMin() . '___' . $filter->getActiveMax());
 
-                if (!$filter->getOptions()) continue;
+                $sxAvailableRangeFilters->add($attribute);
 
-                $sxAvailableRangeFilters->add($attribute); 
+                // add fake attribute for reset function
+                $attributeFake = new Attribute();
+                $attributeFake->setTitle($filter->getName());
+                $attributeFake->setId($filter->getName()); // since api changed
+                if($filter->getActiveMin() != $minValue || $filter->getActiveMax() != $maxValue){
+                    $attributeFake->addValue($minValue . '___' .$maxValue . '___' . $suffix);
+                    $attributeFake->setActiveValue($filter->getActiveMin() . '___' . $filter->getActiveMax());
+                }
+                $sxAvailableFilters->add($attributeFake);                
 
             } else {
 

@@ -11,7 +11,7 @@
     [{foreach from=$oView->getRangeAttributes() item=oFilterAttr key=sAttrID name=attr}]
         <div class="sxRangeFilter">
             <label>[{$oFilterAttr->getTitle()}]: </label>
-            <div class="slider" id="attrfilter[[{$sAttrID}]]"></div>
+            <div class="slider" id="[{$sAttrID}]"></div>
 
             [{foreach from=$oFilterAttr->getValues() item=sValue}]
                 [{assign var="valueRange" value="___"|explode:$sValue}]
@@ -19,7 +19,7 @@
             [{assign var="activeValueRange" value="___"|explode:$oFilterAttr->getActiveValue()}]
 
             <script type="text/javascript">
-                sxRangeFilter["[{$sAttrID}]"] = noUiSlider.create(document.getElementById("attrfilter[[{$sAttrID}]]"), {
+                sxRangeFilter["[{$sAttrID}]"] = noUiSlider.create(document.getElementById("[{$sAttrID}]"), {
                     start: [[{$activeValueRange[0]}], [{$activeValueRange[1]}]],
                     connect: true,
                     range: {
@@ -27,15 +27,14 @@
                         'max': [{$valueRange[1]}]
                     },
                     tooltips: true,
+                    [{if $valueRange[2] == 'integer'}]
+                        step: 1,
+                    [{/if}]
                 });
                 sxRangeFilter["[{$sAttrID}]"].on('end', sxRangeFilterAction);
-            </script>
 
-            [{if $valueRange[0] !== $activeValueRange[0] || $valueRange[1] !== $activeValueRange[1] }]
-                <input type="hidden" name="attrfilter[[{$sAttrID}]]" id="attrfilter[[{$sAttrID}]]_input" value="[{$activeValueRange[0]}]___[{$activeValueRange[1]}]">
-            [{else}]
-                <input type="hidden" name="attrfilter[[{$sAttrID}]]" id="attrfilter[[{$sAttrID}]]_input">
-            [{/if}]
+                document.getElementsByName("attrfilter[[{$sAttrID}]]")[0].parentNode.style.display = "none";
+            </script>
 
         </div>
     [{/foreach}]
