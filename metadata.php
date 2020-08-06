@@ -58,6 +58,7 @@ $aModule = [
     ],
     'extend' => [
         \OxidEsales\Eshop\Application\Model\Article::class => \Semknox\Productsearch\Application\Model\Article::class,
+        \OxidEsales\Eshop\Application\Model\Attribute::class => \Semknox\Productsearch\Application\Model\Attribute::class,
         \OxidEsales\Eshop\Application\Model\ArticleList::class => \Semknox\Productsearch\Application\Model\ArticleList::class,
         \OxidEsales\Eshop\Application\Model\Search::class => \Semknox\Productsearch\Application\Model\Search::class,
         \OxidEsales\Eshop\Application\Controller\SearchController::class => \Semknox\Productsearch\Application\Controller\SearchController::class,

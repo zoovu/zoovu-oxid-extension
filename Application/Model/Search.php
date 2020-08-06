@@ -188,23 +188,37 @@ class Search extends Search_parent
             $attribute->setTitle($filter->getName());
             $attribute->setId($filter->getName()); // since api changed
 
-            foreach($filter->getOptions() as $option) {
-                $attribute->addValue($option->getName());
+            if ($filter->getType() == 'RANGE') {
 
-                if($option->isActive()){
-                    $attribute->setActiveValue($option->getName());
+                $minValue = $filter->getMin();
+                $maxValue = $filter->getMax();
+
+                $attribute->addValue($minValue.'___'. $maxValue);
+
+                $minValue = $filter->getActiveMin() ? $filter->getActiveMin() : $minValue;
+                $maxValue = $filter->getActiveMax() ? $filter->getActiveMax() : $maxValue;
+
+                $attribute->setActiveValue($minValue . '___' . $maxValue);
+
+                if (!$filter->getOptions()) continue;
+
+                $sxAvailableRangeFilters->add($attribute); 
+
+            } else {
+
+                foreach ($filter->getOptions() as $option) {
+                    $attribute->addValue($option->getName());
+
+                    if ($option->isActive()) {
+                        $attribute->setActiveValue($option->getName());
+                    }
                 }
 
-            }
+                if (!$filter->getOptions()) continue;
 
-            if(!$filter->getOptions()) continue;
-                
-            if($filter->getType() == 'RANGE'){
-                $sxAvailableRangeFilters->add($attribute); 
-            } else {
                 $sxAvailableFilters->add($attribute); 
             }
-
+                
         }
         $oArtList->setAvailableFilters($sxAvailableFilters);
         $oArtList->setAvailableRangeFilters($sxAvailableRangeFilters);

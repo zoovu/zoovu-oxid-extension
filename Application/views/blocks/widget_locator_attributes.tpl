@@ -12,26 +12,30 @@
                     <div class="slider" id="attributeRangeFilter[[{$sAttrID}]]"></div>
                 </p>
                 <script type="text/javascript">
+                    [{foreach from=$oFilterAttr->getValues() item=sValue}]
+                        [{assign var="valueRange" value="___"|explode:$sValue}]
+                    [{/foreach}]
+                    [{assign var="activeValueRange" value="___"|explode:$oFilterAttr->getActiveValue()}]
                     noUiSlider.create(document.getElementById("attributeRangeFilter[[{$sAttrID}]]"), {
-                        start: [20, 80],
+                        start: [[{$activeValueRange[0]}], [{$activeValueRange[1]}]],
                         connect: true,
                         range: {
-                            'min': 0,
-                            'max': 100
-                        }
+                            'min': [{$valueRange[0]}],
+                            'max': [{$valueRange[1]}]
+                        },
+                        tooltips: true,
                     });
                 </script>
-                <!--input type="hidden" name="attrfilter[[{$sAttrID}]]" value="[{$oFilterAttr->getActiveValue()}]">
-                <ul-- class="drop FXgradGreyLight shadow">
-                    [{if $oFilterAttr->getActiveValue()}]
-                        <li><a data-selection-id="" href="#">[{oxmultilang ident="PLEASE_CHOOSE"}]</a></li>
-                    [{/if}]
-                    [{foreach from=$oFilterAttr->getValues() item=sValue}]
-                        <li><a data-selection-id="[{$sValue}]" href="#" [{if $oFilterAttr->getActiveValue() == $sValue}]class="selected"[{/if}] >[{$sValue}]</a></li>
-                    [{/foreach}]
-                </ul-->
             </div>
         [{/foreach}]
     </div>
+    <style>
+        .noUi-tooltip {
+            display: none;
+        }
+        .noUi-active .noUi-tooltip {
+            display: block;
+        }
+    </style>
     </form>
 [{/if}]
