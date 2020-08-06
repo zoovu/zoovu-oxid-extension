@@ -83,6 +83,7 @@ class SearchController extends SearchController_parent
      */
     public function getAttributes()
     {
+        $this->isSxSearch = true;
         return $this->_aArticleList->getAvailableFilters();
     }
 

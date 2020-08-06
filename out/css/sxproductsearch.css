@@ -4,3 +4,65 @@
 .noUi-active .noUi-tooltip {
     display: block;
 }
+.slider {
+	min-width: 100px;
+	-webkit-box-shadow: none;
+	        box-shadow: none;
+	border-color: #ccc;
+	background: #fff;
+	margin: 0 17px 0 22px; /* to make up for the space that the slider handes take*/
+}
+.sxRangeFilter {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    padding: 10px;
+    margin: 0 0 10px 0;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+}
+.sxRangeFilter p {
+	margin: 0;
+}
+.sxRangeFilter label {
+	font-size: 12px;
+	font-weight: bold;
+	margin: 0;
+	white-space: nowrap;
+}
+.noUi-connect {
+    background: none;
+}
+.noUi-handle {
+	-webkit-box-shadow: none;
+	        box-shadow: none;
+}
+.listRefine {
+	border-bottom: 1px solid #eee;
+	margin-bottom: 40px;
+}
+.noUi-handle {
+	border-color: #ccc;
+}
+.noUi-handle:after, .noUi-handle:before {
+	background: #ccc;
+}
+.noUi-handle:focus {
+    outline-color: #333;
+}
+@media (max-width: 768px) {
+	.sxRangeFilter {
+	    display: -webkit-box;
+	    display: -ms-flexbox;
+	    display: flex;
+	}
+	.sxRangeFilter label {
+		min-width: 85px;
+	}
+	.slider {
+		-webkit-box-flex: 1;
+		    -ms-flex: 1;
+		        flex: 1;
+	}
+}

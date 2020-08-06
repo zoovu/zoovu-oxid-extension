@@ -129,10 +129,14 @@ class Search extends Search_parent
         // filter
         $filter = Registry::getConfig()->getRequestParameter('attrfilter', []);
         foreach($filter as $filterId => $options){
+
             if(!$options) continue;
 
-            if(!is_array($options)){
+            if(!is_array($options) && stripos($options,'___') === FALSE){
                 $options = [ (string) $options ];
+            } elseif(stripos($options, '___') > 0) {
+                // range filter
+                $options = explode('___', (string) $options);
             }
 
             $sxSearch->addFilter($filterId, $options);

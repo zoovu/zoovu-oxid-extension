@@ -84,6 +84,11 @@ $aModule = [
             'file' => 'Application/views/blocks/search_top_listlocator.tpl'
         ],
         [
+            'template' => 'page/search/search.tpl',
+            'block' => 'search_results',
+            'file' => 'Application/views/blocks/search_results.tpl'
+        ],
+        [
             'template' => 'widget/locator/attributes.tpl',
             'block' => 'widget_locator_attributes',
             'file' => 'Application/views/blocks/widget_locator_attributes.tpl'
