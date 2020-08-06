@@ -20,7 +20,7 @@ class ViewConfig extends ViewConfig_parent
      */
     public function getSxProjectId()
     {
-        return isset($this->_sxConfigValues['projectId']) ? $this->_sxConfigValues['projectId'] : 1;
+        return isset($this->_sxConfigValues['projectId']) ? $this->_sxConfigValues['projectId'] : '';
     }
 
 
@@ -29,7 +29,7 @@ class ViewConfig extends ViewConfig_parent
      */
     public function getSxApiUrl()
     {
-        return isset($this->_sxConfigValues['apiUrl']) ? $this->_sxConfigValues['apiUrl'] : "https://api-v3.semknox.com/";
+        return isset($this->_sxConfigValues['apiUrl']) ? $this->_sxConfigValues['apiUrl'] : '';
     }
 
 }
