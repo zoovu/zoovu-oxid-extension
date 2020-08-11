@@ -2,16 +2,17 @@
 
 <script type="text/javascript">
 
-    [{assign var="projectId" value=$oViewConf->getSxProjectId()}];
-    [{assign var="apiUrl" value=$oViewConf->getSxApiUrl()}];
+    [{assign var="projectId" value=$oViewConf->getSxProjectId()}]
+    [{assign var="userGroup" value=$oViewConf->getSxUserGroup()}]
+    [{assign var="apiUrl" value=$oViewConf->getSxApiUrl()}]
 
     /* eslint-disable */
     (function () {
         var siteId = '[{$projectId}]'; // the project id
         window.ss360Config = {
             siteId: siteId,
-            baseUrl: '[{$apiUrl}]search?projectId=' + siteId,
-            suggestBaseUrl: '[{$apiUrl}]search/suggestions?projectId=' + siteId,
+            baseUrl: '[{$apiUrl}]search?projectId=' + siteId + '&userGroup=[{$userGroup}]',
+            suggestBaseUrl: '[{$apiUrl}]search/suggestions?projectId=' + siteId + '&userGroup=[{$userGroup}]',
             searchBox: {
                 selector: 'input[name="searchparam"]', // search box css selector
                 searchButton: '.form.search .btn-primary', // search button css selector (makes the search suggestions extend over the full search form width)

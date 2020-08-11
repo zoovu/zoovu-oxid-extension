@@ -23,6 +23,14 @@ class ViewConfig extends ViewConfig_parent
         return isset($this->_sxConfigValues['projectId']) ? $this->_sxConfigValues['projectId'] : '';
     }
 
+    /*
+     * get current semknox userGroup.
+     */
+    public function getSxUserGroup()
+    {
+        return isset($this->_sxConfigValues['userGroup']) ? $this->_sxConfigValues['userGroup'] : '';
+    }
+
 
     /*
      * get current semknox projectId.
