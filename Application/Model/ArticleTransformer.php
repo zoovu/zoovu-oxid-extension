@@ -184,7 +184,18 @@ class ArticleTransformer extends AbstractProductTransformer
             }
         }
 
-        return $images;
+
+        //check for correct file type
+        foreach($images as $key => $image){
+
+            $fileExtension = strtolower(pathinfo($image['url'], PATHINFO_EXTENSION));
+
+            if(!in_array($fileExtension, ['jpg','jpeg','png','gif'])){
+                unset($images[$key]);
+            }
+        }
+
+        return array_values($images);
     }
 
     /**
