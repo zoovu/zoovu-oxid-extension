@@ -38,6 +38,7 @@ for (var i = 0; i < liTags.length; i++) {
     let li = liTags[i];
     let currentInput = li.parentNode.parentNode.getElementsByTagName('input')[0];
     if (!currentInput) continue;
+    let currentInputValue = currentInput.value;
 
     let currentButton = li.parentNode.parentNode.getElementsByTagName('button')[0];
     if (currentButton) {
@@ -48,17 +49,17 @@ for (var i = 0; i < liTags.length; i++) {
 
         var currentDataSelectionId = li.firstChild.getAttribute('data-selection-id');
 
-        if (currentInput.value.indexOf(currentDataSelectionId) > -1) {
-            li.firstChild.setAttribute('data-selection-id', currentInput.value.replace(currentDataSelectionId, ''));
-        } else {
-            if (currentInput.value.length > 0) currentInput.value = currentInput.value + '###';
+        if (currentDataSelectionId.length == 0) currentInputValue = '';
 
-            li.firstChild.setAttribute('data-selection-id', currentInput.value + currentDataSelectionId);
+        if (currentInputValue.indexOf(currentDataSelectionId) > -1) {
+            li.firstChild.setAttribute('data-selection-id', currentInputValue.replace(currentDataSelectionId, ''));
+        } else {
+            if (currentInputValue.length > 0) currentInputValue = currentInputValue + '###';
+
+            li.firstChild.setAttribute('data-selection-id', currentInputValue + currentDataSelectionId);
         }
     })
 }
-
-
 
 /*
 if ( $oFilterList.length )
