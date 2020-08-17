@@ -142,14 +142,19 @@ class Search extends Search_parent
 
             if(!$options) continue;
 
-            if(!is_array($options) && stripos($options,'___') === FALSE){
+            if(!is_array($options) && stripos($options,'___') === FALSE && stripos($options, '###') === FALSE){
                 $options = [ (string) $options ];
             } elseif(stripos($options, '___') > 0) {
                 // range filter
                 $options = explode('___', (string) $options);
                 $options = [$options[0], $options[1]];
-            }
-
+            } elseif (stripos($options, '###') !== FALSE) {
+                // range filter
+                $options = explode('###', (string) $options);
+                $options = array_filter($options);
+                $options = array_values($options);
+            } 
+            
             $sxSearch->addFilter($filterId, $options);
         }
 
@@ -178,7 +183,6 @@ class Search extends Search_parent
             return parent::getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer, $sSortBy);
         }
 
-
         $oxArticleIds = array();
         foreach ($this->_sxSearchResponse->getProducts() as $sxArticle) {
             $oxArticleIds[] = $sxArticle->getId();
@@ -197,6 +201,7 @@ class Search extends Search_parent
         // set available filter
         $sxAvailableFilters = new AttributeList();
         $sxAvailableRangeFilters = new AttributeList();
+        $sxActiveMultiselectOptions = array();
         foreach ($this->_sxSearchResponse->getAvailableFilters() as $filter) {
 
             $attribute = new Attribute();
@@ -240,12 +245,21 @@ class Search extends Search_parent
 
             } else {
 
+                $activeValues = [];
+
                 foreach ($filter->getOptions() as $option) {
+
                     $attribute->addValue($option->getName());
 
                     if ($option->isActive()) {
-                        $attribute->setActiveValue($option->getName());
+                        $activeValues[] = $option->getName();
                     }
+                }
+
+                $attribute->setActiveValue(implode('###', $activeValues));
+
+                if(count($activeValues) > 1){
+                    $sxActiveMultiselectOptions[$filter->getName()] = $activeValues;
                 }
 
                 if (!$filter->getOptions()) continue;
@@ -256,6 +270,7 @@ class Search extends Search_parent
         }
         $oArtList->setAvailableFilters($sxAvailableFilters);
         $oArtList->setAvailableRangeFilters($sxAvailableRangeFilters);
+        $oArtList->setActiveMultiselectOptions($sxActiveMultiselectOptions);
 
 
         // set available sorting options

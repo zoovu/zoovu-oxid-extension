@@ -163,6 +163,30 @@ class ArticleList extends ArticleList_parent
 
 
     /**
+     * get active multiselect options (js array)
+     * @return string 
+     */
+    public function getActiveMultiselectOptions()
+    {
+        if ($this->_sxActiveMultiselectOptions) {
+            return json_encode($this->_sxActiveMultiselectOptions);
+        }
+
+        return '[]';
+    }
+
+    /**
+     * set active multiselect options (js array)
+     * @return void 
+     */
+    public function setActiveMultiselectOptions($sxActiveMultiselectOptions){
+
+        $this->_sxActiveMultiselectOptions = $sxActiveMultiselectOptions;
+    }
+
+
+
+    /**
      * set available sorting options
      * 
      * @param string $content 

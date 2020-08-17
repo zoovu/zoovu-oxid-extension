@@ -75,3 +75,11 @@
 		        flex: 1;
 	}
 }
+
+ul.dropdown-menu li a.selected {
+	font-weight: bold;
+}
+
+ul.dropdown-menu li a.selected:after {
+	content: ' ✓';
+}

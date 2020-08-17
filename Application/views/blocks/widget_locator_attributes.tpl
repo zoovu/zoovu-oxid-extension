@@ -1,9 +1,16 @@
 [{$smarty.block.parent}]
 
+[{if $oView->isSxSearch && $oView->getActiveMultiselectOptions()}]
+    <script type="text/javascript">
+        var sxMultiselectFilter = [{$oView->getActiveMultiselectOptions()}];
+    </script>
+[{/if}]
+
 <script type="text/javascript" src="[{$oViewConf->getModuleUrl('sxproductsearch','out/lib/nouislider/nouislider.min.js')}]"></script>
 <script type="text/javascript" src="[{$oViewConf->getModuleUrl('sxproductsearch','out/js/sxproductsearch.js')}]"></script>
 <link rel="stylesheet" type="text/css" href="[{$oViewConf->getModuleUrl('sxproductsearch','out/lib/nouislider/nouislider.min.css')}]" />
 <link rel="stylesheet" type="text/css" href="[{$oViewConf->getModuleUrl('sxproductsearch','out/css/sxproductsearch.css')}]" />
+
 [{if $oView->isSxSearch && $oView->getRangeAttributes()}]
     <script type="text/javascript">
         var sxRangeFilter = [];
@@ -47,3 +54,4 @@
         }
     </script>
 [{/if}]
+
