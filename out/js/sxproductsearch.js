@@ -13,53 +13,64 @@ function sxRangeFilterAction(values, handle, unencoded, tap, positions, noUiSlid
 
 
 // make it work
-let liTags = document.getElementsByTagName("li");
-for (var i = 0; i < liTags.length; i++) {
+if (typeof liTags == 'undefined') {
+    let liTags = document.getElementsByTagName("li");
+    for (var i = 0; i < liTags.length; i++) {
 
-    let li = liTags[i];
+        let li = liTags[i];
 
-    // check if li filter
-    if (!li.parentNode.classList.contains('dropdown-menu') || li.parentNode.parentNode.getElementsByTagName('input').length != 1) continue;
+        // check if li filter
+        if (!li.parentNode.classList.contains('dropdown-menu') || li.parentNode.parentNode.getElementsByTagName('input').length != 1) continue;
 
-    // change filter label
-    let filterButtonElement = li.parentNode.parentNode.getElementsByTagName('button')[0];
-    if (filterButtonElement) {
-        filterButtonElement.innerHTML = filterButtonElement.innerHTML.replace('###', ', ');
-    }
+        // change filter label
+        let filterButtonElement = li.parentNode.parentNode.getElementsByTagName('button')[0];
+        if (filterButtonElement) {
+            filterButtonElement.innerHTML = filterButtonElement.innerHTML.replace('###', ', ');
+        }
 
 
-    // get Filter and value
-    let filterInputElement = li.parentNode.parentNode.getElementsByTagName('input')[0];
-    if (!filterInputElement) continue;
-    let filterValue = filterInputElement.value;
-    let filterName = filterInputElement.getAttribute('name');
-    let filterOptionElement = li.firstChild;
+        // get Filter and value
+        let filterInputElement = li.parentNode.parentNode.getElementsByTagName('input')[0];
+        if (!filterInputElement) continue;
+        let filterName = filterInputElement.getAttribute('name');
 
-    if (sxAttributeOptions[filterName][filterOptionElement.getAttribute('data-selection-id')]) {
+        var aTags = li.getElementsByTagName('a');
+        if (aTags.length != 1) continue;
+        let filterOptionElement = li.getElementsByTagName('a')[0]
 
         var dataSelectionId = filterOptionElement.getAttribute('data-selection-id');
 
-        filterOptionElement.setAttribute('data-selection-id', sxAttributeOptions[filterName][dataSelectionId]['value']);
+        if (sxAttributeOptions[filterName][dataSelectionId]) {
 
-        if (sxAttributeOptions[filterName][dataSelectionId]['active']) {
-            filterOptionElement.classList.add('selected');
+            filterOptionElement.setAttribute('data-selection-id', sxAttributeOptions[filterName][dataSelectionId]['value']);
+
+            if (sxAttributeOptions[filterName][dataSelectionId]['active']) {
+                filterOptionElement.classList.add('selected');
+            }
         }
+
+        // set filter value
+        let filterValue = filterInputElement.value;
+        if (sxAttributeOptions[filterName][filterInputElement.value]) {
+            filterValue = sxAttributeOptions[filterName][filterInputElement.value]['value'];
+            filterInputElement.value = filterValue;
+        }
+
+        li.addEventListener('click', function (event) {
+
+            var dataSelectionId = filterOptionElement.getAttribute('data-selection-id');
+
+            if (dataSelectionId.length == 0) filterValue = '';
+
+            if (filterValue.indexOf(dataSelectionId) > -1) {
+                filterOptionElement.setAttribute('data-selection-id', filterValue.replace(dataSelectionId, ''));
+            } else {
+                if (filterValue.length > 0) filterValue = filterValue + '###';
+
+                filterOptionElement.setAttribute('data-selection-id', filterValue + dataSelectionId);
+            }
+        })
     }
-
-    li.addEventListener('click', function (event) {
-
-        var dataSelectionId = filterOptionElement.getAttribute('data-selection-id');
-
-        if (dataSelectionId.length == 0) filterValue = '';
-
-        if (filterValue.indexOf(dataSelectionId) > -1) {
-            filterOptionElement.setAttribute('data-selection-id', filterValue.replace(dataSelectionId, ''));
-        } else {
-            if (filterValue.length > 0) filterValue = filterValue + '###';
-
-            filterOptionElement.setAttribute('data-selection-id', filterValue + dataSelectionId);
-        }
-    })
 }
 
 /*
