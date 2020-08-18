@@ -110,6 +110,8 @@ class Search extends Search_parent
      */
     public function getSearchArticles($sSearchParamForQuery = false, $sInitialSearchCat = false, $sInitialSearchVendor = false, $sInitialSearchManufacturer = false, $sSortBy = false)
     {
+        $logger = $this->_oxRegistry->getLogger();
+
         if (!$this->_sxConfigValues){
             $sSortBy = !is_array($sSortBy) ? (string) $sSortBy : false;
             return parent::getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer, $sSortBy);
@@ -177,7 +179,6 @@ class Search extends Search_parent
             // fallback
             $this->_sxConfigValues = null;
 
-            $logger = $this->_oxRegistry->getLogger();
             $logger->error($e->getMessage(), [__CLASS__, __FUNCTION__]);
 
             return parent::getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer, $sSortBy);
@@ -202,7 +203,15 @@ class Search extends Search_parent
         $sxAvailableFilters = new AttributeList();
         $sxAvailableRangeFilters = new AttributeList();
         $sxActiveMultiselectOptions = array();
-        foreach ($this->_sxSearchResponse->getAvailableFilters() as $filter) {
+        
+        try {
+            $sxAvailableFiltersFromResponse = $this->_sxSearchResponse->getAvailableFilters();
+        } catch (Exception $e) {
+            $sxAvailableFiltersFromResponse = array();
+            $logger->error($e->getMessage(), [__CLASS__, __FUNCTION__]);
+        }
+
+        foreach ($sxAvailableFiltersFromResponse as $filter) {
 
             $attribute = new Attribute();
             $attribute->setTitle($filter->getName());
