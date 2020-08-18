@@ -202,8 +202,8 @@ class Search extends Search_parent
         // set available filter
         $sxAvailableFilters = new AttributeList();
         $sxAvailableRangeFilters = new AttributeList();
-        $sxActiveMultiselectOptions = array();
-        
+        $sxAttributeOptions = array();
+
         try {
             $sxAvailableFiltersFromResponse = $this->_sxSearchResponse->getAvailableFilters();
         } catch (Exception $e) {
@@ -258,18 +258,24 @@ class Search extends Search_parent
 
                 foreach ($filter->getOptions() as $option) {
 
+                    if(!strlen($option->getName())) continue;
+
                     $attribute->addValue($option->getName());
+
+                    $sxAttributeOption = [
+                        'value' => $option->getValue(),
+                        'active' => false
+                    ];
 
                     if ($option->isActive()) {
                         $activeValues[] = $option->getName();
+                         $sxAttributeOption['active'] = true;
                     }
+
+                    $sxAttributeOptions['attrfilter['.$filter->getName().']'][$option->getName()] = $sxAttributeOption;
                 }
 
                 $attribute->setActiveValue(implode('###', $activeValues));
-
-                if(count($activeValues) > 1){
-                    $sxActiveMultiselectOptions[$filter->getName()] = $activeValues;
-                }
 
                 if (!$filter->getOptions()) continue;
 
@@ -279,8 +285,7 @@ class Search extends Search_parent
         }
         $oArtList->setAvailableFilters($sxAvailableFilters);
         $oArtList->setAvailableRangeFilters($sxAvailableRangeFilters);
-        $oArtList->setActiveMultiselectOptions($sxActiveMultiselectOptions);
-
+        $oArtList->setAttributeOptions($sxAttributeOptions);
 
         // set available sorting options
         $sxAvailableSortingOptions = array();

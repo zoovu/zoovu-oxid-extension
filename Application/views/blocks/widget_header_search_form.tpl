@@ -35,3 +35,6 @@
         document.getElementsByTagName('body')[0].appendChild(e);
     }());
 </script>
+[{if $oViewConf->getSxAdditionalCss()}]
+    <style>[{$oViewConf->getSxAdditionalCss()}]</style>
+[{/if}]

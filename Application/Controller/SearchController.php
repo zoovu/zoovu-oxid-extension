@@ -97,14 +97,15 @@ class SearchController extends SearchController_parent
         return $this->_aArticleList->getAvailableRangeFilters();
     }
 
+
     /**
-     * get Active Multiselect Options for frontend visualization
+     * get Active Multiselect Options for frontend 
      * 
      * @return mixed 
      */
-    public function getActiveMultiselectOptions()
+    public function getAttributeOptions()
     {
-        return $this->_aArticleList->getActiveMultiselectOptions();
+        return $this->_aArticleList->getAttributeOptions();
     }
 
 

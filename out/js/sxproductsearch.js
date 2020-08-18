@@ -12,51 +12,52 @@ function sxRangeFilterAction(values, handle, unencoded, tap, positions, noUiSlid
 }
 
 
-// make multiselect filter work
-let aTags = document.getElementsByTagName("a"); // not nice, but makes it work with many browsers
-for (var filterName in sxMultiselectFilter) {
-
-    sxMultiselectFilter[filterName].forEach(function (option) {
-
-        // make it visible
-        for (var i = 0; i < aTags.length; i++) {
-            if (aTags[i].textContent == option) {
-                aTags[i].classList.add("selected");
-                break;
-            }
-        }
-
-    })
-};
-
 // make it work
 let liTags = document.getElementsByTagName("li");
 for (var i = 0; i < liTags.length; i++) {
 
-    if (!liTags[i].parentNode.classList.contains('dropdown-menu')) continue;
-
     let li = liTags[i];
-    let currentInput = li.parentNode.parentNode.getElementsByTagName('input')[0];
-    if (!currentInput) continue;
-    let currentInputValue = currentInput.value;
 
-    let currentButton = li.parentNode.parentNode.getElementsByTagName('button')[0];
-    if (currentButton) {
-        currentButton.innerHTML = currentButton.innerHTML.replace('###', ', ');
+    // check if li filter
+    if (!li.parentNode.classList.contains('dropdown-menu') || li.parentNode.parentNode.getElementsByTagName('input').length != 1) continue;
+
+    // change filter label
+    let filterButtonElement = li.parentNode.parentNode.getElementsByTagName('button')[0];
+    if (filterButtonElement) {
+        filterButtonElement.innerHTML = filterButtonElement.innerHTML.replace('###', ', ');
+    }
+
+
+    // get Filter and value
+    let filterInputElement = li.parentNode.parentNode.getElementsByTagName('input')[0];
+    if (!filterInputElement) continue;
+    let filterValue = filterInputElement.value;
+    let filterName = filterInputElement.getAttribute('name');
+    let filterOptionElement = li.firstChild;
+
+    if (sxAttributeOptions[filterName][filterOptionElement.getAttribute('data-selection-id')]) {
+
+        var dataSelectionId = filterOptionElement.getAttribute('data-selection-id');
+
+        filterOptionElement.setAttribute('data-selection-id', sxAttributeOptions[filterName][dataSelectionId]['value']);
+
+        if (sxAttributeOptions[filterName][dataSelectionId]['active']) {
+            filterOptionElement.classList.add('selected');
+        }
     }
 
     li.addEventListener('click', function (event) {
 
-        var currentDataSelectionId = li.firstChild.getAttribute('data-selection-id');
+        var dataSelectionId = filterOptionElement.getAttribute('data-selection-id');
 
-        if (currentDataSelectionId.length == 0) currentInputValue = '';
+        if (dataSelectionId.length == 0) filterValue = '';
 
-        if (currentInputValue.indexOf(currentDataSelectionId) > -1) {
-            li.firstChild.setAttribute('data-selection-id', currentInputValue.replace(currentDataSelectionId, ''));
+        if (filterValue.indexOf(dataSelectionId) > -1) {
+            filterOptionElement.setAttribute('data-selection-id', filterValue.replace(dataSelectionId, ''));
         } else {
-            if (currentInputValue.length > 0) currentInputValue = currentInputValue + '###';
+            if (filterValue.length > 0) filterValue = filterValue + '###';
 
-            li.firstChild.setAttribute('data-selection-id', currentInputValue + currentDataSelectionId);
+            filterOptionElement.setAttribute('data-selection-id', filterValue + dataSelectionId);
         }
     })
 }

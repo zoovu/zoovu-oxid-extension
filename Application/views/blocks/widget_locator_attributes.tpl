@@ -1,8 +1,8 @@
 [{$smarty.block.parent}]
 
-[{if $oView->isSxSearch && $oView->getActiveMultiselectOptions()}]
+[{if $oView->isSxSearch && $oView->getAttributeOptions()}]
     <script type="text/javascript">
-        var sxMultiselectFilter = [{$oView->getActiveMultiselectOptions()}];
+        var sxAttributeOptions = [{$oView->getAttributeOptions()}];
     </script>
 [{/if}]
 

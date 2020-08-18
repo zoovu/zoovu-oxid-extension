@@ -11,4 +11,5 @@
     "sxUploadActive" => true|false,
     "sxIncrementalUpdatesActive" => true|false,
     "sxAnswerActive" => true|false,
+    "additionalCss" => "...",
 }

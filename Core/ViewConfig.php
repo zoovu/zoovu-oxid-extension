@@ -40,4 +40,12 @@ class ViewConfig extends ViewConfig_parent
         return isset($this->_sxConfigValues['apiUrl']) ? $this->_sxConfigValues['apiUrl'] : '';
     }
 
+    /*
+     * get additional Css
+     */
+    public function getSxAdditionalCss()
+    {
+        return isset($this->_sxConfigValues['additionalCss']) ? $this->_sxConfigValues['additionalCss'] : '';
+    }
+
 }

@@ -161,27 +161,27 @@ class ArticleList extends ArticleList_parent
         return array();
     }
 
-
     /**
-     * get active multiselect options (js array)
-     * @return string 
+     * get attribute options options (js array)
+     * @return void 
      */
-    public function getActiveMultiselectOptions()
+    public function getAttributeOptions()
     {
-        if ($this->_sxActiveMultiselectOptions) {
-            return json_encode($this->_sxActiveMultiselectOptions);
+        if ($this->_sxAttributeOptions) {
+            return json_encode($this->_sxAttributeOptions);
         }
 
         return '[]';
     }
 
     /**
-     * set active multiselect options (js array)
+     * set attribute options options (js array)
      * @return void 
      */
-    public function setActiveMultiselectOptions($sxActiveMultiselectOptions){
+    public function setAttributeOptions($sxAttributeOptions)
+    {
 
-        $this->_sxActiveMultiselectOptions = $sxActiveMultiselectOptions;
+        $this->_sxAttributeOptions = $sxAttributeOptions;
     }
 
 
