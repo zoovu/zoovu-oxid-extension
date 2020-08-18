@@ -62,6 +62,7 @@ class ArticleTransformer extends AbstractProductTransformer
         $lang = isset($transformerArgs['lang']) ? $transformerArgs['lang'] : null;
         $userGroups = array_merge($userGroups, $oxArticle->getLinkedSubshops($lang));
         $userGroups = array_unique($userGroups);
+        $userGroups = array_values($userGroups); // because api expects array
 
         $sxArticle['attributes'] = $this->_getAttributes($userGroups, $transformerArgs);
 
