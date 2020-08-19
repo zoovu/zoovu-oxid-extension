@@ -214,8 +214,10 @@ class Search extends Search_parent
         foreach ($sxAvailableFiltersFromResponse as $filter) {
 
             $attribute = new Attribute();
-            $attribute->setTitle($filter->getName());
-            $attribute->setId($filter->getName()); // since api changed
+
+            $filterName = $filter->getName();
+            $attribute->setTitle($filterName);
+            $attribute->setId($filterName); // since api changed
 
             if ($filter->getType() == 'RANGE') {
 
@@ -233,19 +235,20 @@ class Search extends Search_parent
                         $suffix = 'float';
                         break;
                     }
-                }
-    
+                }  
 
                 // add one value to initialize slider
                 $attribute->addValue($minValue.'___'. $maxValue.'___'. $suffix);
                 $attribute->setActiveValue($filter->getActiveMin() . '___' . $filter->getActiveMax());
 
+                $attribute->setTitle($filterName . " (" . $filter->getActiveMin() .$filter->getUnit()." - " . $filter->getActiveMax() . $filter->getUnit().")");  
+
                 $sxAvailableRangeFilters->add($attribute);
 
                 // add fake attribute for reset function
                 $attributeFake = new Attribute();
-                $attributeFake->setTitle($filter->getName());
-                $attributeFake->setId($filter->getName()); // since api changed
+                $attributeFake->setTitle($filterName);
+                $attributeFake->setId($filterName); // since api changed
                 if($filter->getActiveMin() != $minValue || $filter->getActiveMax() != $maxValue){
                     $attributeFake->addValue($minValue . '___' .$maxValue . '___' . $suffix);
                     $attributeFake->setActiveValue($filter->getActiveMin() . '___' . $filter->getActiveMax());
@@ -253,6 +256,9 @@ class Search extends Search_parent
                 $sxAvailableFilters->add($attributeFake);                
 
             } else {
+
+                $attribute->setTitle($filterName);
+                $attribute->setId($filterName); // since api changed
 
                 $activeValues = [];
 
@@ -292,7 +298,6 @@ class Search extends Search_parent
         foreach($this->_sxSearchResponse->getAvailableSortingOptions() as $option){
             $sxAvailableSortingOptions[$option->getKey()] = $this->_sxHelper->encodeSortOption($option);
         }
-        
 
         $oArtList->setAvailableSortingOptions($sxAvailableSortingOptions);
 
