@@ -13,6 +13,7 @@ function sxRangeFilterAction(values, handle, unencoded, tap, positions, noUiSlid
 
 
 // make it work
+let elementsDone = [];
 if (typeof liTags == 'undefined') {
     let liTags = document.getElementsByTagName("li");
     for (var i = 0; i < liTags.length; i++) {
@@ -51,10 +52,21 @@ if (typeof liTags == 'undefined') {
 
         // set filter value
         let filterValue = filterInputElement.value;
-        if (sxAttributeOptions[filterName][filterInputElement.value]) {
-            filterValue = sxAttributeOptions[filterName][filterInputElement.value]['value'];
-            filterInputElement.value = filterValue;
+        let filterValues = filterValue.split('###');
+
+        if (!elementsDone[filterName]) {
+            let newFilterValue = [];
+            filterValues.forEach(fv => {
+                if (sxAttributeOptions[filterName][fv]) {
+                    newFilterValue.push(sxAttributeOptions[filterName][fv]['value']);
+                }
+            });
+            filterValue = newFilterValue.join('###');
+            filterInputElement.setAttribute('value', filterValue);
+
+            elementsDone[filterName] = true;
         }
+
 
         li.addEventListener('click', function (event) {
 
