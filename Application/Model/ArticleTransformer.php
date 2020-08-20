@@ -99,9 +99,15 @@ class ArticleTransformer extends AbstractProductTransformer
             $categoryPath = [];
 
             while($oxCategory){
-                $categoryPath[] = $oxCategory->getTitle();
+
+                if((string) $oxCategory->oxcategories__oxactive == '1' && (string) $oxCategory->oxcategories__oxhidden == '0'){
+                    $categoryPath[] = $oxCategory->getTitle();
+                }
+
                 $oxCategory = $oxCategory->getParentCategory();
             }
+
+            if(!count($categoryPath)) $categoryPath = [''];
 
             $categories[] = [
                 'path' => array_reverse($categoryPath)
