@@ -1,5 +1,6 @@
 [{$smarty.block.parent}]
 
+<link rel="stylesheet" type="text/css" href="[{$oViewConf->getModuleUrl('sxproductsearch','out/css/sxproductsearch.css')}]" />
 <script type="text/javascript">
 
     [{assign var="projectId" value=$oViewConf->getSxProjectId()}]

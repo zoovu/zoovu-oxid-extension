@@ -2,10 +2,17 @@
 
 $sMetadataVersion = '2.1';
 
+// extension version:
+$composerJson = file_get_contents(__DIR__. DIRECTORY_SEPARATOR.'composer.json');
+$composerJson = str_replace("\\", "", $composerJson);
+$composerArray = json_decode($composerJson,true);
+$version = isset($composerArray['version']) ? $composerArray['version'] : '1.0.0';
+
 /**
  * Module information
  */
 $aModule = [
+    'version' => $version,
     'id' => 'sxproductsearch',
     'title' => 'SEMKNOX Product Search',
     'description' => [
@@ -48,7 +55,6 @@ $aModule = [
         <br/>Werden in dieser Datei die Werte <i>apiKey</i> und <i>projectId</i> gesetzt, so werden die Datensätze mit nur einem einzigen Account bei SEMKNOX synchronisiert. Abweiche Werte werden in diesem Fall über verschieden <i>userGroups</i> (entspricht den Oxid <i>ShopIds</i>) realisiert. Gleiches gilt für die Suche im Frontend.'
     ],
     'thumbnail' => 'logo.png',
-    'version' => '3.0.0',
     'author' => 'SEMKNOX',
     'url' => 'https://www.semknox.com',
     'email' => 'info@semknox.com',
