@@ -171,6 +171,14 @@ if(function_exists('oxNew')){
             'value' => 'false',
             'position' => 7
         );
+
+        $settings[] = array(
+            'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
+            'name' => 'sxFilterOptionCounterActive' . $oxid,
+            'type' => 'bool',
+            'value' => 'false',
+            'position' => 8
+        );
     }
 }
 

@@ -14,6 +14,7 @@ $aLang = array(
   'SHOP_MODULE_sxFrontendActive' => 'Produktsearch in frontend active',
   'SHOP_MODULE_sxUploadActive' => 'Produktupload to SEMKNOX active',
   'SHOP_MODULE_sxAnswerActive' => 'display SEMKNOX search interpretation sentence',
+  'SHOP_MODULE_sxFilterOptionCounterActive' => 'show expected number of results behind filter options',
   'SHOP_MODULE_sxIncrementalUpdatesActive' => 'incremental Productupdates to SEMKNOX active',
   'SHOP_MODULE_sxIsSandbox' => 'Sandbox-Mode active',
 
@@ -43,5 +44,6 @@ foreach ($oxLanguage->getLanguageArray() as $lang) {
   $aLang['SHOP_MODULE_sxFrontendActive' . $oxid] = $aLang['SHOP_MODULE_sxFrontendActive'] . ' - Shop-Language: ' . $language;
   $aLang['SHOP_MODULE_sxUploadActive' . $oxid] = $aLang['SHOP_MODULE_sxUploadActive'] . ' - Shop-Language: ' . $language;
   $aLang['SHOP_MODULE_sxAnswerActive' . $oxid] = $aLang['SHOP_MODULE_sxAnswerActive'] . ' - Shop-Language: ' . $language;
+  $aLang['SHOP_MODULE_sxFilterOptionCounterActive' . $oxid] = $aLang['SHOP_MODULE_sxFilterOptionCounterActive'] . ' - Shop-Language: ' . $language;
   $aLang['SHOP_MODULE_sxIncrementalUpdatesActive' . $oxid] = $aLang['SHOP_MODULE_sxIncrementalUpdatesActive'] . ' - Shop-Language: ' . $language;
 }

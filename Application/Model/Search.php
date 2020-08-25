@@ -273,6 +273,10 @@ class Search extends Search_parent
                         'active' => false
                     ];
 
+                    if($this->getConfig()->getConfigParam('sxFilterOptionCounterActive' . $this->_oxAbbrLanguage)){
+                         $sxAttributeOption['count'] = $option->getNumberOfResults();
+                    }
+
                     if ($option->isActive()) {
                         $activeValues[] = $option->getName();
                          $sxAttributeOption['active'] = true;
