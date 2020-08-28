@@ -119,6 +119,11 @@ class UploadController
                 $transformerArgs['disableCategories'] = true;
             }
 
+            // imageUrlSuffix
+            if ($imageUrlSuffix = $this->_sxConfig->get('imageUrlSuffix')) {
+                $transformerArgs['imageUrlSuffix'] = $imageUrlSuffix;
+            }
+
 
             foreach ($oxArticleList as $oxArticle) {
                 $this->_sxUploader->addProduct($oxArticle, $transformerArgs);

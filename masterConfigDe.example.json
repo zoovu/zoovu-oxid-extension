@@ -12,4 +12,9 @@
     "sxIncrementalUpdatesActive" => true|false,
     "sxAnswerActive" => true|false,
     "additionalCss" => "...", /* minfied css (one line!) */
+
+    "imageUrlSuffix" => "...", /* suffix for all images */
+    "imageUrlSuffix": {
+        "SMALL": "?300&300" /* suffix by type .... SMALL | LARGE | THUMB */
+    }
 }

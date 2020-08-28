@@ -42,7 +42,7 @@ class ArticleTransformer extends AbstractProductTransformer
 
         $sxArticle['name'] = $oxArticle->oxarticles__oxtitle->value;
 
-        $sxArticle['productUrl'] = $oxArticle->getLink();
+        $sxArticle['productUrl'] = $oxArticle->getMainLink(); //$oxArticle->getLink();
 
         $categories = [
             [
@@ -54,7 +54,7 @@ class ArticleTransformer extends AbstractProductTransformer
         }
         $sxArticle['categories'] = $categories;
         
-        $sxArticle['images'] = $this->_getImages();
+        $sxArticle['images'] = $this->_getImages($transformerArgs);
 
         $userGroups = isset($transformerArgs['userGroup']) ? $transformerArgs['userGroup'] : array();
         $userGroups = !is_array($userGroups) ? [$userGroups] : $userGroups;
@@ -158,13 +158,24 @@ class ArticleTransformer extends AbstractProductTransformer
     /**
      * get images of product
      */
-    protected function _getImages()
+    protected function _getImages($transformerArgs = array())
     {
         $oxArticle = $this->_product;
         $sxImages = $oxArticle->getPictureGallery();
         $images = array();
 
+        $imageSuffix = '';
+        $imageTypeSuffix = array();
+        if(isset($transformerArgs['imageUrlSuffix'])){
+            if(!is_array($transformerArgs['imageUrlSuffix'])){
+                $imageSuffix = (string) $transformerArgs['imageUrlSuffix'];
+            } else {
+                $imageTypeSuffix = $transformerArgs['imageUrlSuffix'];
+            }
+        } 
+
         if (isset($sxImages['Pics'])) {
+
             foreach ($sxImages['Pics'] as $image) {
                 $images[] = [
                     'url' => $image,
@@ -174,6 +185,7 @@ class ArticleTransformer extends AbstractProductTransformer
         }
 
         if (isset($sxImages['ZoomPics'])) {
+
             foreach ($sxImages['ZoomPics'] as $image) {
                 $images[] = [
                     'url' => $image['file'],
@@ -183,6 +195,7 @@ class ArticleTransformer extends AbstractProductTransformer
         }
 
         if (isset($sxImages['Icons'])) {
+
             foreach ($sxImages['Icons'] as $image) {
                 $images[] = [
                     'url' => $image,
@@ -191,7 +204,6 @@ class ArticleTransformer extends AbstractProductTransformer
             }
         }
 
-
         //check for correct file type
         foreach($images as $key => $image){
 
@@ -199,7 +211,15 @@ class ArticleTransformer extends AbstractProductTransformer
 
             if(!in_array($fileExtension, ['jpg','jpeg','png','gif'])){
                 unset($images[$key]);
+                continue;
             }
+
+            if(isset($imageTypeSuffix[$image['type']])){
+                $images[$key]['url'] .= (string) $imageTypeSuffix[$image['type']];
+            } else {
+                $images[$key]['url'] .= $imageSuffix;
+            }
+            
         }
 
         return array_values($images);
