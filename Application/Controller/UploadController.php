@@ -143,11 +143,17 @@ class UploadController
             // uploading
 
             // continue uploading...
-            $response = $this->_sxUploader->sendUploadBatch();
+            $response = $this->_sxUploader->sendUploadBatch(true);
 
-            if($response === false){
+            if(is_array($response) && $response['status'] !== 'success'){
+
+                $message = $response['message'];
+                if(isset($response['validation'][0]['schemaErrors'][0])){
+                    $message .=' ('. $response['validation'][0]['schemaErrors'][0].')';
+                }
+
                 $logger = $this->_oxRegistry->getLogger();
-                $logger->error('Failure in upload batch', [__CLASS__, __FUNCTION__]);
+                $logger->error($response['status'].':'. $message, [__CLASS__, __FUNCTION__]);
             }
         }
     }
@@ -381,7 +387,7 @@ class UploadController
     {
         $productsSent = $this->_sxUpdater->sendUploadBatch();
 
-        if ($productsSent) {
+        if ($productsSent !== FALSE) {
             $logger = $this->_oxRegistry->getLogger();
             $logger->debug($productsSent . ' products sent to SEMKNOX.', [__CLASS__, __FUNCTION__]);
         }
