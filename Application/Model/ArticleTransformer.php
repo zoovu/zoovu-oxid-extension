@@ -44,13 +44,17 @@ class ArticleTransformer extends AbstractProductTransformer
 
         $sxArticle['productUrl'] = $oxArticle->getMainLink(); //$oxArticle->getLink();
 
-        $categories = [
-            [
-                'path' => ['unknown']
-            ]
-        ];
+        $categories = array();
         if(!isset($transformerArgs['disableCategories']) || !$transformerArgs['disableCategories']){
            $categories = $this->_getCategories();
+        }
+
+        if(!count($categories)){
+            $categories = [
+                [
+                    'path' => ['unknown']
+                ]
+            ];
         }
         $sxArticle['categories'] = $categories;
         
@@ -100,14 +104,14 @@ class ArticleTransformer extends AbstractProductTransformer
 
             while($oxCategory){
 
-                if((string) $oxCategory->oxcategories__oxactive == '1' && (string) $oxCategory->oxcategories__oxhidden == '0'){
+                if((string) $oxCategory->oxcategories__oxactive == '1' && (string) $oxCategory->oxcategories__oxhidden == '0' && strlen($oxCategory->getTitle())){
                     $categoryPath[] = $oxCategory->getTitle();
                 }
 
                 $oxCategory = $oxCategory->getParentCategory();
             }
 
-            if(!count($categoryPath)) $categoryPath = [''];
+            if(!count($categoryPath)) continue;
 
             $categories[] = [
                 'path' => array_reverse($categoryPath)
