@@ -52,7 +52,7 @@ class ArticleTransformer extends AbstractProductTransformer
         if(!count($categories)){
             $categories = [
                 [
-                    'path' => ['unknown']
+                    'path' => ['uncategorized']
                 ]
             ];
         }
@@ -106,6 +106,8 @@ class ArticleTransformer extends AbstractProductTransformer
 
                 if((string) $oxCategory->oxcategories__oxactive == '1' && (string) $oxCategory->oxcategories__oxhidden == '0' && strlen($oxCategory->getTitle())){
                     $categoryPath[] = $oxCategory->getTitle();
+                } else {
+                    $categoryPath[] = $oxCategory->getId(); // no title availabe
                 }
 
                 $oxCategory = $oxCategory->getParentCategory();
