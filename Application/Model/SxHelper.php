@@ -26,7 +26,10 @@ class SxHelper {
 
     public function __construct()
     {
-        $workingDir = Registry::getConfig()->getLogsDir().'../'. $this->_sxFolder;
+        $this->_oxRegistry = new Registry();
+        $this->_oxConfig = $this->_oxRegistry->getConfig();
+
+        $workingDir = $this->_oxConfig->getLogsDir().'../'. $this->_sxFolder;
 
         //$this->_sxFolder = $logsDir . $this->_sxFolder;
 
@@ -34,6 +37,77 @@ class SxHelper {
 
         $this->_sxDeleteQueuePath = $workingDir . $this->_sxDeleteQueuePath;
         $this->_sxUpdateQueuePath = $workingDir . $this->_sxUpdateQueuePath;
+
+    }
+
+
+    /**
+     * get all exetnsion config values
+     * 
+     */
+    public function getConfig($langAbbr = null)
+    {
+        include __DIR__.'/../../metadata.php';
+
+        // [1] get config keys
+        $configKeys = ['sxSandboxApiUrl' => 'str', 'sxApiUrl' => 'str'];
+
+        foreach($aModule['settings'] as $field){
+
+            // no lang set
+            if(!$langAbbr){
+                $configKeys[$field['name']] = $field['type'];
+                continue;
+            }
+
+            $group = $field['group'];
+
+            // no lang setting
+            if(stripos($group, 'SemknoxProductsearchLanguageSettings') === false){
+                $configKeys[$field['name']] = $field['type'];
+                continue;
+            }
+
+            // lang setting
+            $groupLang = str_replace('SemknoxProductsearchLanguageSettings','', $group);
+
+            if (strtolower($groupLang) == strtolower($langAbbr)) {
+                $configKeys[$field['name']] = $field['type'];
+                continue;
+            }
+        }
+
+        // [2] get values
+        $config = array();
+        foreach($configKeys as $key => $type){
+
+            $value = $type == 'bool' ? boolval($this->get($key)) : $this->get($key);
+
+            if(substr($key, -2) == $langAbbr){
+                $key = substr($key,0, -2);
+            }
+
+            if (substr($key, 0,2) == 'sx') {
+                $key = substr($key, 2);
+            }
+
+            $config[lcfirst($key)] = $value;
+        }
+
+        // [3] check for sandbox mode
+        if($config['isSandbox']){
+            $config['apiUrl'] = $config['sandboxApiUrl'];
+        }
+
+        // [4] add masterConfig values
+        $config = $this->getMasterConfig($config, $langAbbr);
+
+
+        // [5] add additional data
+        $config['shopId'] = $this->_oxConfig->getShopId();
+        $config['lang'] = $langAbbr;
+
+        return $config;
 
     }
 
@@ -49,8 +123,7 @@ class SxHelper {
     public function get($key, $default = null)
     {
         // check if availalbe in config
-        $oxRegistry = Registry::getConfig();
-        $value = trim($oxRegistry->getConfigParam($key));
+        $value = trim($this->_oxConfig->getConfigParam($key));
         if($value) return $value;
 
         // check preset values or take default
