@@ -99,13 +99,12 @@ class SxHelper {
             $config['apiUrl'] = $config['sandboxApiUrl'];
         }
 
-        // [4] add masterConfig values
-        $config = $this->getMasterConfig($config, $langAbbr);
-
-
-        // [5] add additional data
+        // [4] add additional data
         $config['shopId'] = $this->_oxConfig->getShopId();
         $config['lang'] = $langAbbr;
+
+        // [5] add masterConfig values
+        $config = $this->getMasterConfig($config, $langAbbr);
 
         return $config;
 
