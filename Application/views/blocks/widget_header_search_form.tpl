@@ -3,9 +3,9 @@
 <link rel="stylesheet" type="text/css" href="[{$oViewConf->getModuleUrl('sxproductsearch','out/css/sxproductsearch.css')}]" />
 <script type="text/javascript">
 
-    [{assign var="projectId" value=$oViewConf->getSxProjectId()}]
-    [{assign var="userGroup" value=$oViewConf->getSxUserGroup()}]
-    [{assign var="apiUrl" value=$oViewConf->getSxApiUrl()}]
+    [{assign var="projectId" value=$oViewConf->getSxConfigValue('projectId')}]
+    [{assign var="userGroup" value=$oViewConf->getSxConfigValue('userGroup')}]
+    [{assign var="apiUrl" value=$oViewConf->getSxConfigValue('apiUrl')}]
 
     /* eslint-disable */
     (function () {
@@ -36,6 +36,6 @@
         document.getElementsByTagName('body')[0].appendChild(e);
     }());
 </script>
-[{if $oViewConf->getSxAdditionalCss()}]
-    <style>[{$oViewConf->getSxAdditionalCss()}]</style>
+[{if $oViewConf->getSxConfigValue('additionalCss')}]
+    <style>[{$oViewConf->getSxConfigValue('additionalCss')}]</style>
 [{/if}]

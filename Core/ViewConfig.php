@@ -16,36 +16,11 @@ class ViewConfig extends ViewConfig_parent
     }
 
     /*
-     * get current semknox projectId.
+     * get sc config value by key
      */
-    public function getSxProjectId()
+    public function getSxConfigValue($key)
     {
-        return isset($this->_sxConfigValues['projectId']) ? $this->_sxConfigValues['projectId'] : '';
-    }
-
-    /*
-     * get current semknox userGroup.
-     */
-    public function getSxUserGroup()
-    {
-        return isset($this->_sxConfigValues['userGroup']) ? $this->_sxConfigValues['userGroup'] : '';
-    }
-
-
-    /*
-     * get current semknox projectId.
-     */
-    public function getSxApiUrl()
-    {
-        return isset($this->_sxConfigValues['apiUrl']) ? $this->_sxConfigValues['apiUrl'] : '';
-    }
-
-    /*
-     * get additional Css
-     */
-    public function getSxAdditionalCss()
-    {
-        return isset($this->_sxConfigValues['additionalCss']) ? $this->_sxConfigValues['additionalCss'] : '';
+        return isset($this->_sxConfigValues[$key]) ? $this->_sxConfigValues[$key] : '';
     }
 
 }
