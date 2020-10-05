@@ -2,7 +2,7 @@
     [{include file="widget/locator/listlocator.tpl" locator=$oView->getPageNavigationLimitedTop() listDisplayType=true itemsPerPage=true sort=true}]
 
     [{capture append="oxidBlock_sidebar"}]
-        <div class="box well well-sm hidden-sm hidden-xs sxFilterBox" id="filterBox">
+        <div class="box well well-sm hidden-sm hidden-xs sxFilterBoxSidebar" id="filterBox">
             <div class="page-header h3">Filter</div>
             [{include file="widget/locator/listlocator.tpl" attributes=$oView->getAttributes()}]
         </div>

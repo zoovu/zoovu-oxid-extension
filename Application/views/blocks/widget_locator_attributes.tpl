@@ -17,13 +17,23 @@
     </script>
     [{foreach from=$oView->getRangeAttributes() item=oFilterAttr key=sAttrID name=attr}]
         <div class="sxRangeFilter">
-            <label>[{$oFilterAttr->getTitle()}]: </label>
-            <div class="slider" id="[{$sAttrID}]"></div>
 
             [{foreach from=$oFilterAttr->getValues() item=sValue}]
                 [{assign var="valueRange" value="___"|explode:$sValue}]
             [{/foreach}]
             [{assign var="activeValueRange" value="___"|explode:$oFilterAttr->getActiveValue()}]
+
+            <label>[{$oFilterAttr->getTitle()}]: </label>
+            <div class="slider-wrapper">
+                <div class="slider" id="[{$sAttrID}]"></div>
+                <div class="slider-helper">
+                    <input class="js-style form-control form-control-sm" data-input-type="min" value="[{$activeValueRange[0]}]" min="[{$valueRange[0]}]" type="number" name="num1">
+                    <span>-</span>
+                    <input class="js-style form-control form-control-sm" data-input-type="max" value="[{$activeValueRange[1]}]" max="[{$valueRange[1]}]" type="number" name="num2">
+                    <span class="unit">Stück</span>
+                    <button class="js-style-btn btn btn-default btn-sm" type="button"><i class="fa fa-angle-right"></i></button>
+                </div>
+            </div>
 
             <script type="text/javascript">
                 sxRangeFilter["[{$sAttrID}]"] = noUiSlider.create(document.getElementById("[{$sAttrID}]"), {

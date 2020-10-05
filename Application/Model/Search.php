@@ -91,7 +91,8 @@ class Search extends Search_parent
      */
     public function getSearchArticles($sSearchParamForQuery = false, $sInitialSearchCat = false, $sInitialSearchVendor = false, $sInitialSearchManufacturer = false, $sSortBy = false)
     {
-        $logger = $this->_oxRegistry->getLogger();
+        $oxRegistry = new Registry();
+        $logger = $oxRegistry->getLogger();
 
         if (!$this->_sxConfigValues){
             $sSortBy = !is_array($sSortBy) ? (string) $sSortBy : false;

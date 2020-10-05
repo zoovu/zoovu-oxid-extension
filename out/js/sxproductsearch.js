@@ -11,80 +11,134 @@ function sxRangeFilterAction(values, handle, unencoded, tap, positions, noUiSlid
     document.getElementById('filterList').submit();
 }
 
+// i was getting JS errors bs everything was called 2x, fixed it with this 
+if (typeof sXStarted == 'undefined') {
+    var sXStarted = false;
+    startSx();
+} 
 
-// make it work
-let elementsDone = [];
-if (typeof liTags == 'undefined') {
-    let liTags = document.getElementsByTagName("li");
-    for (var i = 0; i < liTags.length; i++) {
+function startSx() {
+    
+    if(sXStarted) return;
+    sXStarted = true;
 
-        let li = liTags[i];
+    // make it work
+    let elementsDone = [];
+    if (typeof liTags == 'undefined') {
+        let liTags = document.getElementsByTagName("li");
+        for (var i = 0; i < liTags.length; i++) {
 
-        // check if li filter
-        if (!li.parentNode.classList.contains('dropdown-menu') || li.parentNode.parentNode.getElementsByTagName('input').length != 1) continue;
+            let li = liTags[i];
 
-        // change filter label
-        let filterButtonElement = li.parentNode.parentNode.getElementsByTagName('button')[0];
-        if (filterButtonElement) {
-            filterButtonElement.innerHTML = filterButtonElement.innerHTML.replace('###', ', ');
-        }
+            // check if li filter
+            if (!li.parentNode.classList.contains('dropdown-menu') || li.parentNode.parentNode.querySelectorAll('input:not(.js-style)').length != 1) continue;
 
-
-        // get Filter and value
-        let filterInputElement = li.parentNode.parentNode.getElementsByTagName('input')[0];
-        if (!filterInputElement) continue;
-        let filterName = filterInputElement.getAttribute('name');
-
-        var aTags = li.getElementsByTagName('a');
-        if (aTags.length != 1) continue;
-        let filterOptionElement = li.getElementsByTagName('a')[0]
-
-        var dataSelectionId = filterOptionElement.getAttribute('data-selection-id');
-
-        if (sxAttributeOptions[filterName][dataSelectionId]) {
-
-            filterOptionElement.setAttribute('data-selection-id', sxAttributeOptions[filterName][dataSelectionId]['value']);
-
-            if (sxAttributeOptions[filterName][dataSelectionId]['count'] && sxAttributeOptions[filterName][dataSelectionId]['count'] >= 0) {
-                filterOptionElement.innerHTML = filterOptionElement.innerHTML + ' (' + sxAttributeOptions[filterName][dataSelectionId]['count'] + ')';
+            // change filter label
+            let filterButtonElement = li.parentNode.parentNode.querySelectorAll('button:not(.js-style-btn)')[0];
+            if (filterButtonElement) {
+                filterButtonElement.innerHTML = filterButtonElement.innerHTML.replace('###', ', ');
             }
 
-            if (sxAttributeOptions[filterName][dataSelectionId]['active']) {
-                filterOptionElement.classList.add('selected');
-            }
-        }
 
-        // set filter value
-        let filterValue = filterInputElement.value;
-        let filterValues = filterValue.split('###');
+            // get Filter and value
+            let filterInputElement = li.parentNode.parentNode.querySelectorAll('input:not(.js-style)')[0];
+            if (!filterInputElement) continue;
+            let filterName = filterInputElement.getAttribute('name');
 
-        if (!elementsDone[filterName]) {
-            let newFilterValue = [];
-            filterValues.forEach(fv => {
-                if (sxAttributeOptions[filterName][fv]) {
-                    newFilterValue.push(sxAttributeOptions[filterName][fv]['value']);
-                }
-            });
-            filterValue = newFilterValue.join('###');
-            filterInputElement.setAttribute('value', filterValue);
-
-            elementsDone[filterName] = true;
-        }
-
-
-        li.addEventListener('click', function (event) {
+            var aTags = li.getElementsByTagName('a');
+            if (aTags.length != 1) continue;
+            let filterOptionElement = li.getElementsByTagName('a')[0]
 
             var dataSelectionId = filterOptionElement.getAttribute('data-selection-id');
+            
+            if (sxAttributeOptions[filterName] && sxAttributeOptions[filterName][dataSelectionId]) {
+            
+                filterOptionElement.setAttribute('data-selection-id', sxAttributeOptions[filterName][dataSelectionId]['value']);
 
-            if (dataSelectionId.length == 0) filterValue = '';
+                if (sxAttributeOptions[filterName][dataSelectionId]['count'] && sxAttributeOptions[filterName][dataSelectionId]['count'] >= 0) {
+                    filterOptionElement.innerHTML = filterOptionElement.innerHTML + ' (' + sxAttributeOptions[filterName][dataSelectionId]['count'] + ')';
+                }
 
-            if (filterValue.indexOf(dataSelectionId) > -1) {
-                filterOptionElement.setAttribute('data-selection-id', filterValue.replace(dataSelectionId, ''));
-            } else {
-                if (filterValue.length > 0) filterValue = filterValue + '###';
-
-                filterOptionElement.setAttribute('data-selection-id', filterValue + dataSelectionId);
+                if (sxAttributeOptions[filterName][dataSelectionId]['active']) {
+                    filterOptionElement.classList.add('selected');
+                }
             }
+            else {
+                // if we land here, is the "bitte wählen" option that clears the filter!
+                // i copy the word of the clear button, bc hopefully is translated
+                const text = document.querySelector("#resetFilter button").innerText;
+                filterOptionElement.innerText = text;
+                filterOptionElement.classList.add('resetFilter');
+            }
+
+            // set filter value
+            let filterValue = filterInputElement.value;
+            let filterValues = filterValue.split('###');
+
+            if (!elementsDone[filterName]) {
+                let newFilterValue = [];
+                filterValues.forEach(fv => {
+                    if (sxAttributeOptions[filterName] && sxAttributeOptions[filterName][fv]) {
+                        newFilterValue.push(sxAttributeOptions[filterName][fv]['value']);
+                    }
+                });
+                filterValue = newFilterValue.join('###');
+                filterInputElement.setAttribute('value', filterValue);
+
+                elementsDone[filterName] = true;
+            }
+
+
+            li.addEventListener('click', function (event) {
+
+                var dataSelectionId = filterOptionElement.getAttribute('data-selection-id');
+
+                if (dataSelectionId.length == 0) filterValue = '';
+
+                if (filterValue.indexOf(dataSelectionId) > -1) {
+                    filterOptionElement.setAttribute('data-selection-id', filterValue.replace(dataSelectionId, ''));
+                } else {
+                    if (filterValue.length > 0) filterValue = filterValue + '###';
+
+                    filterOptionElement.setAttribute('data-selection-id', filterValue + dataSelectionId);
+                }
+            })
+        }
+        // sometimes, looks like things are not loaded yet... and no one is that fast anyway
+        setTimeout(function(){
+            sidebarFiltersEvents();
+            justStyleEvents();
+        }, 2000);
+    }
+}
+
+function sidebarFiltersEvents() {
+    let sidebarFilters = document.querySelectorAll(".sxFilterBoxSidebar .btn-group .btn, .sxFilterBoxSidebar .sxRangeFilter label");
+    for (var j = 0; j < sidebarFilters.length; j++) {
+        sidebarFilters[j].addEventListener('click', function (event) {
+            this.closest('.btn-group, .sxRangeFilter').classList.toggle('sideclosed');
         })
+    }
+    
+}
+
+function justStyleEvents() {
+    const styleInputsMin = document.querySelector(".js-style[data-input-type='min']");
+    const styleInputsMax = document.querySelector(".js-style[data-input-type='max']");
+    const styleBtn = document.querySelector(".js-style-btn");
+    if(styleBtn) {
+        styleBtn.addEventListener('click', function(event) {
+            const filterName = this.closest('.sxRangeFilter').querySelector('.slider').getAttribute('id');
+            if((styleInputsMin.value < styleInputsMax.value) && 
+                (styleInputsMin.value >= styleInputsMin.getAttribute('min')) && 
+                (styleInputsMax.value <= styleInputsMax.getAttribute('max'))
+                ) {
+                    document.getElementsByName("attrfilter[" + filterName + "]")[0].value = styleInputsMin.value + '___' + styleInputsMax.value;
+                    
+                } else {
+                    document.getElementsByName("attrfilter[" + filterName + "]")[0].value = styleInputsMin.getAttribute('min') + '___' + styleInputsMax.getAttribute('max');
+                }
+                document.getElementById('filterList').submit();
+        });
     }
 }
