@@ -382,3 +382,7 @@ Sidebar CSS
 .sxFilterBoxSidebar .dropdown-menu li a.resetFilter:before {
     display: none;
 }
+
+.sxFilterBoxSidebar .list-filter.clearfix {
+	margin-bottom: 0px;
+}
