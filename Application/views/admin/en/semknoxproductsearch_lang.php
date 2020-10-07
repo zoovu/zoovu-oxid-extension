@@ -37,7 +37,7 @@ foreach ($oxLanguage->getLanguageArray() as $lang) {
   $oxid = ucfirst($lang->oxid);
   $language = $lang->name;
 
-  $aLang['SHOP_MODULE_GROUP_SemknoxProductsearchLogin' . $oxid] = $aLang['SHOP_MODULE_GROUP_SemknoxProductsearchLogin'] . ' - Shop-language: ' . $language;
+  $aLang['SHOP_MODULE_GROUP_SemknoxProductsearchLanguageSettings' . $oxid] = $aLang['SHOP_MODULE_GROUP_SemknoxProductsearchLanguageSettings'] . ' - Shop-Language: ' . $language;
   $aLang['SHOP_MODULE_sxProjectId' . $oxid] = $aLang['SHOP_MODULE_sxProjectId'] . ' - Shop-Language: ' . $language;
   $aLang['SHOP_MODULE_sxApiKey' . $oxid] = $aLang['SHOP_MODULE_sxApiKey'] . ' - Shop-Language: ' . $language;
 
