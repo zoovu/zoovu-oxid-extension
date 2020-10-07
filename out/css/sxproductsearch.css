@@ -46,7 +46,8 @@
 .list-filter.clearfix {
     padding-bottom: 15px;
 	border-bottom: 1px solid #eee;
-	margin-bottom: 40px;
+    margin-bottom: 40px;
+    background: transparent;
 }
 .list-filter .btn {
     margin: 5px 0;
@@ -142,6 +143,7 @@ Sidebar CSS
 .sxFilterBoxSidebar.box.well .btn-group {
     padding: 9px;
     margin: 0;
+    background: transparent;
 }
 .sxFilterBoxSidebar.box.well .sxRangeFilter + .btn-group,
 .sxFilterBoxSidebar.box.well .btn-group + .sxRangeFilter,
@@ -171,7 +173,7 @@ Sidebar CSS
 }
 .sxFilterBoxSidebar .btn-group .dropdown-menu{
     display: block;
-    position: static;
+    position: static !important;
     width: 100%;
     float: none;
     -webkit-box-shadow: none;
@@ -180,6 +182,7 @@ Sidebar CSS
     background: none;
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
+    transform: none !important;
 }
 
 .sxFilterBoxSidebar .btn-group .btn .caret {
@@ -187,16 +190,17 @@ Sidebar CSS
     position: absolute;
     top: 50%;
     -webkit-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-            transform: translateY(-50%);
-    right: 15px;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    right: 0;
     border: 0;
-    height: auto;
-    font: normal normal normal 20px/1 FontAwesome;
+    height: 16px;
+    background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cpath%20d%3D%22M8.103%2015.8a1.493%201.493%200%20000%202.109l14.496%2014.327c.243.24.63.382%201.019.43h.146c.388-.048.728-.19.97-.43l14.497-14.327a1.493%201.493%200%20000-2.109c-.581-.622-1.551-.622-2.181%200L23.67%2029.024%2010.29%2015.8a1.507%201.507%200%2000-2.182%200z%22%2F%3E%3C%2Fsvg%3E);
+    width: 16px;
+    background-repeat: no-repeat;
+    background-position: right center;
 }
-.sxFilterBoxSidebar .btn-group .btn .caret:before {
-    content: "\f106";
-}
+
 
 .sxFilterBoxSidebar .dropdown-menu>li>a {
     white-space: normal;
@@ -262,11 +266,14 @@ Sidebar CSS
     -webkit-transform: translateY(-50%);
         -ms-transform: translateY(-50%);
             transform: translateY(-50%);
-    right: 2px;
+    right: 0;
     border: 0;
-    height: auto;
-    font: normal normal normal 20px/1 FontAwesome;
-    content: "\f106";
+    content: "";
+    height: 16px;
+    background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cpath%20d%3D%22M8.103%2015.8a1.493%201.493%200%20000%202.109l14.496%2014.327c.243.24.63.382%201.019.43h.146c.388-.048.728-.19.97-.43l14.497-14.327a1.493%201.493%200%20000-2.109c-.581-.622-1.551-.622-2.181%200L23.67%2029.024%2010.29%2015.8a1.507%201.507%200%2000-2.182%200z%22%2F%3E%3C%2Fsvg%3E);
+    width: 16px;
+    background-repeat: no-repeat;
+    background-position: right center;
 }
 .sxFilterBoxSidebar .sxRangeFilter .noUi-horizontal .noUi-handle {
     height: 20px;
@@ -280,14 +287,15 @@ Sidebar CSS
 }
 
 .sxFilterBoxSidebar .sxRangeFilter .noUi-horizontal .noUi-handle:after {
-    content: "\f105";
-    font: normal normal normal 18px/1 FontAwesome;
-    left: 7px;
-    color: #fff;
+    background-image: url( data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M15.467%208.436a1.493%201.493%200%20012.109%200l14.326%2014.497c.24.242.383.63.431%201.018v.147c-.048.387-.191.727-.43.97L17.575%2039.563a1.493%201.493%200%2001-2.11%200c-.622-.581-.622-1.551%200-2.181l13.224-13.38-13.223-13.38a1.507%201.507%200%20010-2.182z%22%2F%3E%3C%2Fsvg%3E);
+    background-color: #333;
+    left: 0;
     top: 0;
-    width: auto;
-    height: auto;
-    background: transparent;
+    width: 18px;
+    height: 18px;
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 .sxFilterBoxSidebar .sxRangeFilter .noUi-horizontal .noUi-handle-upper:after {
     -webkit-transform: scaleX(-1);
@@ -304,6 +312,9 @@ Sidebar CSS
 }
 .sxFilterBoxSidebar .btn-group.sideclosed>.dropdown-menu {
     display: none;
+}
+.sxFilterBoxSidebar .btn-group .dropdown-toggle:hover {
+    color: inherit;
 }
 .sxFilterBoxSidebar .btn-group .dropdown-toggle:active,
 .sxFilterBoxSidebar .btn-group.sideclosed .dropdown-toggle {
@@ -326,7 +337,10 @@ Sidebar CSS
     display: flex;
 }
 .sxFilterBoxSidebar .sxRangeFilter.sideclosed label:after {
-    content: "\f107";
+    content: "";
+    -webkit-transform: translateY(-50%) scaleY(-1);
+        -ms-transform: translateY(-50%) scaleY(-1);
+            transform: translateY(-50%) scaleY(-1);
 }
 
 .sxFilterBoxSidebar .sxRangeFilter.sideclosed .slider-wrapper {
@@ -335,6 +349,8 @@ Sidebar CSS
 
 .sxFilterBoxSidebar .sxRangeFilter .btn {
     margin: 0 0 0 auto;
+    background: #fff;
+    border-color: #ccc;
 }
 .slider-helper span {
     line-height: 30px;
@@ -366,8 +382,9 @@ Sidebar CSS
 
 .sxFilterBoxSidebar .dropdown-menu li a.resetFilter {
     margin-bottom: 10px;
-    padding-left: 22px;
     font-size: 12px;
+    padding: 3px 20px 3px 22px;
+    display: block;
 }
 .sxFilterBoxSidebar .dropdown-menu li a.resetFilter:hover:after {
     font-size: 12px;
@@ -384,5 +401,19 @@ Sidebar CSS
 }
 
 .sxFilterBoxSidebar .list-filter.clearfix {
-	margin-bottom: 0px;
+    margin: 0px;
+    padding: 0;
+}
+.sxFilterBoxSidebar .filter-item.active, 
+.sxFilterBoxSidebar .filter-item.selected, 
+.sxFilterBoxSidebar .filter-item:hover {
+    background-color: transparent;
+}
+.sxFilterBoxSidebar .show>.btn-outline-dark.dropdown-toggle {
+    color: inherit;
+}
+@media (min-width: 768px) {
+    .sxFilterBoxSidebar .filter-attributes .list-filter .btn-group .btn {
+        width: 100%;
+    }
 }
