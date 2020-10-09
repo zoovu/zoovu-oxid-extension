@@ -15,11 +15,11 @@ function sxRangeFilterAction(values, handle, unencoded, tap, positions, noUiSlid
 if (typeof sXStarted == 'undefined') {
     var sXStarted = false;
     startSx();
-} 
+}
 
 function startSx() {
-    
-    if(sXStarted) return;
+
+    if (sXStarted) return;
     sXStarted = true;
 
     // make it work
@@ -50,9 +50,9 @@ function startSx() {
             let filterOptionElement = li.getElementsByTagName('a')[0]
 
             var dataSelectionId = filterOptionElement.getAttribute('data-selection-id');
-            
+
             if (sxAttributeOptions[filterName] && sxAttributeOptions[filterName][dataSelectionId]) {
-            
+
                 filterOptionElement.setAttribute('data-selection-id', sxAttributeOptions[filterName][dataSelectionId]['value']);
 
                 if (sxAttributeOptions[filterName][dataSelectionId]['count'] && sxAttributeOptions[filterName][dataSelectionId]['count'] >= 0) {
@@ -66,8 +66,12 @@ function startSx() {
             else {
                 // if we land here, is the "bitte wählen" option that clears the filter!
                 // i copy the word of the clear button, bc hopefully is translated
-                const text = document.querySelector("#resetFilter button").innerText;
-                filterOptionElement.innerText = text;
+                if (document.querySelector("#resetFilter button")) {
+                    const text = document.querySelector("#resetFilter button").innerText;
+                    filterOptionElement.innerText = text;
+                } else {
+                    filterOptionElement.innerText = "Clear";
+                }
                 filterOptionElement.classList.add('resetFilter');
             }
 
@@ -105,40 +109,40 @@ function startSx() {
             })
         }
         // sometimes, looks like things are not loaded yet... and no one is that fast anyway
-        setTimeout(function(){
+        setTimeout(function () {
             sidebarFiltersEvents();
             justStyleEvents();
         }, 2000);
     }
 }
 
-function sidebarFiltersEvents() {
-    let sidebarFilters = document.querySelectorAll(".sxFilterBoxSidebar .btn-group .btn, .sxFilterBoxSidebar .sxRangeFilter label");
+function sidebarFiltersEvents() {                                                        // this btn-filter is for sonepar
+    let sidebarFilters = document.querySelectorAll(".sxFilterBoxSidebar .btn-group .btn, .sxFilterBoxSidebar .btn-filter .btn,.sxFilterBoxSidebar .sxRangeFilter label");
     for (var j = 0; j < sidebarFilters.length; j++) {
         sidebarFilters[j].addEventListener('click', function (event) {
-            this.closest('.btn-group, .sxRangeFilter').classList.toggle('sideclosed');
+            this.closest('.btn-group, .btn-filter, .sxRangeFilter').classList.toggle('sideclosed');
         })
     }
-    
+
 }
 
 function justStyleEvents() {
     const styleInputsMin = document.querySelector(".js-style[data-input-type='min']");
     const styleInputsMax = document.querySelector(".js-style[data-input-type='max']");
     const styleBtn = document.querySelector(".js-style-btn");
-    if(styleBtn) {
-        styleBtn.addEventListener('click', function(event) {
+    if (styleBtn) {
+        styleBtn.addEventListener('click', function (event) {
             const filterName = this.closest('.sxRangeFilter').querySelector('.slider').getAttribute('id');
-            if((styleInputsMin.value < styleInputsMax.value) && 
-                (styleInputsMin.value >= styleInputsMin.getAttribute('min')) && 
+            if ((styleInputsMin.value < styleInputsMax.value) &&
+                (styleInputsMin.value >= styleInputsMin.getAttribute('min')) &&
                 (styleInputsMax.value <= styleInputsMax.getAttribute('max'))
-                ) {
-                    document.getElementsByName("attrfilter[" + filterName + "]")[0].value = styleInputsMin.value + '___' + styleInputsMax.value;
-                    
-                } else {
-                    document.getElementsByName("attrfilter[" + filterName + "]")[0].value = styleInputsMin.getAttribute('min') + '___' + styleInputsMax.getAttribute('max');
-                }
-                document.getElementById('filterList').submit();
+            ) {
+                document.getElementsByName("attrfilter[" + filterName + "]")[0].value = styleInputsMin.value + '___' + styleInputsMax.value;
+
+            } else {
+                document.getElementsByName("attrfilter[" + filterName + "]")[0].value = styleInputsMin.getAttribute('min') + '___' + styleInputsMax.getAttribute('max');
+            }
+            document.getElementById('filterList').submit();
         });
     }
 }
