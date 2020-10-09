@@ -104,10 +104,8 @@ class ArticleTransformer extends AbstractProductTransformer
 
             while($oxCategory){
 
-                if((string) $oxCategory->oxcategories__oxactive == '1' && (string) $oxCategory->oxcategories__oxhidden == '0' && strlen($oxCategory->getTitle())){
-                    $categoryPath[] = $oxCategory->getTitle();
-                } else {
-                    $categoryPath[] = $oxCategory->getId(); // no title availabe
+                if((string) $oxCategory->oxcategories__oxactive == '1' && (string) $oxCategory->oxcategories__oxhidden == '0')){
+                    $categoryPath[] = strlen($oxCategory->getTitle()) ? $oxCategory->getTitle() : $oxCategory->getId();
                 }
 
                 $oxCategory = $oxCategory->getParentCategory();
