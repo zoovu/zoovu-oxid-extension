@@ -46,7 +46,8 @@
 .list-filter.clearfix {
     padding-bottom: 15px;
 	border-bottom: 1px solid #eee;
-	margin-bottom: 40px;
+    margin-bottom: 40px;
+    background: transparent;
 }
 .list-filter .btn {
     margin: 5px 0;
@@ -109,7 +110,9 @@ span.unibox__highlight {
         min-height: 68px;
         min-width: 68px;
         padding: 4px 6px 4px 6px;
-        justify-content: center;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
         border-left: 1px solid transparent;
         border-bottom: 1px solid transparent;
         border-top: 1px solid transparent;
@@ -128,3 +131,289 @@ img.unibox__img {
 .unibox__selectable--active a{
         text-decoration: underline;
 } 
+
+/***
+Sidebar CSS
+***/
+.sxFilterBoxSidebar.box.well {
+    padding: 0;
+}
+.sxFilterBoxSidebar.box.well .page-header,
+.sxFilterBoxSidebar.box.well .sxRangeFilter,
+.sxFilterBoxSidebar.box.well .btn-group {
+    padding: 9px;
+    margin: 0;
+    background: transparent;
+}
+.sxFilterBoxSidebar.box.well .sxRangeFilter + .btn-group,
+.sxFilterBoxSidebar.box.well .btn-group + .sxRangeFilter,
+.sxFilterBoxSidebar.box.well .btn-group + .btn-group {
+    border-top: 1px solid #eee;
+}
+.sxFilterBoxSidebar .pull-left {
+    float: none !important;
+    width: 100%;
+}
+.sxFilterBoxSidebar .btn-group {
+    display: block;
+    width: 100%;
+}
+.sxFilterBoxSidebar .btn-group .btn {
+    border: 0;
+    background: none;
+    font-size: 0;
+    width: 100%;
+    text-align: left;
+    padding: 5px 0;
+    position: relative;
+    float: none;
+}
+.sxFilterBoxSidebar .btn-group .btn strong {
+    font-size: 14px;
+}
+.sxFilterBoxSidebar .btn-group .dropdown-menu{
+    display: block;
+    position: static !important;
+    width: 100%;
+    float: none;
+    -webkit-box-shadow: none;
+            box-shadow: none;
+    border: 0;
+    background: none;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    transform: none !important;
+}
+
+.sxFilterBoxSidebar .btn-group .btn .caret {
+    margin-left: 0;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    right: 0;
+    border: 0;
+    height: 16px;
+    background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cpath%20d%3D%22M8.103%2015.8a1.493%201.493%200%20000%202.109l14.496%2014.327c.243.24.63.382%201.019.43h.146c.388-.048.728-.19.97-.43l14.497-14.327a1.493%201.493%200%20000-2.109c-.581-.622-1.551-.622-2.181%200L23.67%2029.024%2010.29%2015.8a1.507%201.507%200%2000-2.182%200z%22%2F%3E%3C%2Fsvg%3E);
+    width: 16px;
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+
+
+.sxFilterBoxSidebar .dropdown-menu>li>a {
+    white-space: normal;
+    position: relative;
+    padding-left: 30px;
+}
+.sxFilterBoxSidebar .dropdown-menu>li>a:hover, 
+.sxFilterBoxSidebar .dropdown-menu>li>a:focus {
+    color: inherit;
+    background-color: transparent;
+}
+.sxFilterBoxSidebar .dropdown-menu li a:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border: 1px solid;
+    border-radius: 4px;
+    text-align: center;
+    top: 3px;
+}
+.sxFilterBoxSidebar .dropdown-menu>li>a:hover:after,
+.sxFilterBoxSidebar .dropdown-menu li a.selected:after {
+    content: ' ✓';
+    position: absolute;
+    left: 6px;
+    font-size: 10px;
+    top: 6px;
+    font-weight: 700;
+}
+
+.sxFilterBoxSidebar .dropdown-menu li a.selected:before {
+    background: #333;
+}
+
+.sxFilterBoxSidebar .dropdown-menu li a.selected:after {
+    color: #fff;
+}
+
+.sxFilterBoxSidebar .sxRangeFilter {
+    display: block;
+    padding: 0;
+    height: auto;
+}
+
+.sxFilterBoxSidebar .sxRangeFilter .slider {
+    margin: 10px 15px 20px 0;
+    height: 5px;
+}
+.sxFilterBoxSidebar .sxRangeFilter label {
+    font-size: 14px;
+    margin: 10px 0 20px 0;
+    display: block;
+    padding: 5px 0;
+    position: relative;
+    cursor: pointer;
+}
+.sxFilterBoxSidebar .sxRangeFilter label:after {
+    margin-left: 0;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+    right: 0;
+    border: 0;
+    content: "";
+    height: 16px;
+    background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cpath%20d%3D%22M8.103%2015.8a1.493%201.493%200%20000%202.109l14.496%2014.327c.243.24.63.382%201.019.43h.146c.388-.048.728-.19.97-.43l14.497-14.327a1.493%201.493%200%20000-2.109c-.581-.622-1.551-.622-2.181%200L23.67%2029.024%2010.29%2015.8a1.507%201.507%200%2000-2.182%200z%22%2F%3E%3C%2Fsvg%3E);
+    width: 16px;
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+.sxFilterBoxSidebar .sxRangeFilter .noUi-horizontal .noUi-handle {
+    height: 20px;
+    width: 20px;
+    top: -10px;
+    background: #333;
+}
+
+.sxFilterBoxSidebar .sxRangeFilter .noUi-horizontal .noUi-handle:before {
+    display: none;
+}
+
+.sxFilterBoxSidebar .sxRangeFilter .noUi-horizontal .noUi-handle:after {
+    background-image: url( data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M15.467%208.436a1.493%201.493%200%20012.109%200l14.326%2014.497c.24.242.383.63.431%201.018v.147c-.048.387-.191.727-.43.97L17.575%2039.563a1.493%201.493%200%2001-2.11%200c-.622-.581-.622-1.551%200-2.181l13.224-13.38-13.223-13.38a1.507%201.507%200%20010-2.182z%22%2F%3E%3C%2Fsvg%3E);
+    background-color: #333;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.sxFilterBoxSidebar .sxRangeFilter .noUi-horizontal .noUi-handle-upper:after {
+    -webkit-transform: scaleX(-1);
+        -ms-transform: scaleX(-1);
+            transform: scaleX(-1);
+}
+.sxFilterBoxSidebar .list-filter .btn[type=submit] {
+    margin: 10px 9px !important;
+}
+.sxFilterBoxSidebar .btn-group.open .dropdown-toggle {
+    -webkit-box-shadow: none;
+            box-shadow: none;
+    background: transparent;
+}
+.sxFilterBoxSidebar .btn-group.sideclosed>.dropdown-menu {
+    display: none;
+}
+.sxFilterBoxSidebar .btn-group .dropdown-toggle:hover {
+    color: inherit;
+}
+.sxFilterBoxSidebar .btn-group .dropdown-toggle:active,
+.sxFilterBoxSidebar .btn-group.sideclosed .dropdown-toggle {
+    -webkit-box-shadow: none;
+            box-shadow: none;
+}
+.sxFilterBoxSidebar .btn-group.sideclosed .btn .caret {
+    -webkit-transform: translateY(-50%) scaleY(-1);
+        -ms-transform: translateY(-50%) scaleY(-1);
+            transform: translateY(-50%) scaleY(-1);
+}
+
+.slider-helper {
+    display: none;
+}
+
+.sxFilterBoxSidebar .slider-helper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+.sxFilterBoxSidebar .sxRangeFilter.sideclosed label:after {
+    content: "";
+    -webkit-transform: translateY(-50%) scaleY(-1);
+        -ms-transform: translateY(-50%) scaleY(-1);
+            transform: translateY(-50%) scaleY(-1);
+}
+
+.sxFilterBoxSidebar .sxRangeFilter.sideclosed .slider-wrapper {
+    display: none;
+}
+
+.sxFilterBoxSidebar .sxRangeFilter .btn {
+    margin: 0 0 0 auto;
+    background: #fff;
+    border-color: #ccc;
+}
+.slider-helper span {
+    line-height: 30px;
+    display: inline-block;
+    margin: 0 5px;
+}
+.slider-helper .unit {
+    width: 200%;
+}
+.form-control-sm {
+    height: 30px;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+/* Chrome, Safari, Edge, Opera */
+.slider-helper input::-webkit-outer-spin-button,
+.slider-helper input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.slider-helper input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.sxFilterBoxSidebar .dropdown-menu li a.resetFilter {
+    margin-bottom: 10px;
+    font-size: 12px;
+    padding: 3px 20px 3px 22px;
+    display: block;
+}
+.sxFilterBoxSidebar .dropdown-menu li a.resetFilter:hover:after {
+    font-size: 12px;
+    font-weight: 400;
+}
+.sxFilterBoxSidebar .dropdown-menu li a.resetFilter:after {
+    content: "✖";
+    position: absolute;
+    left: 6px;
+    top: 3px;
+}
+.sxFilterBoxSidebar .dropdown-menu li a.resetFilter:before {
+    display: none;
+}
+
+.sxFilterBoxSidebar .list-filter.clearfix {
+    margin: 0px;
+    padding: 0;
+}
+.sxFilterBoxSidebar .filter-item.active, 
+.sxFilterBoxSidebar .filter-item.selected, 
+.sxFilterBoxSidebar .filter-item:hover {
+    background-color: transparent;
+}
+.sxFilterBoxSidebar .show>.btn-outline-dark.dropdown-toggle {
+    color: inherit;
+}
+@media (min-width: 768px) {
+    .sxFilterBoxSidebar .filter-attributes .list-filter .btn-group .btn {
+        width: 100%;
+    }
+}

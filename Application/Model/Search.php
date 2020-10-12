@@ -49,41 +49,22 @@ class Search extends Search_parent
      */
     public function setSxConfigValues()
     {
+
         $oxRegistry = new Registry();
+
         $this->_oxAbbrLanguage = ucfirst($oxRegistry->getLang()->getLanguageAbbr());
 
-        $sxFrontendActive = $this->_sxHelper->get('sxFrontendActive' . $this->_oxAbbrLanguage);
+        $sxConfigValues = $this->_sxHelper->getConfig($this->_oxAbbrLanguage);
 
-        if($sxFrontendActive){
-
-            $sxIsSandbox = $this->_sxHelper->get('sxIsSandbox' . $this->_oxAbbrLanguage);
-            $sxApiUrl = $sxIsSandbox ? $this->_sxHelper->get('sxSandboxApiUrl') : $this->_sxHelper->get('sxApiUrl');
-
-            $sxProjectId = $this->_sxHelper->get('sxProjectId' . $this->_oxAbbrLanguage);
-            $sxApiKey = $this->_sxHelper->get('sxApiKey' . $this->_oxAbbrLanguage);
-
-            $oxShopId = $oxRegistry->getConfig()->getShopId();
-
-            $sxRequestTimeout = (int) $this->_sxHelper->get('sxRequestTimeout');
-
-            $sxConfigValues = [
-                // required options
-                'projectId' => $sxProjectId,
-                'apiKey' => $sxApiKey,
-                'apiUrl' => $sxApiUrl,
-                'requestTimeout' => $sxRequestTimeout,
-                'shopId' => $oxShopId,
-                'lang' => $this->_oxAbbrLanguage,
-            ];
-
-            $sxConfigValues = $this->_sxHelper->getMasterConfig($sxConfigValues, $this->_oxAbbrLanguage);
-
-            // since its possible to set login data by masterConfig, this check has to be the last one
-            if($sxConfigValues['projectId'] && $sxConfigValues['apiKey']){
-                $this->_sxConfigValues = $sxConfigValues;
-            }
-
+        if($sxConfigValues['frontendActive']){
+            $this->_sxConfigValues = $sxConfigValues;
         }
+
+        return;
+
+        echo '<pre>';
+        var_dump($this->_sxConfigValues);
+        die;
 
     }
 
@@ -110,7 +91,8 @@ class Search extends Search_parent
      */
     public function getSearchArticles($sSearchParamForQuery = false, $sInitialSearchCat = false, $sInitialSearchVendor = false, $sInitialSearchManufacturer = false, $sSortBy = false)
     {
-        $logger = $this->_oxRegistry->getLogger();
+        $oxRegistry = new Registry();
+        $logger = $oxRegistry->getLogger();
 
         if (!$this->_sxConfigValues){
             $sSortBy = !is_array($sSortBy) ? (string) $sSortBy : false;
