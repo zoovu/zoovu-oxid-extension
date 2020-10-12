@@ -40,10 +40,115 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
 
     }
 
+
     /**
      * cronjob runner (checks what to do start/continue)
      */
     protected function _cronRunner()
+    {
+        $startTime = time(); // for logging duration
+        $flags = array();
+
+        $sxUpload = new UploadController([]);
+
+        $sxShopUloads = array();
+        foreach($sxUpload->getShopConfigs() as $key => $shopConfig){
+
+            $sxShopUloads[$key] = new UploadController($shopConfig);
+            $sxShopUloads[$key]->config = $shopConfig;
+            $sxShopUloads[$key]->start_upload = ($this->_currentHour == $shopConfig['cronjobHour'] && $this->_currentMinute == $shopConfig['cronjobMinute']);
+        }
+
+
+        // [-1-] Check if upload has to be started
+        foreach($sxShopUloads as $key => $shopUploader){
+
+            if($shopUploader->start_upload && !$shopUploader->isRunning()){
+                $shopUploader->startFullUpload();
+                unset($sxShopUloads[$key]);
+                $flags['running'] = true;
+            } elseif(!$shopUploader->isRunning()){
+                unset($sxShopUloads[$key]);
+            }
+        }
+
+
+        // [-2-] check queue actions
+        if(isset($flags['running'])){
+            $sxQueue = new SxQueue();
+
+            // empty update queue
+            $sxQueue->set('update');
+            $sxQueue->empty();
+
+            // empty delete queue
+            $sxQueue->set('delete');
+            $sxQueue->empty();
+        }
+
+
+        // [-3-] collecting for all shops
+        // >>> check if !!!COLLECTING!!! needs to be continued (always just one job per cronrun!)
+        foreach ($sxShopUloads as $key => $shopUploader) {
+
+            if ($shopUploader->isReadyToUpload()) continue;   
+
+            // !!!COLLECTING!!!
+            $shopUploader->continueFullUpload();
+            $flags['collecting'] = true;
+            break; // (always just one job per cronrun!)
+        }
+
+
+        // [-4-] uploading for all shops
+        // >>>> check if !!!UPLOADING!!! needs to be continued (always just one job per cronrun!)
+        if (!isset($flags['collecting'])) {
+
+            foreach ($sxShopUloads as $key => $shopUploader) {
+
+                if (!$shopUploader->isReadyToUpload() || $shopUploader->isReadyToFinalize()) continue;
+
+                // !!!UPLOADING!!!
+                $shopUploader->continueFullUpload();
+                $flags['uploading'] = true;
+                break; // (always just one job per cronrun!)
+            
+            }
+        }
+
+
+        // [-5-] finalizing for all shops !!!AT ONCE!!!
+        // >>> check if !!!FINALIZE UPLOADING!!! needs to be continued (always just one job per cronrun!)
+        if (!isset($flags['collecting']) && !isset($flags['uploading'])) {
+
+            $signalSent = true;
+
+            foreach ($sxShopUloads as $key => $shopUploader) {
+
+                if (!$shopUploader->isReadyToUpload() || !$shopUploader->isReadyToFinalize()) continue;
+
+                // !!!FINALIZE UPLOADING!!!
+                $shopUploader->finalizeFullUpload($signalSent);
+
+                if (isset($shopUploader->config['userGroup'])) {
+                    $signalSent = false;
+                };
+        
+            }
+        }
+
+
+
+        $this->sxResponse = ['status' => 'success', 'duration' => time() - $startTime];
+
+
+    }
+
+
+    /**
+     * cronjob runner (checks what to do start/continue)
+     */
+    protected function _cronRunnerOLD()
     {
         $startTime = time();
         $sxQueue = new SxQueue();
