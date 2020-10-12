@@ -10,6 +10,7 @@ use Semknox\Productsearch\Application\Model\SxHelper;
 
 use Semknox\Core\SxConfig;
 use Semknox\Core\SxCore;
+use Semknox\Core\Exceptions\DuplicateInstantiationException;
 
 class UploadController
 {
@@ -42,9 +43,20 @@ class UploadController
         $configValues = array_merge($defaultValues, $configValues);
 
         $this->_sxConfig = new SxConfig($configValues);
-        $this->_sxCore = new SxCore($this->_sxConfig);
-        $this->_sxUploader = $this->_sxCore->getInitialUploader();
-        $this->_sxUpdater = $this->_sxCore->getProductUpdater();
+
+        try{
+
+            $this->_sxCore = new SxCore($this->_sxConfig);
+            $this->_sxUploader = $this->_sxCore->getInitialUploader();
+            $this->_sxUpdater = $this->_sxCore->getProductUpdater();
+
+        } catch(DuplicateInstantiationException $e){
+            
+            $logger = $this->_oxRegistry->getLogger();
+            $logger->error('Duplicate instantiation of uploader. Cronjob execution to close?', [__CLASS__, __FUNCTION__]);
+            exit();
+        }
+
     }
 
     /**
