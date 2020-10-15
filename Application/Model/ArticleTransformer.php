@@ -2,7 +2,6 @@
 
 namespace Semknox\Productsearch\Application\Model;
 
-use Codeception\Lib\Generator\Shared\Classname;
 use InvalidArgumentException;
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\CategoryList;

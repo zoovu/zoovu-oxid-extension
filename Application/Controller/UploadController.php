@@ -45,7 +45,7 @@ class UploadController
         $this->_sxConfig = new SxConfig($configValues);
 
         try{
-
+            
             $this->_sxCore = new SxCore($this->_sxConfig);
             $this->_sxUploader = $this->_sxCore->getInitialUploader();
             $this->_sxUpdater = $this->_sxCore->getProductUpdater();
