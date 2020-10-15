@@ -144,7 +144,7 @@ if(function_exists('oxNew')){
             'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
             'name' => 'sxFrontendActive' . $oxid,
             'type' => 'bool',
-            'value' => 'false',
+            'value' => 'true',
             'position' => 4
         );
 
@@ -152,7 +152,7 @@ if(function_exists('oxNew')){
             'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
             'name' => 'sxUploadActive' . $oxid,
             'type' => 'bool',
-            'value' => 'false',
+            'value' => 'true',
             'position' => 5
         );
 
@@ -168,7 +168,7 @@ if(function_exists('oxNew')){
             'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
             'name' => 'sxAnswerActive' . $oxid,
             'type' => 'bool',
-            'value' => 'false',
+            'value' => 'true',
             'position' => 7
         );
 
