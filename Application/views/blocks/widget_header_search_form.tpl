@@ -6,6 +6,7 @@
     [{assign var="projectId" value=$oViewConf->getSxConfigValue('projectId')}]
     [{assign var="userGroup" value=$oViewConf->getSxConfigValue('userGroup')}]
     [{assign var="apiUrl" value=$oViewConf->getSxConfigValue('apiUrl')}]
+    [{assign var="dataPoints" value=$oViewConf->getSxConfigValue('dataPoints','{}')}]
 
     /* eslint-disable */
     (function () {
@@ -14,6 +15,9 @@
             siteId: siteId,
             baseUrl: '[{$apiUrl}]search?projectId=' + siteId + '&userGroup=[{$userGroup}]',
             suggestBaseUrl: '[{$apiUrl}]search/suggestions?projectId=' + siteId + '&userGroup=[{$userGroup}]',
+            suggestions: {
+                dataPoints: [{$dataPoints}]
+            },
             searchBox: {
                 selector: 'input[name="searchparam"]', // search box css selector
                 searchButton: '.form.search .btn-primary', // search button css selector (makes the search suggestions extend over the full search form width)

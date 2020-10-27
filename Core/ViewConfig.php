@@ -18,9 +18,10 @@ class ViewConfig extends ViewConfig_parent
     /*
      * get sc config value by key
      */
-    public function getSxConfigValue($key)
+    public function getSxConfigValue($key, $default = null)
     {
-        return isset($this->_sxConfigValues[$key]) ? $this->_sxConfigValues[$key] : '';
+        $default = $default ? $default : '';
+        return isset($this->_sxConfigValues[$key]) ? $this->_sxConfigValues[$key] : $default;
     }
 
 }
