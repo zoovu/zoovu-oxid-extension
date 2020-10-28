@@ -30,7 +30,7 @@
                     <input class="js-style form-control form-control-sm" data-input-type="min" value="[{$activeValueRange[0]}]" min="[{$valueRange[0]}]" type="number" name="num1">
                     <span>-</span>
                     <input class="js-style form-control form-control-sm" data-input-type="max" value="[{$activeValueRange[1]}]" max="[{$valueRange[1]}]" type="number" name="num2">
-                    <span class="unit">Stück</span>
+                    <span class="unit">[{$oFilterAttr->unit}]</span>
                     <button class="js-style-btn btn btn-default btn-sm" type="button"><i class="fa fa-angle-right"></i></button>
                 </div>
             </div>
