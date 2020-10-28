@@ -50,7 +50,7 @@
                 });
                 sxRangeFilter["[{$sAttrID}]"].on('end', sxRangeFilterAction);
 
-                document.getElementsByName("attrfilter[[{$sAttrID}]]")[0].parentNode.style.display = "none";
+                document.getElementsByName("attrfilter[[{$sAttrID}]]")[0].parentNode.setAttribute('style','display:none !important;');
             </script>
 
         </div>

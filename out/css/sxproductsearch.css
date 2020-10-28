@@ -417,3 +417,7 @@ Sidebar CSS
         width: 100%;
     }
 }
+
+.sxFilterBoxSidebar .filter-light-row {
+    display: none;
+}
