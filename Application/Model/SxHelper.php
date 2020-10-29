@@ -162,7 +162,7 @@ class SxHelper {
             $masterConfig = $this->_sxMasterConfig[$lang];
             $configValues = array_merge($configValues, $masterConfig);
 
-            if (isset($masterConfig['projectId']) && isset($masterConfig['apiKey']) && isset($configValues['shopId'])) {
+            if (!isset($configValues['userGroup']) && isset($masterConfig['projectId']) && isset($masterConfig['apiKey']) && isset($configValues['shopId'])) {
                 // for masterConfig routine (merge multiple subshops with same products)
                 $configValues['userGroup'] = $configValues['shopId'].'-'.$configValues['lang'];
             }
