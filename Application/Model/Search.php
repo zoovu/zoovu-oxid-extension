@@ -223,7 +223,7 @@ class Search extends Search_parent
                 $attribute->addValue($minValue.'___'. $maxValue.'___'. $suffix);
                 $attribute->setActiveValue($filter->getActiveMin() . '___' . $filter->getActiveMax());
 
-                $attribute->setTitle($filterName . " (" . $filter->getActiveMin() .$filter->getUnit()." - " . $filter->getActiveMax() . $filter->getUnit().")");
+                $attribute->setTitle($filterName . " (" . $filter->getActiveMin().' '.$filter->getUnit()." - " . $filter->getActiveMax() . ' ' . $filter->getUnit().")");
                 $attribute->unit = $filter->getUnit();
 
                 $sxAvailableRangeFilters->add($attribute);
