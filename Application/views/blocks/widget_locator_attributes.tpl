@@ -11,12 +11,16 @@
 <link rel="stylesheet" type="text/css" href="[{$oViewConf->getModuleUrl('sxproductsearch','out/lib/nouislider/nouislider.min.css')}]" />
 <link rel="stylesheet" type="text/css" href="[{$oViewConf->getModuleUrl('sxproductsearch','out/css/sxproductsearch.css')}]" />
 
+[{if $inSidebar}]
+    [{assign var="idSuffix" value="Sidebar"}]
+[{else}]
+    [{assign var="idSuffix" value=""}]
+[{/if}]
+
+
 [{if $oView->isSxSearch && $oView->getRangeAttributes()}]
-    <script type="text/javascript">
-        var sxRangeFilter = [];
-    </script>
     [{foreach from=$oView->getRangeAttributes() item=oFilterAttr key=sAttrID name=attr}]
-        <div class="sxRangeFilter">
+        <div class="sxRangeFilter sxIn[{$idSuffix}]">
 
             [{foreach from=$oFilterAttr->getValues() item=sValue}]
                 [{assign var="valueRange" value="___"|explode:$sValue}]
@@ -25,7 +29,7 @@
 
             <label>[{$oFilterAttr->getTitle()}]: </label>
             <div class="slider-wrapper">
-                <div class="slider" id="[{$sAttrID}]"></div>
+                <div class="slider" id="[{$sAttrID}][{$idSuffix}]"></div>
                 <div class="slider-helper">
                     <input class="js-style form-control form-control-sm" data-input-type="min" value="[{$activeValueRange[0]}]" min="[{$valueRange[0]}]" type="number" name="num1">
                     <span>-</span>
@@ -36,7 +40,7 @@
             </div>
 
             <script type="text/javascript">
-                sxRangeFilter["[{$sAttrID}]"] = noUiSlider.create(document.getElementById("[{$sAttrID}]"), {
+                sxRangeFilter["[{$sAttrID}][{$idSuffix}]"] = noUiSlider.create(document.getElementById("[{$sAttrID}][{$idSuffix}]"), {
                     start: [[{$activeValueRange[0]}], [{$activeValueRange[1]}]],
                     connect: true,
                     range: {
@@ -48,20 +52,12 @@
                         step: 1,
                     [{/if}]
                 });
-                sxRangeFilter["[{$sAttrID}]"].on('end', sxRangeFilterAction);
+                sxRangeFilter["[{$sAttrID}][{$idSuffix}]"].on('end', sxRangeFilterAction);
 
-                document.getElementsByName("attrfilter[[{$sAttrID}]]")[0].parentNode.setAttribute('style','display:none !important;');
+                sxFilterToHide.push("attrfilter[[{$sAttrID}]]");
             </script>
 
         </div>
     [{/foreach}]
-    <script type="text/javascript">
-        var filterForm = document.getElementById("filterList"); 
-        var rangeFilters = document.getElementsByClassName("sxRangeFilter"); 
-
-        for (var i = 0; i < rangeFilters.length; i++) {
-            filterForm.appendChild(rangeFilters[i]);
-        }
-    </script>
 [{/if}]
 

@@ -7,6 +7,9 @@ function sxRangeFilterAction(values, handle, unencoded, tap, positions, noUiSlid
     // positions: Left offset of the handles (array);
     // noUiSlider: slider public Api (noUiSlider);
 
+    var id = this.target.getAttribute('id');
+    if (id.endsWith('Sidebar')) id = id.substr(-7);
+
     document.getElementsByName("attrfilter[" + this.target.getAttribute('id') + "]")[0].value = values[0] + '___' + values[1];
     document.getElementById('filterList').submit();
 }
@@ -145,4 +148,14 @@ function justStyleEvents() {
             document.getElementById('filterList').submit();
         });
     }
+}
+
+function hasSomeParentTheClass(element, classname) {
+    if (element.className && element.className.split(' ').indexOf(classname) >= 0) return true;
+    return element.parentNode && hasSomeParentTheClass(element.parentNode, classname);
+}
+
+function getParentWithClass(element, classname) {
+    if (element.className && element.className.split(' ').indexOf(classname) >= 0) return element;
+    return element.parentNode && getParentWithClass(element.parentNode, classname);
 }
