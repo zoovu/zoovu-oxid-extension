@@ -224,7 +224,7 @@ class Search extends Search_parent
                 $attribute->setActiveValue($filter->getActiveMin() . '___' . $filter->getActiveMax());
 
 
-                if($this->_sxConfig->get('hideRangeInRaneSliderTitle', false)){
+                if($this->_sxConfig->get('hideRangeInRangeSliderTitle', false)){
                     $attribute->setTitle($filterName);
                 } else {
                     $attribute->setTitle($filterName . " (" . $filter->getActiveMin() . ' ' . $filter->getUnit() . " - " . $filter->getActiveMax() . ' ' . $filter->getUnit() . ")");

@@ -190,7 +190,7 @@ if(function_exists('oxNew')){
 
         $settings[] = array(
             'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
-            'name' => 'sxHideRangeInRaneSliderTitle' . $oxid,
+            'name' => 'sxHideRangeInRangeSliderTitle' . $oxid,
             'type' => 'bool',
             'value' => 'false',
             'position' => 8
