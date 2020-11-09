@@ -223,7 +223,12 @@ class Search extends Search_parent
                 $attribute->addValue($minValue.'___'. $maxValue.'___'. $suffix);
                 $attribute->setActiveValue($filter->getActiveMin() . '___' . $filter->getActiveMax());
 
-                $attribute->setTitle($filterName . " (" . $filter->getActiveMin().' '.$filter->getUnit()." - " . $filter->getActiveMax() . ' ' . $filter->getUnit().")");
+
+                if($this->_sxConfig->get('hideRangeInRaneSliderTitle', false)){
+                    $attribute->setTitle($filterName);
+                } else {
+                    $attribute->setTitle($filterName . " (" . $filter->getActiveMin() . ' ' . $filter->getUnit() . " - " . $filter->getActiveMax() . ' ' . $filter->getUnit() . ")");
+                }
                 $attribute->unit = $filter->getUnit();
 
                 $sxAvailableRangeFilters->add($attribute);

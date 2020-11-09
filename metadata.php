@@ -187,6 +187,14 @@ if(function_exists('oxNew')){
             'value' => 'false',
             'position' => 8
         );
+
+        $settings[] = array(
+            'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
+            'name' => 'sxHideRangeInRaneSliderTitle' . $oxid,
+            'type' => 'bool',
+            'value' => 'false',
+            'position' => 8
+        );
     }
 }
 
