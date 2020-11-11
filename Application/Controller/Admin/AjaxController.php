@@ -49,7 +49,7 @@ class AjaxController extends \OxidEsales\Eshop\Application\Controller\Admin\Admi
         
         $responseData = array();
 
-        $this->_sxUpload->setConfig();
+        $this->_sxUpload->setConfig([], true);
         $shopConfigs = $this->_sxUpload->getShopConfigs();
 
         foreach($shopConfigs as $shop){

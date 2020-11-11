@@ -33,7 +33,7 @@ class UploadController
     }
 
 
-    public function setConfig($configValues = [])
+    public function setConfig($configValues = [], $noUploader = false)
     {
 
         // really needed 
@@ -44,19 +44,19 @@ class UploadController
 
         $this->_sxConfig = new SxConfig($configValues);
 
-        try{
-            
+        try {
             $this->_sxCore = new SxCore($this->_sxConfig);
-            $this->_sxUploader = $this->_sxCore->getInitialUploader();
-            $this->_sxUpdater = $this->_sxCore->getProductUpdater();
 
-        } catch(DuplicateInstantiationException $e){
-            
+            if (!$noUploader) {
+                $this->_sxUploader = $this->_sxCore->getInitialUploader();
+                $this->_sxUpdater = $this->_sxCore->getProductUpdater();
+            }
+        } catch (DuplicateInstantiationException $e) {
+
             $logger = $this->_oxRegistry->getLogger();
             $logger->error('Duplicate instantiation of uploader. Cronjob execution to close?', [__CLASS__, __FUNCTION__]);
             exit();
         }
-
     }
 
     /**
