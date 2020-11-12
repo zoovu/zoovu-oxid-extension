@@ -141,6 +141,10 @@ class Search extends Search_parent
                 $options = array_values($options);
             } 
             
+            foreach($options as &$option){
+                $option = html_entity_decode($option);
+            }
+            
             $sxSearch->addFilter($filterId, $options);
         }
 
