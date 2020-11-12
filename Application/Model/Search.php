@@ -63,11 +63,6 @@ class Search extends Search_parent
         }
 
         return;
-
-        echo '<pre>';
-        var_dump($this->_sxConfigValues);
-        die;
-
     }
 
     /**
@@ -144,7 +139,7 @@ class Search extends Search_parent
             foreach($options as &$option){
                 $option = html_entity_decode($option);
             }
-            
+
             $sxSearch->addFilter($filterId, $options);
         }
 

@@ -88,7 +88,12 @@
         for (var i = 0; i < filterLists.length; i++) {
             filterListsItems = filterLists[i].getElementsByTagName("LI");
             if(filterListsItems.length > 8){
-                filterLists[i].parentNode.innerHTML +='<button class="show-more" type="button">[{oxmultilang ident="SX_show_more"}]</button>';
+
+                button = document.createElement('button');
+                button.classList.add("show-more");
+                button.setAttribute("type", "button");
+                button.innerHTML = '[{oxmultilang ident="SX_show_more"}]';
+                filterLists[i].parentNode.appendChild(button);
             }
         }
     }
