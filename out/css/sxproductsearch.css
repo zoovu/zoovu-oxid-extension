@@ -421,3 +421,11 @@ Sidebar CSS
 .sxFilterBoxSidebar .filter-light-row {
     display: none;
 }
+
+/*Display just  first 8 -needs js to toggle more*/
+.sxFilterBoxSidebar .dropdown-menu li:nth-of-type(n+9) {
+    display: none;
+}
+.sxFilterBoxSidebar .dropdown-menu.showAll li:nth-of-type(n+9) {
+    display: block;
+}

@@ -16,7 +16,7 @@
                     sxFilterBoxSidebar" id="filterBox">
             <div class="page-header h3   [{* <= default classes/styling of flow-theme*}]
                         card-header      [{* <= default classes/styling of wave-theme*}]"
-                        >Filter</div>
+                        >[{oxmultilang ident="DD_LISTLOCATOR_FILTER_ATTRIBUTES"}]</div>
   
             [{include file="widget/locator/listlocator.tpl" attributes=$oView->getAttributes() inSidebar=true}]
         </div>
@@ -80,5 +80,35 @@
     for (var i = 0; i <  topbarRangeSliders.length; i++) {
         sxForms['topbar'].appendChild(topbarRangeSliders[i]);
     }
+
+
+    // add toggle list feature
+    if(sxForms['sidebar']){
+        var filterLists = sxForms['sidebar'].getElementsByClassName("dropdown-menu");
+        for (var i = 0; i < filterLists.length; i++) {
+            filterListsItems = filterLists[i].getElementsByTagName("LI");
+            if(filterListsItems.length > 8){
+                filterLists[i].parentNode.innerHTML +='<button class="show-more" type="button">[{oxmultilang ident="SX_show_more"}]</button>';
+            }
+        }
+    }
+
+    document.addEventListener('click', function (event) {
+
+        // If the clicked element doesn't have the right selector, bail
+        if (!event.target.matches('button.show-more')) return;
+        event.preventDefault();
+
+        parent = event.target.parentNode.getElementsByClassName('dropdown-menu')[0];
+        if(event.target.innerHTML == '[{oxmultilang ident="SX_show_more"}]'){
+            parent.classList.add('showAll');
+            event.target.innerHTML = '[{oxmultilang ident="SX_show_less"}]';
+        } else {
+            parent.classList.remove('showAll');
+            event.target.innerHTML = '[{oxmultilang ident="SX_show_more"}]';
+        }
+
+    }, false);
+
 
 </script>
