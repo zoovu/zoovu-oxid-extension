@@ -27,7 +27,7 @@
             [{/foreach}]
             [{assign var="activeValueRange" value="___"|explode:$oFilterAttr->getActiveValue()}]
 
-            <label>[{$oFilterAttr->getTitle()}]: </label>
+            <label>[{$oFilterAttr->sxTitle}]: </label>
             <div class="slider-wrapper">
                 <div class="slider" id="[{$sAttrID}][{$idSuffix}]"></div>
                 <div class="slider-helper">

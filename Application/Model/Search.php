@@ -34,6 +34,8 @@ class Search extends Search_parent
         $this->setSxConfigValues();
         if(!$this->_sxConfigValues) return;
 
+        $this->_sxConfigValues['requestTimeout'] = '2'; // for search request should not be longer
+
         $this->_sxConfig = new SxConfig($this->_sxConfigValues);
         $this->_sxCore = new SxCore($this->_sxConfig);
 
@@ -224,11 +226,11 @@ class Search extends Search_parent
                 $attribute->setActiveValue($filter->getActiveMin() . '___' . $filter->getActiveMax());
 
 
-                if($this->_sxConfig->get('hideRangeInRangeSliderTitle', false)){
-                    $attribute->setTitle($filterName);
-                } else {
-                    $attribute->setTitle($filterName . " (" . $filter->getActiveMin() . ' ' . $filter->getUnit() . " - " . $filter->getActiveMax() . ' ' . $filter->getUnit() . ")");
+                $attribute->sxTitle = $filterName;
+                if(!$this->_sxConfig->get('hideRangeInRangeSliderTitle', false)){
+                    $attribute->sxTitle .= " <span class='sxTitleRange'>(" . $filter->getActiveMin() . ' ' . $filter->getUnit() . " - " . $filter->getActiveMax() . ' ' . $filter->getUnit() . ")</span>";
                 }
+                $attribute->setTitle($filterName);
                 $attribute->unit = $filter->getUnit();
 
                 $sxAvailableRangeFilters->add($attribute);
