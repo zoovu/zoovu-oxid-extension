@@ -8,9 +8,9 @@ function sxRangeFilterAction(values, handle, unencoded, tap, positions, noUiSlid
     // noUiSlider: slider public Api (noUiSlider);
 
     var id = this.target.getAttribute('id');
-    if (id.endsWith('Sidebar')) id = id.substr(-7);
+    if (id.endsWith('Sidebar')) id = id.substr(0, id.length - 7);
 
-    document.getElementsByName("attrfilter[" + this.target.getAttribute('id') + "]")[0].value = values[0] + '___' + values[1];
+    document.getElementsByName("attrfilter[" + id + "]")[0].value = values[0] + '___' + values[1];
     document.getElementById('filterList').submit();
 }
 
