@@ -1,8 +1,8 @@
 {
   "name": "semknox/semknox-oxid",
-  "description": "This is the Semknox ProductSearch module for the OXID eShop.",
+  "description": "This is the SEMKNOX module for the OXID eShop.",
   "homepage": "https://www.semknox.com",
-  "version": "3.0.9",
+  "version": "3.0.11",
   "type": "oxideshop-module",
   "keywords": [
     "semknox",
@@ -12,8 +12,8 @@
   ],
   "authors": [
     {
-      "name": "Youbility Software",
-      "email": "info@youbility.de"
+      "name": "SEMKNOX GmbH",
+      "email": "oxid@sitesearch360.com"
     }
   ],
   "require": {

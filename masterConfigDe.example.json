@@ -7,14 +7,19 @@
     "collectBatchSize": "500",
     "uploadBatchSize": "500",
     "requestTimeout": "15",
-    "sxFrontendActive" => true|false,
-    "sxUploadActive" => true|false,
-    "sxIncrementalUpdatesActive" => true|false,
-    "sxAnswerActive" => true|false,
-    "additionalCss" => "...", /* minfied css (one line!) */
+    "sxFrontendActive": true|false,
+    "sxUploadActive": true|false,
+    "sxIncrementalUpdatesActive": true|false,
+    "sxAnswerActive": true|false,
+    "additionalCss": "...", /* minfied css (one line!) */
 
-    "imageUrlSuffix" => "...", /* suffix for all images */
+    "imageUrlSuffix": "...", /* suffix for all images */
     "imageUrlSuffix": {
         "SMALL": "?300&300" /* suffix by type .... SMALL | LARGE | THUMB */
-    }
+    },
+
+    /* ADVANCED Settings ... do not use if not necessary! */
+
+    "masterStoreUrl": "\\/\\/domain.com\\/", /* <= url that will be replaced in SS360 results if replaceMasterStoreUrlInSS360Result is TRUE */
+    "replaceMasterStoreUrlInSS360Result": true|false, /* <= this will replace the masterStoreUrl with the current shop url*/
 }

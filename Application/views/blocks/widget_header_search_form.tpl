@@ -7,6 +7,12 @@
     [{assign var="userGroup" value=$oViewConf->getSxConfigValue('userGroup')}]
     [{assign var="apiUrl" value=$oViewConf->getSxConfigValue('apiUrl')}]
     [{assign var="dataPoints" value=$oViewConf->getSxConfigValue('dataPoints','{}')}]
+    [{assign var="currentStoreUrl" value=$oViewConf->getHomeLink()}]
+    [{assign var="sxproductsearchVersion" value=$oViewConf->getSxConfigValue('version','undefined')}]
+    [{assign var="sxproductsearchTitle" value=$oViewConf->getSxConfigValue('title','sxproductsearch')}]
+
+    [{assign var="masterStoreUrl" value=$oViewConf->getSxConfigValue('masterStoreUrl','EMPTY')}]
+    [{assign var="replaceMasterStoreUrlInSS360Result" value=$oViewConf->getSxConfigValue('replaceMasterStoreUrlInSS360Result',false)}]
 
     /* eslint-disable */
     (function () {
@@ -33,12 +39,26 @@
                     searchBox.value = query;
                     searchForm.submit();
                     return false; // prevent search
+                },
+                suggestLine: function (suggestLine) {
+
+                    if( !"[{$replaceMasterStoreUrlInSS360Result}]" || "[{$masterStoreUrl}]"=="EMPTY" ) return suggestLine;
+
+                    var replaceUrl = "[{$currentStoreUrl}]";
+                    replaceUrl = replaceUrl.substr(0, replaceUrl.lastIndexOf("/") +1);
+
+                    //console.log('replace: "[{$masterStoreUrl}]" with "'+replaceUrl+'"');
+
+                    suggestLine = suggestLine.replace(/[{$masterStoreUrl}]/g, replaceUrl);
+                    return suggestLine;
                 }
             }
         };	var e = document.createElement('script');
         e.src = 'https://cdn.sitesearch360.com/v13/sitesearch360-v13.min.js';
         document.getElementsByTagName('body')[0].appendChild(e);
     }());
+
+    console.info('[{$sxproductsearchTitle}] OXID-Module [{$sxproductsearchVersion}]');
 </script>
 [{if $oViewConf->getSxConfigValue('additionalCss')}]
     <style>[{$oViewConf->getSxConfigValue('additionalCss')}]</style>

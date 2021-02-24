@@ -2,11 +2,7 @@
 
 namespace Semknox\Productsearch\Application\Model;
 
-use InvalidArgumentException;
 use OxidEsales\Eshop\Application\Model\Article;
-use OxidEsales\Eshop\Application\Model\CategoryList;
-use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
-use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Application\Model\Category;
 use Semknox\Core\Transformer\AbstractProductTransformer;
@@ -83,9 +79,6 @@ class ArticleTransformer extends AbstractProductTransformer
      * get categories of product
      * 
      * @return array 
-     * @throws DatabaseConnectionException 
-     * @throws DatabaseErrorException 
-     * @throws InvalidArgumentException 
      */
     protected function _getCategories()
     {
@@ -116,43 +109,6 @@ class ArticleTransformer extends AbstractProductTransformer
                 'path' => array_reverse($categoryPath)
             ];
             
-        }
-
-        return $categories;
-    }
-
-
-    /**
-     * get categories of product
-     * 
-     * @return array 
-     * @throws DatabaseConnectionException 
-     * @throws DatabaseErrorException 
-     * @throws InvalidArgumentException 
-     */
-    protected function _getCategoriesSlow()
-    {
-        $oxArticle = $this->_product;
-        $oxCategoryList = new CategoryList;
-        $categories = array();
-
-        $categorieIds = $oxArticle->getCategoryIds();
-
-        foreach ($categorieIds as $oxid) {
-
-            $oxCategoryList->buildTree($oxid);
-            $path = array();
-
-            foreach ($oxCategoryList->getPath() as $oxCategory) {
-                $title = $oxCategory->getTitle();
-                $path[] = $title;
-            }
-
-            if (empty($path)) continue;
-
-            $categories[] = [
-                'path' => $path,
-            ];
         }
 
         return $categories;

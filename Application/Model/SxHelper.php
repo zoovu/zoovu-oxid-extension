@@ -178,7 +178,7 @@ class SxHelper {
      * @param string $sStringToTranslate 
      * @return bool 
      */
-    public function isEncodedOption($sStringToTranslate = '')
+    static function isEncodedOption($sStringToTranslate = '')
     {
         return stripos((string) $sStringToTranslate, 'sxoption') === 0;
     }

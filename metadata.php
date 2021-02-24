@@ -14,10 +14,10 @@ $version = isset($composerArray['version']) ? $composerArray['version'] : '1.0.0
 $aModule = [
     'version' => $version,
     'id' => 'sxproductsearch',
-    'title' => 'SEMKNOX Product Search',
+    'title' => 'SEMKNOX SiteSearch360',
     'description' => [
         'en' =>
-        'Oxide modules for integration and use of the SEMKNOX product search.
+        'OXID module for integration and use of the SEMKNOX SiteSearch360.
         <b style="color:#000;font-size: 15px;padding: 10px 0 10px 0;display: block;">Requirements</b>
         <b style="display: block; margin: 0 0 5px 0">Cronjob</b>
         The following cronjob is required for the initial product upload and product synchronization with SEMKNOX. 
@@ -36,7 +36,7 @@ $aModule = [
         Via the file <i>/export/semknox/masterConfigLANGUAGE.json</i>, while LANGUAGE has to be replaced with the Language shortcut (e.g. <i>masterConfigEn.json</i>), module settings can be globally overwritten <b>per language</b>. The values set there apply to <b>ALL active shops and languages</b> (in which the module is activated). 
         If the values <i>apiKey</i> and <i>projectId</i> are set in this file, all records are synchronized with only one account at SEMKNOX. In this case, different values are realized via different <i>userGroups</i> (corresponds to the oxide <i>ShopIds</i>). The same applies to the search in the frontend.',
         'de' =>
-        'Oxid Modul zur Integration und Verwendung der SEMKNOX Produktsuche.
+        'OXID Modul zur Integration und Verwendung der SEMKNOX SiteSearch360.
         <b style="color:#000;font-size: 15px;padding: 10px 0 10px 0;display: block;">Voraussetzungen</b>
         <b style="display: block; margin: 0 0 5px 0">Cronjob</b>
         Der folgende Cronjob wird für den initialen Produktupload und die Produktsynchronisation mit SEMKNOX benötigt. 
@@ -57,7 +57,7 @@ $aModule = [
     'thumbnail' => 'logo.png',
     'author' => 'SEMKNOX',
     'url' => 'https://www.semknox.com',
-    'email' => 'info@semknox.com',
+    'email' => 'oxid@semknox.com',
     'controllers'  => [
         'sxproductsearch_ajax' => Semknox\Productsearch\Application\Controller\Admin\AjaxController::class,
         'sxproductsearch_cron' => Semknox\Productsearch\Application\Controller\CronController::class
