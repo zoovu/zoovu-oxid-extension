@@ -135,7 +135,7 @@ function justStyleEvents() {
     const styleBtn = document.querySelector(".js-style-btn");
     var filterName;
     if (styleBtn) {
-        styleBtn.addEventListener('click', function (event) {
+        styleBtn.addEventListener('click', function () {
             filterName = this.closest('.sxRangeFilter').querySelector('.slider').getAttribute('id');
             filterName = filterName.replace("Sidebar", "");
 
