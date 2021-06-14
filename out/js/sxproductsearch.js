@@ -141,7 +141,7 @@ function justStyleEvents() {
 
             if (document.getElementsByName("attrfilter[" + filterName + "]").length == 0) {
                 console.warn("SEMKNOX SiteSearch360: filter input for '" + filterName + "' does not exist");
-                return;
+                return false;
             }
 
             if ((styleInputsMin.value < styleInputsMax.value) &&
