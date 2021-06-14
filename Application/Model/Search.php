@@ -34,7 +34,8 @@ class Search extends Search_parent
         $this->setSxConfigValues();
         if(!$this->_sxConfigValues) return;
 
-        $this->_sxConfigValues['requestTimeout'] = '2'; // for search request should not be longer
+        // todo: add seperat config value for frontend output
+        //$this->_sxConfigValues['requestTimeout'] = '2'; // for search request should not be longer
 
         $this->_sxConfig = new SxConfig($this->_sxConfigValues);
         $this->_sxCore = new SxCore($this->_sxConfig);

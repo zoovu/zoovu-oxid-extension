@@ -133,12 +133,21 @@ function justStyleEvents() {
     const styleInputsMin = document.querySelector(".js-style[data-input-type='min']");
     const styleInputsMax = document.querySelector(".js-style[data-input-type='max']");
     const styleBtn = document.querySelector(".js-style-btn");
+    var filterName;
     if (styleBtn) {
         styleBtn.addEventListener('click', function (event) {
-            const filterName = this.closest('.sxRangeFilter').querySelector('.slider').getAttribute('id');
+            filterName = this.closest('.sxRangeFilter').querySelector('.slider').getAttribute('id');
+            filterName = filterName.replace("Sidebar", "");
+
+            if (document.getElementsByName("attrfilter[" + filterName + "]").length == 0) {
+                console.warn("SEMKNOX SiteSearch360: filter input for '" + filterName + "' does not exist");
+                return;
+            }
+
             if ((styleInputsMin.value < styleInputsMax.value) &&
                 (styleInputsMin.value >= styleInputsMin.getAttribute('min')) &&
                 (styleInputsMax.value <= styleInputsMax.getAttribute('max'))
+
             ) {
                 document.getElementsByName("attrfilter[" + filterName + "]")[0].value = styleInputsMin.value + '___' + styleInputsMax.value;
 
