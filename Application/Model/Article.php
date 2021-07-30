@@ -80,4 +80,30 @@ class Article extends Article_parent
 
         return $subShopIds;
     }
+
+
+    public function getUserGroupMainLinks($transformerArgs = [])
+    {
+        $subShopMainLinks = [];
+        $languages = isset($transformerArgs['languages']) ? $transformerArgs['languages'] : [];
+
+        if(!count($languages)) return $subShopMainLinks;
+
+        // articleId
+        $articleId = (string) $this->oxarticles__oxid;
+        if (!$articleId) return [];
+
+        $sSelect = "SELECT oxseourl, oxshopid, oxlang FROM oxseo WHERE oxobjectid='$articleId'";
+
+        $result = \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->select($sSelect);
+        foreach ($result->fetchAll() as $row) {
+
+            $lang = isset($languages[$row[2]]) ? $languages[$row[2]] : false;
+            if(!$lang) continue;
+
+            $userGroup = $row[1].'-'. $lang;
+            $subShopMainLinks[$userGroup] = '/'.ltrim($row[0],'/');
+        }
+        return $subShopMainLinks;
+    }
 }

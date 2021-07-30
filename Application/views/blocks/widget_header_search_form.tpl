@@ -40,14 +40,28 @@
                     searchForm.submit();
                     return false; // prevent search
                 },
-                suggestLine: function (suggestLine) {
+                suggestLine: function (suggestLine, key, index, suggest) {
 
+                    var replaceUrl = "[{$currentStoreUrl}]";
+                    replaceUrl = replaceUrl.substr(0, replaceUrl.lastIndexOf("/"));
+
+                    // shop specific url-slug
+                    var specificShopUrl = '';
+                    if(suggest.dataPoints != undefined){
+                        for (i = 0; i < suggest.dataPoints.length; i++) {
+                            if(suggest.dataPoints[i].key == 'shop-specific-url'){
+                                suggestLine = suggestLine.replace(/href="(.*?)"/, function(m, $1) {
+                                    return 'href="' +replaceUrl + suggest.dataPoints[i].value + '"';
+                                });
+                            }
+                        } 
+                    }
+
+                    // shop specific master URL
                     if( !"[{$replaceMasterStoreUrlInSS360Result}]" || "[{$masterStoreUrl}]"=="EMPTY" ) return suggestLine;
 
                     var replaceUrl = "[{$currentStoreUrl}]";
                     replaceUrl = replaceUrl.substr(0, replaceUrl.lastIndexOf("/") +1);
-
-                    //console.log('replace: "[{$masterStoreUrl}]" with "'+replaceUrl+'"');
 
                     suggestLine = suggestLine.replace(/[{$masterStoreUrl}]/g, replaceUrl);
                     return suggestLine;

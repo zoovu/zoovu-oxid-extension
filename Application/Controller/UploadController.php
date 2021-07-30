@@ -137,6 +137,7 @@ class UploadController
             }
 
 
+            $transformerArgs['languages'] = $this->_getLanguages();
             foreach ($oxArticleList as $oxArticle) {
                 $this->_sxUploader->addProduct($oxArticle, $transformerArgs);
             }
@@ -385,6 +386,7 @@ class UploadController
         $oxArticleList = new ArticleList;
         $oxArticleList->loadIds($oxArticleIds);
 
+        $transformerArgs['languages'] = $this->_getLanguages();
         foreach ($oxArticleList as $oxArticle) {
             $this->_sxUpdater->addProduct($oxArticle, $transformerArgs);
         }

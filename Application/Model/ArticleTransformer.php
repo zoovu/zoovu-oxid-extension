@@ -343,6 +343,17 @@ class ArticleTransformer extends AbstractProductTransformer
             }
         }
 
+
+        // get subshop MainLinks
+        foreach($this->_product->getUserGroupMainLinks($transformerArgs) as $userGroup => $mainLink){
+            $attributes[] = [
+                'key' => 'shop-specific-url',
+                'userGroups' => [$userGroup],
+                'value' => $mainLink
+            ];
+        }
+
+
         return array_values($attributes); // array values... because removing elements makes transforms array to assoziative array => error in validator
     }
 }
