@@ -119,7 +119,14 @@ class Search extends Search_parent
         $sxSearch->setPage($this->iActPage);
 
         // filter
-        $filter = Registry::getConfig()->getRequestParameter('attrfilter', []);
+        $actControl = Registry::getConfig()->getRequestParameter('actcontrol', false);
+        $stoken = Registry::getConfig()->getRequestParameter('stoken', false);
+        if($actControl == 'search' || $stoken){ // workaround to find out if filter have been changed
+            $filter = Registry::getConfig()->getRequestParameter('attrfilter', []);
+            Registry::getSession()->setVariable('attrfilter', $filter);
+        }
+
+        $filter = Registry::getSession()->getVariable('attrfilter');
         foreach($filter as $filterId => $options){
 
             if(!$options) continue;

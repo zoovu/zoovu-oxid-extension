@@ -31,9 +31,9 @@
             <div class="slider-wrapper">
                 <div class="slider" id="[{$sAttrID}][{$idSuffix}]"></div>
                 <div class="slider-helper">
-                    <input class="js-style form-control form-control-sm" data-input-type="min" value="[{$activeValueRange[0]}]" min="[{$valueRange[0]}]" type="number" name="num1">
+                    <input id="[{$sAttrID}][{$idSuffix}]input1" class="js-style form-control form-control-sm" data-input-type="min" value="[{$activeValueRange[0]}]" min="[{$valueRange[0]}]" type="number">
                     <span>-</span>
-                    <input class="js-style form-control form-control-sm" data-input-type="max" value="[{$activeValueRange[1]}]" max="[{$valueRange[1]}]" type="number" name="num2">
+                    <input id="[{$sAttrID}][{$idSuffix}]input2" class="js-style form-control form-control-sm" data-input-type="max" value="[{$activeValueRange[1]}]" max="[{$valueRange[1]}]" type="number">
                     <span class="unit">[{$oFilterAttr->unit}]</span>
                     <button class="js-style-btn btn btn-default btn-sm" type="button"><i class="fa fa-angle-right"></i></button>
                 </div>
@@ -52,6 +52,7 @@
                         step: 1,
                     [{/if}]
                 });
+
                 sxRangeFilter["[{$sAttrID}][{$idSuffix}]"].on('end', sxRangeFilterAction);
 
                 sxFilterToHide.push("attrfilter[[{$sAttrID}]]");
@@ -59,5 +60,6 @@
 
         </div>
     [{/foreach}]
+
 [{/if}]
 
