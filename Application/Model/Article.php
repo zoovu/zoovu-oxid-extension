@@ -98,7 +98,7 @@ class Article extends Article_parent
         $result = \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->select($sSelect);
         foreach ($result->fetchAll() as $row) {
 
-            $lang = isset($languages[$row[2]]) ? $languages[$row[2]] : false;
+            $lang = isset($languages[$row[2]]) ? $languages[$row[2]] : 'unknownLangID-' . $row[2];
             if(!$lang) continue;
 
             $userGroup = $row[1].'-'. $lang;
