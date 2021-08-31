@@ -99,8 +99,7 @@ class Article extends Article_parent
         foreach ($result->fetchAll() as $row) {
 
             $lang = isset($languages[$row[2]]) ? $languages[$row[2]] : 'unknownLangID-' . $row[2];
-            if(!$lang) continue;
-
+            
             $userGroup = $row[1].'-'. $lang;
             $subShopMainLinks[$userGroup] = '/'.ltrim($row[0],'/');
         }
