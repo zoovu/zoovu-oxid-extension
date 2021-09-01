@@ -327,6 +327,13 @@ class UploadController
                     'sxUploadActive' => $this->_sxHelper->get('sxUploadActive', true),
                     'sxIncrementalUpdatesActive' => $this->_sxHelper->get('sxIncrementalUpdatesActive', true),
                     'sxAnswerActive' => $this->_sxHelper->get('sxAnswerActive', true),
+
+
+                    'shopsystem' => 'oxid',
+                    //'shopsystemversion' => '2',
+                    //'extensionversion' => '3.2',
+                    
+                    
                 ];
 
                 $currentShopConfig = $this->_sxHelper->getMasterConfig($currentShopConfig, $lang);
