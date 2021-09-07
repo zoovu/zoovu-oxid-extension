@@ -197,7 +197,7 @@ if(function_exists('oxNew')){
         );
 
         $settings[] = array(
-            'group' => 'SemknoxProductsearchCategoryQuery' . $oxid,
+            'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
             'name' => 'sxCategoryQueryTitle' . $oxid,
             'type' => 'bool',
             'value' => 'false',
