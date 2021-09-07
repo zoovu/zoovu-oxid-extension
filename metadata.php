@@ -195,6 +195,14 @@ if(function_exists('oxNew')){
             'value' => 'false',
             'position' => 8
         );
+
+        $settings[] = array(
+            'group' => 'SemknoxProductsearchCategoryQuery' . $oxid,
+            'name' => 'sxCategoryQueryTitle' . $oxid,
+            'type' => 'bool',
+            'value' => 'false',
+            'position' => 8
+        );
     }
 }
 
