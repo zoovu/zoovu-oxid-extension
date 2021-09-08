@@ -4,6 +4,10 @@ namespace Semknox\Productsearch\Application\Model;
 
 use Semknox\Productsearch\Application\Model\SxHelper;
 
+use Semknox\Core\SxCore;
+use Semknox\Core\SxConfig;
+use OxidEsales\Eshop\Core\Registry;
+
 class ArticleList extends ArticleList_parent
 {
 
@@ -11,6 +15,45 @@ class ArticleList extends ArticleList_parent
     protected $_sxAvailableSortingOptions;
 
     public $isSxArticleList = false;
+
+
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->_sxHelper = new SxHelper();
+
+        $this->setSxConfigValues();
+        if (!$this->_sxConfigValues) return;
+
+        $this->_sxConfig = new SxConfig($this->_sxConfigValues);
+        $this->_sxCore = new SxCore($this->_sxConfig);
+
+        $this->_sxSearch = $this->_sxCore->getSearch();
+    }
+
+
+    public function setSxConfigValues()
+    {
+
+        $oxRegistry = new Registry();
+
+        $this->_oxAbbrLanguage = ucfirst($oxRegistry->getLang()->getLanguageAbbr());
+
+        $sxConfigValues = $this->_sxHelper->getConfig($this->_oxAbbrLanguage);
+
+        if ($sxConfigValues['frontendActive']) {
+            $this->_sxConfigValues = $sxConfigValues;
+        }
+
+        return;
+    }
+
+
+
+
+
 
     /**
      * Load all Article in pages articles
@@ -230,6 +273,26 @@ class ArticleList extends ArticleList_parent
         }
 
         return parent::setCustomSorting($sqlSorting);
+
+    }
+
+
+    public function loadCategoryArticles($sCatId, $aSessionFilter, $iLimit = null)
+    {
+
+        $categoryPath = $this->_sxHelper->getCategoryPath($sCatId);
+
+        // get articles
+        $sxSearch = $this->_sxSearch->queryCategory($categoryPath);
+        $this->_sxSearchResponse = $sxSearch->search();
+        $oxArticleIds = array();
+        foreach ($this->_sxSearchResponse->getProducts() as $sxArticle) {
+            $oxArticleIds[] = $sxArticle->getId();
+        }
+
+        $this->loadIdsByGivenOrder($oxArticleIds);
+
+        return $this->_sxSearchResponse->getTotalProductResults();;
 
     }
 

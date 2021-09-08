@@ -7,6 +7,7 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Application\Model\Category;
 use Semknox\Core\Transformer\AbstractProductTransformer;
 use OxidEsales\Eshop\Core\Field;
+use Semknox\Productsearch\Application\Model\SxHelper;
 
 class ArticleTransformer extends AbstractProductTransformer
 {
@@ -19,6 +20,7 @@ class ArticleTransformer extends AbstractProductTransformer
     public function __construct(Article $oxProduct)
     {
         $this->_product = $oxProduct;
+        $this->_sxHelper = new SxHelper;
     }
 
 
@@ -88,25 +90,12 @@ class ArticleTransformer extends AbstractProductTransformer
 
         foreach($oxArticle->getCategoryIds() as $oxCategoryId){
 
-            $oxCategory = new Category;
-            $oxCategory->load($oxCategoryId);
-            if(!$oxCategory) continue;
-
-            $categoryPath = [];
-
-            while($oxCategory){
-
-                if((string) $oxCategory->oxcategories__oxactive == '1' && (string) $oxCategory->oxcategories__oxhidden == '0'){
-                    $categoryPath[] = strlen($oxCategory->getTitle()) ? $oxCategory->getTitle() : $oxCategory->getId();
-                }
-
-                $oxCategory = $oxCategory->getParentCategory();
-            }
+            $categoryPath = $this->_sxHelper->getCategoryPath($oxCategoryId);
 
             if(!count($categoryPath)) continue;
 
             $categories[] = [
-                'path' => array_reverse($categoryPath)
+                'path' => $categoryPath
             ];
             
         }

@@ -185,7 +185,7 @@ if(function_exists('oxNew')){
             'name' => 'sxMoveFilterToSidebar' . $oxid,
             'type' => 'bool',
             'value' => 'false',
-            'position' => 8
+            'position' => 9
         );
 
         $settings[] = array(
@@ -193,7 +193,7 @@ if(function_exists('oxNew')){
             'name' => 'sxHideRangeInRangeSliderTitle' . $oxid,
             'type' => 'bool',
             'value' => 'false',
-            'position' => 8
+            'position' => 10
         );
 
         $settings[] = array(
@@ -201,7 +201,7 @@ if(function_exists('oxNew')){
             'name' => 'sxCategoryQueryTitle' . $oxid,
             'type' => 'bool',
             'value' => 'false',
-            'position' => 8
+            'position' => 11
         );
     }
 }

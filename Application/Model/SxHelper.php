@@ -3,6 +3,7 @@
 namespace Semknox\Productsearch\Application\Model;
 
 use Semknox\Core\Services\Search\Sorting\SortingOption;
+use OxidEsales\Eshop\Application\Model\Category;
 
 use OxidEsales\Eshop\Core\Registry;
 
@@ -217,6 +218,32 @@ class SxHelper {
         $optionData = array_merge($optionData, $additionalData);
 
         return new SortingOption($optionData);
+    }
+
+
+
+    public function getCategoryPath($oxCategoryId)
+    {
+
+        $oxCategory = new Category;
+        $oxCategory->load($oxCategoryId);
+
+        $categoryPath = [];
+        if (!$oxCategory) return $categoryPath;
+
+        while ($oxCategory) {
+
+            if ((string) $oxCategory->oxcategories__oxactive == '1' && (string) $oxCategory->oxcategories__oxhidden == '0') {
+                $categoryPath[] = strlen($oxCategory->getTitle()) ? $oxCategory->getTitle() : $oxCategory->getId();
+            }
+
+            $oxCategory = $oxCategory->getParentCategory();
+        }
+
+        if (!count($categoryPath)) $categoryPath;
+
+        return array_reverse($categoryPath);
+
     }
 
 }
