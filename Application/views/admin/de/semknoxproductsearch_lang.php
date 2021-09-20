@@ -18,7 +18,7 @@ $aLang = array(
   'SHOP_MODULE_sxIncrementalUpdatesActive' => 'inkrementelle Produktupdates an SEMKNOX senden',
   'SHOP_MODULE_sxMoveFilterToSidebar' => 'Filter in die Sidebar verschieben',
   'SHOP_MODULE_sxHideRangeInRangeSliderTitle' => 'Werte im Slider-Filter Titel ausblenden',
-  'SHOP_MODULE_sxCategoryQueryTitle' => 'Kategorieprodukte über SEMKNOX ausspielen',
+  'SHOP_MODULE_sxCategoryQuery' => 'Kategorieprodukte über SEMKNOX ausspielen',
   'SHOP_MODULE_sxIsSandbox' => 'Sandbox-Modus aktivieren',
 
   'SHOP_MODULE_sxStartInitialUpload' => 'Produktupload starten',
@@ -52,5 +52,5 @@ foreach ($oxLanguage->getLanguageArray() as $lang) {
   $aLang['SHOP_MODULE_sxIncrementalUpdatesActive' . $oxid] = $aLang['SHOP_MODULE_sxIncrementalUpdatesActive'] . ' - Shopsprache: ' . $language;
   $aLang['SHOP_MODULE_sxMoveFilterToSidebar' . $oxid] = $aLang['SHOP_MODULE_sxMoveFilterToSidebar'] . ' - Shopsprache: ' . $language;
   $aLang['SHOP_MODULE_sxHideRangeInRangeSliderTitle' . $oxid] = $aLang['SHOP_MODULE_sxHideRangeInRangeSliderTitle'] . ' - Shopsprache: ' . $language;
-  $aLang['SHOP_MODULE_sxCategoryQueryTitle' . $oxid] = $aLang['SHOP_MODULE_sxCategoryQueryTitle'] . ' - Shopsprache: ' . $language;
+  $aLang['SHOP_MODULE_sxCategoryQuery' . $oxid] = $aLang['SHOP_MODULE_sxCategoryQuery'] . ' - Shopsprache: ' . $language;
 }

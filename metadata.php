@@ -67,6 +67,7 @@ $aModule = [
         \OxidEsales\Eshop\Application\Model\ArticleList::class => \Semknox\Productsearch\Application\Model\ArticleList::class,
         \OxidEsales\Eshop\Application\Model\Search::class => \Semknox\Productsearch\Application\Model\Search::class,
         \OxidEsales\Eshop\Application\Controller\SearchController::class => \Semknox\Productsearch\Application\Controller\SearchController::class,
+        \OxidEsales\Eshop\Application\Controller\ArticleListController::class => \Semknox\Productsearch\Application\Controller\ArticleListController::class,
         \OxidEsales\Eshop\Core\ViewConfig::class => \Semknox\Productsearch\Core\ViewConfig::class,
         \OxidEsales\Eshop\Core\Language::class => \Semknox\Productsearch\Core\Language::class
     ],
@@ -198,7 +199,7 @@ if(function_exists('oxNew')){
 
         $settings[] = array(
             'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
-            'name' => 'sxCategoryQueryTitle' . $oxid,
+            'name' => 'sxCategoryQuery' . $oxid,
             'type' => 'bool',
             'value' => 'false',
             'position' => 11

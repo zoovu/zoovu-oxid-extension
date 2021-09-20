@@ -31,6 +31,11 @@ class ArticleList extends ArticleList_parent
         $this->_sxCore = new SxCore($this->_sxConfig);
 
         $this->_sxSearch = $this->_sxCore->getSearch();
+
+        if (isset($this->_sxConfigValues['categoryQuery']) || $this->_sxConfigValues['categoryQuery']) {
+            $this->isSxArticleList = true;
+        }
+
     }
 
 
@@ -248,6 +253,7 @@ class ArticleList extends ArticleList_parent
      */
     public function getAvailableSortingOptions()
     {
+       
         if ($this->_sxAvailableSortingOptions) {
             return $this->_sxAvailableSortingOptions;
         }
@@ -264,11 +270,9 @@ class ArticleList extends ArticleList_parent
      */
     public function setCustomSorting($sqlSorting)
     {
-        $sxHelper = new SxHelper();
-
         $trimedsqlSorting = ltrim($sqlSorting, '`');
 
-        if(!$sqlSorting || !$trimedsqlSorting || $sxHelper->isEncodedOption($trimedsqlSorting)){
+        if(!$sqlSorting || !$trimedsqlSorting || $this->_sxHelper->isEncodedOption($trimedsqlSorting)){
             $sqlSorting = false;
         }
 
@@ -277,13 +281,75 @@ class ArticleList extends ArticleList_parent
     }
 
 
-    public function loadCategoryArticles($sCatId, $aSessionFilter, $iLimit = null)
+
+
+
+
+
+
+    protected function _getCategorySelect($sFields, $sCatId, $aSessionFilter) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
+        if (!isset($this->_sxConfigValues['categoryQuery']) || !$this->_sxConfigValues['categoryQuery']) {
+            return parent::_getCategorySelect($sFields, $sCatId, $aSessionFilter);
+        }
 
         $categoryPath = $this->_sxHelper->getCategoryPath($sCatId);
 
         // get articles
         $sxSearch = $this->_sxSearch->queryCategory($categoryPath);
+
+        $sxSearch->setLimit(1000);
+        //$sxSearch->setPage($this->_sxHelper->getPageNr());
+
+        $this->_sxSearchResponse = $sxSearch->search();
+
+        // set available sorting options
+        $sxAvailableSortingOptions = array();
+        foreach ($this->_sxSearchResponse->getAvailableSortingOptions() as $option) {
+            $sxAvailableSortingOptions[$option->getKey()] = $this->_sxHelper->encodeSortOption($option);
+        }
+        $this->setAvailableSortingOptions($sxAvailableSortingOptions);
+        
+        
+        $oxArticleIds = array();
+        foreach ($this->_sxSearchResponse->getProducts() as $sxArticle) {
+            $oxArticleIds[] = $sxArticle->getId();
+        }
+
+        $sArticleTable = getViewName('oxarticles');
+
+        //$oxArticleIds = \array_reverse($oxArticleIds);
+
+        $oxIdsSql = implode(',', \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->quoteArray($oxArticleIds));
+
+        $sSelect = "SELECT $sFields, $sArticleTable.oxtimestamp from $sArticleTable ";
+        $sSelect .= "WHERE $sArticleTable.oxid IN ( " .  $oxIdsSql . " ) AND ";
+        $sSelect .= $this->getBaseObject()->getSqlActiveSnippet();
+        $sSelect .= " ORDER BY FIELD(`oxid`, $oxIdsSql)";
+
+
+        return $sSelect;
+    }
+
+
+    /*
+    public function loadCategoryArticles($sCatId, $aSessionFilter, $iLimit = null)
+    {
+        return parent::loadCategoryArticles($sCatId, $aSessionFilter, $iLimit);
+
+
+        if(!isset($this->_sxConfigValues['categoryQuery']) || !$this->_sxConfigValues['categoryQuery']){
+            return parent::loadCategoryArticles($sCatId, $aSessionFilter, $iLimit);
+        }
+
+        $categoryPath = $this->_sxHelper->getCategoryPath($sCatId);
+
+        // get articles
+        $sxSearch = $this->_sxSearch->queryCategory($categoryPath);
+
+        $sxSearch->setLimit($this->_sxHelper->getPageLimit());
+        $sxSearch->setPage($this->_sxHelper->getPageNr());
+
         $this->_sxSearchResponse = $sxSearch->search();
         $oxArticleIds = array();
         foreach ($this->_sxSearchResponse->getProducts() as $sxArticle) {
@@ -292,8 +358,9 @@ class ArticleList extends ArticleList_parent
 
         $this->loadIdsByGivenOrder($oxArticleIds);
 
-        return $this->_sxSearchResponse->getTotalProductResults();;
+        return $this->_sxSearchResponse->getTotalProductResults();
 
     }
+    */
 
 }

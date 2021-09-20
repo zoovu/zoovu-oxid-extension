@@ -30,6 +30,8 @@ class Search extends Search_parent
         parent::__construct();
 
         $this->_sxHelper = new SxHelper();
+        $this->_oxRegistry = new Registry();
+        $this->_logger = $this->_oxRegistry->getLogger();
 
         $this->setSxConfigValues();
         if(!$this->_sxConfigValues) return;
@@ -41,8 +43,6 @@ class Search extends Search_parent
         $this->_sxCore = new SxCore($this->_sxConfig);
 
         $this->_sxSearch = $this->_sxCore->getSearch();
-
-        $this->_oxRegistry = new Registry();
     }
 
     /**
@@ -52,10 +52,7 @@ class Search extends Search_parent
      */
     public function setSxConfigValues()
     {
-
-        $oxRegistry = new Registry();
-
-        $this->_oxAbbrLanguage = ucfirst($oxRegistry->getLang()->getLanguageAbbr());
+        $this->_oxAbbrLanguage = ucfirst($this->_oxRegistry->getLang()->getLanguageAbbr());
 
         $sxConfigValues = $this->_sxHelper->getConfig($this->_oxAbbrLanguage);
 
@@ -89,69 +86,33 @@ class Search extends Search_parent
      */
     public function getSearchArticles($sSearchParamForQuery = false, $sInitialSearchCat = false, $sInitialSearchVendor = false, $sInitialSearchManufacturer = false, $sSortBy = false)
     {
-        $oxRegistry = new Registry();
-        $logger = $oxRegistry->getLogger();
-
         if (!$this->_sxConfigValues){
             $sSortBy = !is_array($sSortBy) ? (string) $sSortBy : false;
             return parent::getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer, $sSortBy);
         }
 
-        $oArtList = new ArticleList;
+        /*
+         * [1.] prepare Request
+         */
 
-        // is semknox ArticleList
-        $oArtList->isSxArticleList = true;
-
-
-        // sets active page
-        $this->iActPage = (int) \OxidEsales\Eshop\Core\Registry::getConfig()->getRequestParameter('pgNr');
-        $this->iActPage = ($this->iActPage < 0) ? 0 : $this->iActPage;
-        $this->iActPage++;
-
-        // load only articles which we show on screen
-        //setting default values to avoid possible errors showing article list
-        $iNrofCatArticles = $this->getConfig()->getConfigParam('iNrofCatArticles');
-        $iNrofCatArticles = $iNrofCatArticles ? $iNrofCatArticles : 10;
-
-        // searching ..
+        // create search AND set query
         $sxSearch = $this->_sxSearch->query($sSearchParamForQuery);
-        $sxSearch->setLimit($iNrofCatArticles);
+
+        // sets current page
+        $this->iActPage = $this->_sxHelper->getPageNr();
         $sxSearch->setPage($this->iActPage);
 
-        // filter
-        $actControl = Registry::getConfig()->getRequestParameter('actcontrol', false);
-        $stoken = Registry::getConfig()->getRequestParameter('stoken', false);
-        if($actControl == 'search' || $stoken){ // workaround to find out if filter have been changed
-            $filter = Registry::getConfig()->getRequestParameter('attrfilter', []);
-            Registry::getSession()->setVariable('attrfilter', $filter);
-        }
+        // set Page Limit 
+        $iNrofCatArticles = $this->_sxHelper->getPageLimit();
+        $sxSearch->setLimit($iNrofCatArticles);
 
-        $filter = Registry::getSession()->getVariable('attrfilter');
-        foreach($filter as $filterId => $options){
-
-            if(!$options) continue;
-
-            if(!is_array($options) && stripos($options,'___') === FALSE && stripos($options, '###') === FALSE){
-                $options = [ (string) $options ];
-            } elseif(stripos($options, '___') > 0) {
-                // range filter
-                $options = explode('___', (string) $options);
-                $options = [$options[0], $options[1]];
-            } elseif (stripos($options, '###') !== FALSE) {
-                // range filter
-                $options = explode('###', (string) $options);
-                $options = array_filter($options);
-                $options = array_values($options);
-            } 
-            
-            foreach($options as &$option){
-                $option = html_entity_decode($option);
-            }
-
+        // set filters
+        $filters = $this->_sxHelper->getRequestFilter();
+        foreach($filters as $filterId => $options){
             $sxSearch->addFilter($filterId, $options);
         }
 
-        // sort
+        // set sort
         if(is_array($sSortBy)){
             $option = $this->_sxHelper->decodeSortOption($sSortBy['sortby'], ['sort' => $sSortBy['sortdir']]);
             $sxSearch->sortBy($option->getKey(), $option->getSort());
@@ -163,144 +124,50 @@ class Search extends Search_parent
         }
 
 
-        // do search...
+        /*
+         * [2.] execute Request
+         */
+
         try{
             $this->_sxSearchResponse = $sxSearch->search();
         } catch(Exception $e){
             // fallback
             $this->_sxConfigValues = null;
-
-            $logger->error($e->getMessage(), [__CLASS__, __FUNCTION__]);
-
+            $this->_logger->error($e->getMessage(), [__CLASS__, __FUNCTION__]);
             return parent::getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer, $sSortBy);
         }
 
+        /*
+         * [3.] evaluate Response
+         */
+
+
+        // create response List
+        $oArtList = new ArticleList;
+
+        // set IsSemknox ArticleList
+        $oArtList->isSxArticleList = true;
+
+        // add articles
         $oxArticleIds = array();
         foreach ($this->_sxSearchResponse->getProducts() as $sxArticle) {
             $oxArticleIds[] = $sxArticle->getId();
         }
-
         $oArtList->loadIdsByGivenOrder($oxArticleIds);
 
-        // set search interpretation text
-        $sxAnswerActive = $this->getConfig()->getConfigParam('sxAnswerActive' . $this->_oxAbbrLanguage);
-        if($sxAnswerActive){
-            // set answer
-            $sxAnswerText = (string) $this->_sxSearchResponse->getAnswerText();
-            $oArtList->setArticleListInterpretation($sxAnswerText);
+        // add Filter to articleList
+        $sxAvailableFiltersFromResponse = $this->_sxSearchResponse->getAvailableFilters();
+        $oArtList = $this->_sxHelper->addFilterToArticleList($oArtList, $sxAvailableFiltersFromResponse);
+
+
+        // add search interpretation text
+        if ($this->_sxConfigValues['answerActive']) {
+            $oArtList->setArticleListInterpretation((string) $this->_sxSearchResponse->getAnswerText());
         }
 
-        // set available filter
-        $sxAvailableFilters = new AttributeList();
-        $sxAvailableRangeFilters = new AttributeList();
-        $sxAttributeOptions = array();
-
-        try {
-            $sxAvailableFiltersFromResponse = $this->_sxSearchResponse->getAvailableFilters();
-        } catch (Exception $e) {
-            $sxAvailableFiltersFromResponse = array();
-            $logger->error($e->getMessage(), [__CLASS__, __FUNCTION__]);
-        }
-
-        foreach ($sxAvailableFiltersFromResponse as $filter) {
-
-            $attribute = new Attribute();
-
-            $filterName = $filter->getName();
-            $attribute->setTitle($filterName);
-            $attribute->setId($filterName); // since api changed
-
-            if ($filter->getType() == 'RANGE') {
-
-                $minValue = $filter->getMin();
-                $maxValue = $filter->getMax();
-
-                if($minValue == $maxValue) continue;
-
-                // find out what steps to take
-                $suffix = 'integer';
-                foreach ($filter->getOptions() as $option) {
-                    $value = $option->getName();
-
-                    if( (int) $value != $value){
-                        $suffix = 'float';
-                        break;
-                    }
-                }  
-
-                // add one value to initialize slider
-                $attribute->addValue($minValue.'___'. $maxValue.'___'. $suffix);
-                $attribute->setActiveValue($filter->getActiveMin() . '___' . $filter->getActiveMax());
-
-
-                $attribute->sxTitle = $filterName;
-                if(!$this->_sxConfig->get('hideRangeInRangeSliderTitle', false)){
-                    $attribute->sxTitle .= " <span class='sxTitleRange'>(" . $filter->getActiveMin() . ' ' . $filter->getUnit() . " - " . $filter->getActiveMax() . ' ' . $filter->getUnit() . ")</span>";
-                }
-                $attribute->setTitle($filterName);
-                $attribute->unit = $filter->getUnit();
-
-                $sxAvailableRangeFilters->add($attribute);
-
-                // add fake attribute for reset function
-                $attributeFake = new Attribute();
-                $attributeFake->setTitle($filterName);
-                $attributeFake->setId($filterName); // since api changed
-                if($filter->getActiveMin() != $minValue || $filter->getActiveMax() != $maxValue){
-                    $attributeFake->addValue($minValue . '___' .$maxValue . '___' . $suffix);
-                    $attributeFake->setActiveValue($filter->getActiveMin() . '___' . $filter->getActiveMax());
-                }
-                $sxAvailableFilters->add($attributeFake);                
-
-            } else {
-
-                $attribute->setTitle($filterName);
-                $attribute->setId($filterName); // since api changed
-
-                $activeValues = [];
-
-                foreach ($filter->getOptions() as $option) {
-
-                    if(!strlen($option->getName())) continue;
-
-                    $attribute->addValue($option->getName());
-
-                    $sxAttributeOption = [
-                        'value' => $option->getValue(),
-                        'active' => false
-                    ];
-
-                    if($this->getConfig()->getConfigParam('sxFilterOptionCounterActive' . $this->_oxAbbrLanguage)){
-                         $sxAttributeOption['count'] = $option->getNumberOfResults();
-                    }
-
-                    if ($option->isActive()) {
-                        $activeValues[] = $option->getName();
-                         $sxAttributeOption['active'] = true;
-                    }
-
-                    $sxAttributeOptions['attrfilter['.$filter->getName().']'][$option->getName()] = $sxAttributeOption;
-                }
-
-                $attribute->setActiveValue(implode('###', $activeValues));
-
-                if (!$filter->getOptions()) continue;
-
-                $sxAvailableFilters->add($attribute); 
-            }
-                
-        }
-        $oArtList->setAvailableFilters($sxAvailableFilters);
-        $oArtList->setAvailableRangeFilters($sxAvailableRangeFilters);
-        $oArtList->setAttributeOptions($sxAttributeOptions);
-
-        // set available sorting options
-        $sxAvailableSortingOptions = array();
-        foreach($this->_sxSearchResponse->getAvailableSortingOptions() as $option){
-            $sxAvailableSortingOptions[$option->getKey()] = $this->_sxHelper->encodeSortOption($option);
-        }
-
-        $oArtList->setAvailableSortingOptions($sxAvailableSortingOptions);
+        // add available sorting options to articleList
+        $sxAvailableSortingOptions = $this->_sxSearchResponse->getAvailableSortingOptions();
+        $oArtList = $this->_sxHelper->addSortingToArticleList($oArtList, $sxAvailableSortingOptions);
 
         return $oArtList;
     }
