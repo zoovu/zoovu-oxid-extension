@@ -93,7 +93,12 @@ class Article extends Article_parent
         $articleId = (string) $this->oxarticles__oxid;
         if (!$articleId) return [];
 
-        $sSelect = "SELECT oxseourl, oxshopid, oxlang FROM oxseo WHERE oxobjectid='$articleId' AND oxexpired=0";
+        $sSelect = "SELECT oxseourl, oxshopid, oxlang FROM oxseo 
+            WHERE   oxtype='oxarticle'
+            AND     oxobjectid='$articleId'
+            AND     oxexpired=0
+            ORDER BY oxparams ASC
+        ";
 
         $result = \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->select($sSelect);
         foreach ($result->fetchAll() as $row) {
