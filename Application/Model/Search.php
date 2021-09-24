@@ -133,7 +133,7 @@ class Search extends Search_parent
         } catch(Exception $e){
             // fallback
             $this->_sxConfigValues = null;
-            $this->_logger->error($e->getMessage(), [__CLASS__, __FUNCTION__]);
+            $this->_sxHelper->log($e->getMessage(). ' | ' . __CLASS__ . '::' . __FUNCTION__, 'error');
             return parent::getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer, $sSortBy);
         }
 
@@ -152,6 +152,14 @@ class Search extends Search_parent
         $oxArticleIds = array();
         foreach ($this->_sxSearchResponse->getProducts() as $sxArticle) {
             $oxArticleIds[] = $sxArticle->getId();
+        }
+
+        try {
+            $sxAvailableFiltersFromResponse = $this->_sxSearchResponse->getAvailableFilters();
+        } catch (Exception $e) {
+            $sxAvailableFiltersFromResponse = array();
+            $this->_sxHelper->log($e->getMessage(). ' | ' . __CLASS__ . '::' . __FUNCTION__, 'error');
+
         }
         $oArtList->loadIdsByGivenOrder($oxArticleIds);
 
