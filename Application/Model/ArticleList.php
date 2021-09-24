@@ -2,6 +2,7 @@
 
 namespace Semknox\Productsearch\Application\Model;
 
+use Exception;
 use Semknox\Productsearch\Application\Model\SxHelper;
 
 use Semknox\Core\SxCore;
@@ -289,35 +290,98 @@ class ArticleList extends ArticleList_parent
 
     protected function _getCategorySelect($sFields, $sCatId, $aSessionFilter) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
+        // fallback if disabled
         if (!isset($this->_sxConfigValues['categoryQuery']) || !$this->_sxConfigValues['categoryQuery']) {
             return parent::_getCategorySelect($sFields, $sCatId, $aSessionFilter);
         }
 
+        // get category path
         $categoryPath = $this->_sxHelper->getCategoryPath($sCatId);
 
-        // get articles
+        /*
+         * [1.] prepare Request
+         */
+
+        // create search AND set category array
         $sxSearch = $this->_sxSearch->queryCategory($categoryPath);
+        $sxSearch->setLimit(1000); // todo: improve
 
-        $sxSearch->setLimit(1000);
-        //$sxSearch->setPage($this->_sxHelper->getPageNr());
 
-        $this->_sxSearchResponse = $sxSearch->search();
+        // set sort/order
+        $request = Registry::get(\OxidEsales\Eshop\Core\Request::class);
+        $sortBy = $request->getRequestParameter('listorderby');
+        $sortOrder = $request->getRequestParameter('listorder', 'desc');
+        if($sortOrder && $sortBy && $this->_sxHelper->isEncodedOption($sortBy)){
+            $sortOption = $this->_sxHelper->decodeSortOption($sortBy, ['sort' => $sortOrder]);
+            $sxSearch->sortBy($sortOption->getKey(),$sortOption->getSort());
+        }
 
-        // set available sorting options
+        // sets current page
+        /*
+        $this->iActPage = $this->_sxHelper->getPageNr();
+        $sxSearch->setPage($this->iActPage);
+        */
+
+        // set Page Limit
+        /* 
+        $iNrofCatArticles = $this->_sxHelper->getPageLimit();
+        $sxSearch->setLimit($iNrofCatArticles);
+        */
+
+        // set filters
+        $filters = $this->_sxHelper->getRequestFilter();
+        foreach ($filters as $filterId => $options) {
+            $sxSearch->addFilter($filterId, $options);
+        }
+
+        var_dump($filters);
+
+        /*
+        // set userGroup
+        if (isset($this->_sxConfigValues['userGroup'])) {
+            $sxSearch->setUserGroup($this->_sxConfigValues['userGroup']);
+        }
+        */
+
+        /*
+         * [2.] execute Request
+         */
+
+        try {
+            $this->_sxSearchResponse = $sxSearch->search();
+        } catch (Exception $e) {
+            // fallback
+            $this->_sxConfigValues = null;
+            $this->_logger->error($e->getMessage(), [__CLASS__, __FUNCTION__]);
+            return parent::_getCategorySelect($sFields, $sCatId, $aSessionFilter);
+        }
+
+
+        /*
+         * [3.] evaluate Response
+         */
+
+        // set IsSemknox ArticleList
+        $this->isSxArticleList = true;
+
+        // add available sorting options to articleList
         $sxAvailableSortingOptions = array();
         foreach ($this->_sxSearchResponse->getAvailableSortingOptions() as $option) {
             $sxAvailableSortingOptions[$option->getKey()] = $this->_sxHelper->encodeSortOption($option);
         }
         $this->setAvailableSortingOptions($sxAvailableSortingOptions);
-        
-        
+
+
+        // add Filter to articleList
+        $sxAvailableFiltersFromResponse = $this->_sxSearchResponse->getAvailableFilters();
+        $this->_sxHelper->addFilterToArticleList($this, $sxAvailableFiltersFromResponse);
+
+        // add articles
         $oxArticleIds = array();
         foreach ($this->_sxSearchResponse->getProducts() as $sxArticle) {
             $oxArticleIds[] = $sxArticle->getId();
         }
-
         $sArticleTable = getViewName('oxarticles');
-
         //$oxArticleIds = \array_reverse($oxArticleIds);
 
         $oxIdsSql = implode(',', \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->quoteArray($oxArticleIds));
@@ -326,7 +390,6 @@ class ArticleList extends ArticleList_parent
         $sSelect .= "WHERE $sArticleTable.oxid IN ( " .  $oxIdsSql . " ) AND ";
         $sSelect .= $this->getBaseObject()->getSqlActiveSnippet();
         $sSelect .= " ORDER BY FIELD(`oxid`, $oxIdsSql)";
-
 
         return $sSelect;
     }

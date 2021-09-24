@@ -260,7 +260,7 @@ class SxHelper {
 
     public function getPageLimit()
     {
-        $limit = (int) \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('iNrofCatArticles');;
+        $limit = (int) \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('iNrofCatArticles');
         
         return $limit ? $limit : 10;
     }
