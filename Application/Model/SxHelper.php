@@ -5,6 +5,7 @@ namespace Semknox\Productsearch\Application\Model;
 use Semknox\Core\Services\Search\Sorting\SortingOption;
 
 use OxidEsales\Eshop\Core\Registry;
+use Semknox\Productsearch\Application\Model\SxLogger;
 
 class SxHelper {
 
@@ -38,6 +39,13 @@ class SxHelper {
         $this->_sxDeleteQueuePath = $workingDir . $this->_sxDeleteQueuePath;
         $this->_sxUpdateQueuePath = $workingDir . $this->_sxUpdateQueuePath;
 
+        $this->_logger = new SxLogger();
+
+    }
+
+    public function log($message, $logLevel = 'info')
+    {
+        $this->_logger->log($message, $logLevel);
     }
 
 

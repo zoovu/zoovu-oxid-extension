@@ -90,7 +90,6 @@ class Search extends Search_parent
     public function getSearchArticles($sSearchParamForQuery = false, $sInitialSearchCat = false, $sInitialSearchVendor = false, $sInitialSearchManufacturer = false, $sSortBy = false)
     {
         $oxRegistry = new Registry();
-        $logger = $oxRegistry->getLogger();
 
         if (!$this->_sxConfigValues){
             $sSortBy = !is_array($sSortBy) ? (string) $sSortBy : false;
@@ -169,9 +168,7 @@ class Search extends Search_parent
         } catch(Exception $e){
             // fallback
             $this->_sxConfigValues = null;
-
-            $logger->error($e->getMessage(), [__CLASS__, __FUNCTION__]);
-
+            $this->_sxHelper->log($e->getMessage(). ' | ' . __CLASS__ . '::' . __FUNCTION__, 'error');
             return parent::getSearchArticles($sSearchParamForQuery, $sInitialSearchCat, $sInitialSearchVendor, $sInitialSearchManufacturer, $sSortBy);
         }
 
@@ -199,7 +196,8 @@ class Search extends Search_parent
             $sxAvailableFiltersFromResponse = $this->_sxSearchResponse->getAvailableFilters();
         } catch (Exception $e) {
             $sxAvailableFiltersFromResponse = array();
-            $logger->error($e->getMessage(), [__CLASS__, __FUNCTION__]);
+
+            $this->_sxHelper->log($e->getMessage(). ' | ' . __CLASS__ . '::' . __FUNCTION__, 'error');
         }
 
         foreach ($sxAvailableFiltersFromResponse as $filter) {

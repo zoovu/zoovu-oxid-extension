@@ -7,6 +7,7 @@ use OxidEsales\Eshop\Application\Model\ShopList;
 use Semknox\Productsearch\Application\Model\ArticleList;
 use Semknox\Productsearch\Application\Model\ArticleTransformer;
 use Semknox\Productsearch\Application\Model\SxHelper;
+use Semknox\Productsearch\Application\Model\SxLogger;
 
 use Semknox\Core\SxConfig;
 use Semknox\Core\SxCore;
@@ -28,6 +29,7 @@ class UploadController
         $this->_oxLang = $this->_oxRegistry->getLang();
 
         $this->_sxHelper = new SxHelper;
+        $this->_sxLogger = new SxLogger;
 
         $this->setConfig($configValues);
     }
@@ -37,6 +39,7 @@ class UploadController
     {
 
         // really needed 
+        $configValues['loggingService'] = $this->_sxLogger;
         $configValues['productTransformer'] = ArticleTransformer::class;
         $defaultValues['storagePath'] = $this->_oxConfig->getConfigParam('sShopDir') . $this->_sxHelper->get('sxFolder');
 
@@ -53,8 +56,7 @@ class UploadController
             }
         } catch (DuplicateInstantiationException $e) {
 
-            $logger = $this->_oxRegistry->getLogger();
-            $logger->error('Duplicate instantiation of uploader. Cronjob execution to close?', [__CLASS__, __FUNCTION__]);
+            $this->_sxHelper->log('Duplicate instantiation of uploader. Cronjob execution to close? | '.__CLASS__.'::'.__FUNCTION__, 'error');
             exit();
         }
     }
@@ -84,8 +86,6 @@ class UploadController
      */
     public function continueFullUpload()
     {
-
-        
         if ($this->_sxUploader->isCollecting()) {
             // collecting
 
@@ -147,8 +147,7 @@ class UploadController
                 $response = $this->_sxUploader->startUploading();
 
                 if($response['status'] !== 'success'){
-                    $logger = $this->_oxRegistry->getLogger();
-                    $logger->error($response['satus'].': '.$response['message'], [__CLASS__, __FUNCTION__]);
+                    $this->_sxHelper->log($response['satus'] . ': ' . $response['message'] .' | '.__CLASS__.'::'.__FUNCTION__, 'error');
                 }
             }
 
@@ -165,8 +164,7 @@ class UploadController
                     $message .=' ('. $response['validation'][0]['schemaErrors'][0].')';
                 }
 
-                $logger = $this->_oxRegistry->getLogger();
-                $logger->error($response['status'].':'. $message, [__CLASS__, __FUNCTION__]);
+                $this->_sxHelper->log($response['status'] . ':' . $message . ' | ' . __CLASS__ . '::' . __FUNCTION__, 'error');
             }
         }
     }
@@ -181,8 +179,7 @@ class UploadController
         $response = $this->_sxUploader->finalizeUpload($signalApi);
 
         if ($response['status'] !== 'success') {
-            $logger = $this->_oxRegistry->getLogger();
-            $logger->error($response['message'], [__CLASS__, __FUNCTION__]);
+            $this->_sxHelper->log($response['message']. ' | ' . __CLASS__ . '::' . __FUNCTION__, 'error');
         }
     }
 
@@ -408,9 +405,8 @@ class UploadController
     {
         $productsSent = $this->_sxUpdater->sendUploadBatch();
 
-        if ($productsSent !== FALSE) {
-            $logger = $this->_oxRegistry->getLogger();
-            $logger->debug($productsSent . ' products sent to SEMKNOX.', [__CLASS__, __FUNCTION__]);
+        if ($productsSent !== FALSE && $productsSent > 0) {
+            $this->_sxHelper->log($productsSent . ' products sent to SEMKNOX.'. ' | ' . __CLASS__ . '::' . __FUNCTION__, 'info');
         }
 
         return $productsSent;
