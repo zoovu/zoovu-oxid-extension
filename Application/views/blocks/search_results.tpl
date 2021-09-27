@@ -86,14 +86,17 @@
     if(sxForms['sidebar']){
         var filterLists = sxForms['sidebar'].getElementsByClassName("dropdown-menu");
         for (var i = 0; i < filterLists.length; i++) {
-            filterListsItems = filterLists[i].getElementsByTagName("LI");
-            if(filterListsItems.length > 8){
 
-                button = document.createElement('button');
-                button.classList.add("show-more");
-                button.setAttribute("type", "button");
-                button.innerHTML = '[{oxmultilang ident="SX_show_more"}]';
-                filterLists[i].parentNode.appendChild(button);
+            if(!filterLists[i].classList.contains('showAll')){
+                filterListsItems = filterLists[i].getElementsByTagName("LI");
+                if(filterListsItems.length > 8){
+
+                    button = document.createElement('button');
+                    button.classList.add("show-more");
+                    button.setAttribute("type", "button");
+                    button.innerHTML = '[{oxmultilang ident="SX_show_more"}]';
+                    filterLists[i].parentNode.appendChild(button);
+                }
             }
         }
     }

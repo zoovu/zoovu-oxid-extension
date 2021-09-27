@@ -65,6 +65,18 @@ function startSx() {
                 if (sxAttributeOptions[filterName][dataSelectionId]['active']) {
                     filterOptionElement.classList.add('selected');
                 }
+
+                if (sxAttributeOptions[filterName][dataSelectionId]['isTreeNode']) {
+                    filterOptionElement.parentNode.parentNode.classList.add('showAll');
+                } 
+
+                filterOptionElement.setAttribute('style', sxAttributeOptions[filterName][dataSelectionId]['css']);
+
+                if (sxAttributeOptions[filterName][dataSelectionId]['isParent']) {
+                    filterOptionElement.setAttribute('data-is-parent', true);
+                    filterOptionElement.innerHTML = filterOptionElement.innerHTML + ' <span class="caret" onclick="sxExpandCategory(\"test\")"></span>';
+                }
+
             }
             else {
                 // if we land here, is the "bitte wählen" option that clears the filter!
@@ -117,6 +129,10 @@ function startSx() {
             justStyleEvents();
         }, 2000);
     }
+}
+
+function expandCategory(category) {
+    console.log(category);
 }
 
 function sidebarFiltersEvents() {                                                        // this btn-filter is for sonepar

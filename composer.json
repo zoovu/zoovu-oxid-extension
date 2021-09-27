@@ -2,7 +2,7 @@
   "name": "semknox/semknox-oxid",
   "description": "This is the SEMKNOX module for the OXID eShop.",
   "homepage": "https://www.semknox.com",
-  "version": "3.0.19",
+  "version": "3.0.20",
   "type": "oxideshop-module",
   "keywords": [
     "semknox",

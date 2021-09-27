@@ -7,13 +7,8 @@ use Semknox\Productsearch\Application\Model\ArticleList;
 use Semknox\Productsearch\Application\Model\SxHelper;
 
 use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Application\Model\AttributeList;
-use OxidEsales\Eshop\Application\Model\Attribute;
 use Semknox\Core\SxCore;
 use Semknox\Core\SxConfig;
-use Semknox\Core\Services\Search\Filters\RangeFilter;
-use Semknox\Core\Services\Search\Filters\CollectionFilter;
-use Semknox\Core\Services\Search\Filters\Option;
 
 class Search extends Search_parent
 {
