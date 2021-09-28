@@ -70,11 +70,11 @@ function startSx() {
                     filterOptionElement.parentNode.parentNode.classList.add('showAll');
                 } 
 
-                filterOptionElement.setAttribute('style', sxAttributeOptions[filterName][dataSelectionId]['css']);
+                filterOptionElement.parentNode.setAttribute('style', sxAttributeOptions[filterName][dataSelectionId]['css']);
 
                 if (sxAttributeOptions[filterName][dataSelectionId]['isParent']) {
                     filterOptionElement.setAttribute('data-is-parent', true);
-                    filterOptionElement.innerHTML = filterOptionElement.innerHTML + ' <span class="caret" onclick="sxExpandCategory(\"test\")"></span>';
+                    filterOptionElement.outerHTML = filterOptionElement.outerHTML + ' <span class="caret" onclick="sxExpandCategory(\"test\")"></span>';
                 }
 
             }
