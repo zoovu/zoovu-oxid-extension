@@ -429,3 +429,20 @@ Sidebar CSS
 .sxFilterBoxSidebar .dropdown-menu.showAll li:nth-of-type(n+9) {
     display: block;
 }
+
+
+li.filter-item .caret {
+    height: 20px;
+    background-image: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cpath%20d%3D%22M8.103%2015.8a1.493%201.493%200%20000%202.109l14.496%2014.327c.243.24.63.382%201.019.43h.146c.388-.048.728-.19.97-.43l14.497-14.327a1.493%201.493%200%20000-2.109c-.581-.622-1.551-.622-2.181%200L23.67%2029.024%2010.29%2015.8a1.507%201.507%200%2000-2.182%200z%22%2F%3E%3C%2Fsvg%3E);
+    width: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: inline-block;
+    cursor: pointer;
+    background-size: 16px;
+    vertical-align: middle;
+}
+
+li.filter-item a {
+    display: inline-block;
+}
