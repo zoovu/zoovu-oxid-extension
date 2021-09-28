@@ -76,7 +76,7 @@ function startSx() {
 
                 if (sxAttributeOptions[filterName][dataSelectionId]['isParent']) {
                     filterOptionElement.setAttribute('data-is-parent', true);
-                    filterOptionElement.outerHTML = filterOptionElement.outerHTML + ' <span class="caret" onclick="event.preventDefault(); return sxExpandCategory(\'' + sxAttributeOptions[filterName][dataSelectionId]['id'] + '\')"></span>';
+                    filterOptionElement.outerHTML = filterOptionElement.outerHTML + ' <span class="caret" onclick="return sxExpandCategory(\'' + sxAttributeOptions[filterName][dataSelectionId]['id'] + '\')"></span>';
                 }
 
             }
