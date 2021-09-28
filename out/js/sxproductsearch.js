@@ -71,12 +71,21 @@ function startSx() {
                 } 
 
                 filterOptionElement.parentNode.setAttribute('style', sxAttributeOptions[filterName][dataSelectionId]['css']);
+                if (sxAttributeOptions[filterName][dataSelectionId]['isHidden']) {
+                    filterOptionElement.parentNode.classList.add('hidden');
+                }
+
                 filterOptionElement.parentNode.setAttribute('data-id', sxAttributeOptions[filterName][dataSelectionId]['id']);
                 filterOptionElement.parentNode.setAttribute('data-parent-id', sxAttributeOptions[filterName][dataSelectionId]['parentId']);
 
                 if (sxAttributeOptions[filterName][dataSelectionId]['isParent']) {
                     filterOptionElement.setAttribute('data-is-parent', true);
-                    filterOptionElement.outerHTML = filterOptionElement.outerHTML + ' <span class="caret" onclick="return sxExpandCategory(\'' + sxAttributeOptions[filterName][dataSelectionId]['id'] + '\')"></span>';
+
+                    folded = "";
+                    if (sxAttributeOptions[filterName][dataSelectionId]['isFolded']) {
+                        folded = " folded ";
+                    }
+                    filterOptionElement.outerHTML = filterOptionElement.outerHTML + ' <span class="caret '+ folded +'" onclick="return sxExpandCategory(this, \'' + sxAttributeOptions[filterName][dataSelectionId]['id'] + '\')"></span>';
                 }
 
             }
@@ -187,20 +196,40 @@ function getParentWithClass(element, classname) {
     return element.parentNode && getParentWithClass(element.parentNode, classname);
 }
 
-function sxExpandCategory(parentId) {
+function sxExpandCategory(element, parentId) {
 
     if (parentId <= 0) return false;
 
-    console.log('show ' + parentId);
+    var folded = element.classList.contains('folded');
+
+    if (folded) {
+        element.classList.remove('folded');
+    } else {
+        element.classList.add('folded');
+    }
+
+    document.querySelectorAll('#filterList .dropdown-menu li').forEach(function (node) {
+        if (node.getAttribute("data-parent-id") == parentId) {
+            if (folded) {
+                node.classList.remove('hidden');
+            } else {
+                node.classList.add('hidden');
+            }
+        }
+    });
 
     return false;
 
 }
 
-document.querySelectorAll('.dropdown-toggle>i').forEach(function (node) {
+document.querySelectorAll('#filterList .dropdown-menu .caret').forEach(function (node) {
 
     node.addEventListener('click', function (e) {
         e.preventDefault();
+        e.cancelBubble = true;
+        if (e.stopPropagation) {
+            e.stopPropagation();
+        }
     });
 
 })

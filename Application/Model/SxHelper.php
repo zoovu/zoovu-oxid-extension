@@ -394,6 +394,29 @@ class SxHelper {
                 if ($filter->getType() == 'TREE'){
                     $options = $this->iterateThroughCategoryOptions($options);
                 }
+                // find active options
+                $notFoldedParents = [];
+                $activeOptions = [];
+                foreach($options as $option){
+                    if($option->isActive()){
+                        $notFoldedParents[] = $option->parentId;
+                        $activeOptions = array_merge($activeOptions, $option->parentIds);
+                    }
+                }
+                // mark active paths
+                foreach ($options as &$option) {
+                    if (in_array($option->getId(), $activeOptions) || in_array($option->parentId, $activeOptions)) {
+                        $option->isHidden= false;
+                        $notFoldedParents[] = $option->parentId;
+                    }
+                }
+
+                // marke not folded parents
+                foreach ($options as &$option) {
+                    if (in_array($option->getId(), $notFoldedParents)) {
+                        $option->isFolded = false;
+                    }
+                }
 
                 foreach ($options as $option) {
 
@@ -417,6 +440,8 @@ class SxHelper {
                     $sxAttributeOption['id'] = $option->getId();
                     $sxAttributeOption['parentId'] = $option->parentId;
                     $sxAttributeOption['isTreeNode'] = isset($option->isTreeNode) ? $option->isTreeNode : false;
+                    $sxAttributeOption['isHidden'] = isset($option->isHidden) ? $option->isHidden : false;
+                    $sxAttributeOption['isFolded'] = isset($option->isFolded) ? $option->isFolded : true;
 
                     if ($option->isActive()) {
                         $activeValues[] = $optionName;
@@ -445,6 +470,7 @@ class SxHelper {
     {
         $returnOptions = []; // needed for correct order
         $parentActive = !$level ? true : $parent->isActive();
+        
 
         foreach ($options as $option) {
             /* @var $option \Semknox\Core\Services\Search\Filters\Option */
@@ -454,7 +480,7 @@ class SxHelper {
             $option->css = "";
             if($level > 0){
                 $option->css .= "margin-left: " . ($level * 20) . "px;";
-                $option->css .= !$option->isActive() && !$parentActive ? " display: none;" : "";
+                $option->isHidden = !$option->isActive() && !$parentActive ? true : false;
             }
 
             if ($option->hasChildren()) {
@@ -462,6 +488,7 @@ class SxHelper {
             }
 
             $option->parentId = $parent ? $parent->getId() : 0;
+            $option->parentIds = $parent ? array_merge($parent->parentIds,[$option->parentId]) : [];
             
             $returnOptions[] = $option;
 
