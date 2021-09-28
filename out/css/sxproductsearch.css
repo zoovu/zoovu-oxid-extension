@@ -446,3 +446,5 @@ li.filter-item .caret {
 li.filter-item a {
     display: inline-block;
 }
+
+.sxFilterBoxSidebar .dropdown-menu>li>a { display: inline-block; }

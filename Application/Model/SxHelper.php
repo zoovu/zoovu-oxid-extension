@@ -414,6 +414,8 @@ class SxHelper {
 
                     $sxAttributeOption['css'] = isset($option->css) ? $option->css : '';
                     $sxAttributeOption['isParent'] = isset($option->isParent) ? $option->isParent : false;
+                    $sxAttributeOption['id'] = $option->getId();
+                    $sxAttributeOption['parentId'] = $option->parentId;
                     $sxAttributeOption['isTreeNode'] = isset($option->isTreeNode) ? $option->isTreeNode : false;
 
                     if ($option->isActive()) {
@@ -439,10 +441,10 @@ class SxHelper {
         return $oArtList;
     }
 
-    private function iterateThroughCategoryOptions($options, $level=0, $parentActive=false)
+    private function iterateThroughCategoryOptions($options, $level=0, $parent=null)
     {
         $returnOptions = []; // needed for correct order
-        $parentActive = !$level ? true : $parentActive;
+        $parentActive = !$level ? true : $parent->isActive();
 
         foreach ($options as $option) {
             /* @var $option \Semknox\Core\Services\Search\Filters\Option */
@@ -458,12 +460,14 @@ class SxHelper {
             if ($option->hasChildren()) {
                 $option->isParent = true;
             }
+
+            $option->parentId = $parent ? $parent->getId() : 0;
             
             $returnOptions[] = $option;
 
             // iterate through children
             if($option->hasChildren()) {
-                $returnOptions = array_merge($returnOptions, $this->iterateThroughCategoryOptions($option->getChildren(), $level+1, $option->isActive()));
+                $returnOptions = array_merge($returnOptions, $this->iterateThroughCategoryOptions($option->getChildren(), $level+1, $option));
             }
 
         }

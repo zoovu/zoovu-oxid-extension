@@ -71,10 +71,12 @@ function startSx() {
                 } 
 
                 filterOptionElement.parentNode.setAttribute('style', sxAttributeOptions[filterName][dataSelectionId]['css']);
+                filterOptionElement.parentNode.setAttribute('data-id', sxAttributeOptions[filterName][dataSelectionId]['id']);
+                filterOptionElement.parentNode.setAttribute('data-parent-id', sxAttributeOptions[filterName][dataSelectionId]['parentId']);
 
                 if (sxAttributeOptions[filterName][dataSelectionId]['isParent']) {
                     filterOptionElement.setAttribute('data-is-parent', true);
-                    filterOptionElement.outerHTML = filterOptionElement.outerHTML + ' <span class="caret" onclick="sxExpandCategory(\"test\")"></span>';
+                    filterOptionElement.outerHTML = filterOptionElement.outerHTML + ' <span class="caret" onclick="event.preventDefault(); return sxExpandCategory(\'' + sxAttributeOptions[filterName][dataSelectionId]['id'] + '\')"></span>';
                 }
 
             }
@@ -183,4 +185,14 @@ function hasSomeParentTheClass(element, classname) {
 function getParentWithClass(element, classname) {
     if (element.className && element.className.split(' ').indexOf(classname) >= 0) return element;
     return element.parentNode && getParentWithClass(element.parentNode, classname);
+}
+
+function sxExpandCategory(parentId) {
+
+    if (parentId <= 0) return false;
+
+    console.log('show ' + parentId);
+
+    return false;
+
 }
