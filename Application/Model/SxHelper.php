@@ -459,7 +459,6 @@ class SxHelper {
                 $option->isParent = true;
             }
             
-
             $returnOptions[] = $option;
 
             // iterate through children
