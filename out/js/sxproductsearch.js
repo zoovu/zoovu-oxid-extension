@@ -196,3 +196,11 @@ function sxExpandCategory(parentId) {
     return false;
 
 }
+
+document.querySelectorAll('.dropdown-toggle>i').forEach(function (node) {
+
+    node.addEventListener('click', function (e) {
+        e.preventDefault();
+    });
+
+})
