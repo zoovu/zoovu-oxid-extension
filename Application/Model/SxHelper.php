@@ -326,7 +326,7 @@ class SxHelper {
         return $oArtList;
     }
 
-    public function addFilterToArticleList($oArtList, $sxAvailableFiltersFromResponse = [])
+    public function addFilterToArticleList($sxAvailableFiltersFromResponse)
     {
         $sxAvailableFilters = new AttributeList();
         $sxAvailableRangeFilters = new AttributeList();
@@ -341,6 +341,12 @@ class SxHelper {
             $attribute->setId($filterName); // since api changed
 
             if ($filter->getType() == 'RANGE') {
+
+                /*
+                echo '<pre>';
+                var_dump($filter);
+                echo '</pre>';
+                */
 
                 $minValue = $filter->getMin();
                 $maxValue = $filter->getMax();
@@ -393,31 +399,32 @@ class SxHelper {
 
                 if ($filter->getType() == 'TREE'){
                     $options = $this->iterateThroughCategoryOptions($options);
-                }
-                // find active options
-                $notFoldedParents = [];
-                $activeOptions = [];
-                foreach($options as $option){
-                    if($option->isActive()){
-                        $notFoldedParents[] = $option->parentId;
-                        $activeOptions = array_merge($activeOptions, $option->parentIds);
-                    }
-                }
-                // mark active paths
-                foreach ($options as &$option) {
-                    if (in_array($option->getId(), $activeOptions) || in_array($option->parentId, $activeOptions)) {
-                        $option->isHidden= false;
-                        $notFoldedParents[] = $option->parentId;
-                    }
-                }
 
-                // marke not folded parents
-                foreach ($options as &$option) {
-                    if (in_array($option->getId(), $notFoldedParents)) {
-                        $option->isFolded = false;
+                    // find active options
+                    $notFoldedParents = [];
+                    $activeOptions = [];
+                    foreach ($options as $option) {
+                        if ($option->isActive()) {
+                            $notFoldedParents[] = $option->parentId;
+                            $activeOptions = array_merge($activeOptions, $option->parentIds);
+                        }
+                    }
+                    // mark active paths
+                    foreach ($options as &$option) {
+                        if (in_array($option->getId(), $activeOptions) || in_array($option->parentId, $activeOptions)) {
+                            $option->isHidden = false;
+                            $notFoldedParents[] = $option->parentId;
+                        }
+                    }
+
+                    // marke not folded parents
+                    foreach ($options as &$option) {
+                        if (in_array($option->getId(), $notFoldedParents)) {
+                            $option->isFolded = false;
+                        }
                     }
                 }
-
+                
                 foreach ($options as $option) {
 
                     $optionName = $option->getName();
@@ -435,13 +442,15 @@ class SxHelper {
                         $sxAttributeOption['count'] = $option->getNumberOfResults();
                     }
 
-                    $sxAttributeOption['css'] = isset($option->css) ? $option->css : '';
-                    $sxAttributeOption['isParent'] = isset($option->isParent) ? $option->isParent : false;
-                    $sxAttributeOption['id'] = $option->getId();
-                    $sxAttributeOption['parentId'] = $option->parentId;
-                    $sxAttributeOption['isTreeNode'] = isset($option->isTreeNode) ? $option->isTreeNode : false;
-                    $sxAttributeOption['isHidden'] = isset($option->isHidden) ? $option->isHidden : false;
-                    $sxAttributeOption['isFolded'] = isset($option->isFolded) ? $option->isFolded : true;
+                    if($filter->getType() == 'TREE'){
+                        $sxAttributeOption['css'] = isset($option->css) ? $option->css : '';
+                        $sxAttributeOption['isParent'] = isset($option->isParent) ? $option->isParent : false;
+                        $sxAttributeOption['id'] = $option->getId();
+                        $sxAttributeOption['parentId'] = $option->parentId;
+                        $sxAttributeOption['isTreeNode'] = isset($option->isTreeNode) ? $option->isTreeNode : false;
+                        $sxAttributeOption['isHidden'] = isset($option->isHidden) ? $option->isHidden : false;
+                        $sxAttributeOption['isFolded'] = isset($option->isFolded) ? $option->isFolded : true;
+                    }
 
                     if ($option->isActive()) {
                         $activeValues[] = $optionName;
@@ -459,11 +468,11 @@ class SxHelper {
             }
         }
 
-        $oArtList->setAvailableFilters($sxAvailableFilters);
-        $oArtList->setAvailableRangeFilters($sxAvailableRangeFilters);
-        $oArtList->setAttributeOptions($sxAttributeOptions);
-
-        return $oArtList;
+        return [
+            'availableFilters' => $sxAvailableFilters,
+            'availableRangeFilters' => $sxAvailableRangeFilters,
+            'attributeOptions' => $sxAttributeOptions
+        ];
     }
 
     private function iterateThroughCategoryOptions($options, $level=0, $parent=null)

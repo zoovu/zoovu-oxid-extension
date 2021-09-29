@@ -67,26 +67,29 @@ function startSx() {
                 }
 
                 if (sxAttributeOptions[filterName][dataSelectionId]['isTreeNode']) {
+                   
                     filterOptionElement.parentNode.parentNode.classList.add('showAll');
+
+                    filterOptionElement.parentNode.setAttribute('style', sxAttributeOptions[filterName][dataSelectionId]['css']);
+                    if (sxAttributeOptions[filterName][dataSelectionId]['isHidden']) {
+                        filterOptionElement.parentNode.classList.add('hidden');
+                    }
+
+                    filterOptionElement.parentNode.setAttribute('data-id', sxAttributeOptions[filterName][dataSelectionId]['id']);
+                    filterOptionElement.parentNode.setAttribute('data-parent-id', sxAttributeOptions[filterName][dataSelectionId]['parentId']);
+
+                    if (sxAttributeOptions[filterName][dataSelectionId]['isParent']) {
+                        filterOptionElement.setAttribute('data-is-parent', true);
+
+                        folded = "";
+                        if (sxAttributeOptions[filterName][dataSelectionId]['isFolded']) {
+                            folded = " folded ";
+                        }
+                        filterOptionElement.outerHTML = filterOptionElement.outerHTML + ' <span class="caret ' + folded + '" onclick="return sxExpandCategory(this, \'' + sxAttributeOptions[filterName][dataSelectionId]['id'] + '\')"></span>';
+                    }
+
                 } 
 
-                filterOptionElement.parentNode.setAttribute('style', sxAttributeOptions[filterName][dataSelectionId]['css']);
-                if (sxAttributeOptions[filterName][dataSelectionId]['isHidden']) {
-                    filterOptionElement.parentNode.classList.add('hidden');
-                }
-
-                filterOptionElement.parentNode.setAttribute('data-id', sxAttributeOptions[filterName][dataSelectionId]['id']);
-                filterOptionElement.parentNode.setAttribute('data-parent-id', sxAttributeOptions[filterName][dataSelectionId]['parentId']);
-
-                if (sxAttributeOptions[filterName][dataSelectionId]['isParent']) {
-                    filterOptionElement.setAttribute('data-is-parent', true);
-
-                    folded = "";
-                    if (sxAttributeOptions[filterName][dataSelectionId]['isFolded']) {
-                        folded = " folded ";
-                    }
-                    filterOptionElement.outerHTML = filterOptionElement.outerHTML + ' <span class="caret '+ folded +'" onclick="return sxExpandCategory(this, \'' + sxAttributeOptions[filterName][dataSelectionId]['id'] + '\')"></span>';
-                }
 
             }
             else {

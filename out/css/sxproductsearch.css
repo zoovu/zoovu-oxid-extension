@@ -453,3 +453,9 @@ Sidebar CSS
 li.filter-item a {
     display: inline-block; 
 }
+
+#filterList > strong {
+    display: none;
+}
+
+

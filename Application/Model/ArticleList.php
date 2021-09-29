@@ -334,14 +334,10 @@ class ArticleList extends ArticleList_parent
             $sxSearch->addFilter($filterId, $options);
         }
 
-        var_dump($filters);
-
-        /*
         // set userGroup
         if (isset($this->_sxConfigValues['userGroup'])) {
             $sxSearch->setUserGroup($this->_sxConfigValues['userGroup']);
         }
-        */
 
         /*
          * [2.] execute Request
@@ -374,7 +370,10 @@ class ArticleList extends ArticleList_parent
 
         // add Filter to articleList
         $sxAvailableFiltersFromResponse = $this->_sxSearchResponse->getAvailableFilters();
-        $this->_sxHelper->addFilterToArticleList($this, $sxAvailableFiltersFromResponse);
+        $articleListFilter = $this->_sxHelper->addFilterToArticleList($sxAvailableFiltersFromResponse);
+        $this->setAvailableFilters($articleListFilter['availableFilters']);
+        $this->setAvailableRangeFilters($articleListFilter['availableRangeFilters']);
+        $this->setAttributeOptions($articleListFilter['attributeOptions']);
 
         // add articles
         $oxArticleIds = array();

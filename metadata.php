@@ -76,21 +76,71 @@ $aModule = [
         'sxproductsearch_cron.tpl'   => 'semknox/semknox-oxid/Application/views/tpl/sxproductsearch_cron.tpl',
     ],
     'blocks' => [
+
+        /*
+        * BACKEND
+        */ 
+
         [
             'template' => 'bottomnaviitem.tpl',
             'block'=>'admin_bottomnavicustom',
             'file'=>'Application/views/admin/blocks/admin_bottomnavicustom.tpl'
         ],
+
+
+        /*
+        * FRONTEND
+        */ 
+
+        /*
         [
             'template' => 'page/search/search.tpl',
             'block' => 'search_header',
             'file' => 'Application/views/blocks/search_header.tpl'
         ],
+        */
+        // replaced by ==>
+        [
+            'template' => 'page/search/search.tpl',
+            'block' => 'search_header',
+            'file' => 'Application/views/blocks/header.tpl'
+        ],
+        [
+            'template' => 'page/list/list.tpl',
+            'block' => 'page_list_listhead',
+            'file' => 'Application/views/blocks/header.tpl'
+        ],
+        // <== 
+
+        /*
         [
             'template' => 'page/search/search.tpl',
             'block' => 'search_top_listlocator',
             'file' => 'Application/views/blocks/search_top_listlocator.tpl'
         ],
+        */
+        // replaced by ==>
+        [
+            'template' => 'page/search/search.tpl',
+            'block' => 'search_top_listlocator',
+            'file' => 'Application/views/blocks/top_listlocator.tpl'
+        ],
+        [
+            'template' => 'page/list/list.tpl',
+            'block' => 'page_list_upperlocator',
+            'file' => 'Application/views/blocks/top_listlocator.tpl'
+        ],
+        // <== 
+
+        /*
+        [
+            'template' => 'page/search/search.tpl',
+            'block' => 'search_results',
+            'file' => 'Application/views/blocks/search_results.tpl'
+        ],
+        */
+        // replaced by ==>
+        /*
         [
             'template' => 'page/search/search.tpl',
             'block' => 'search_results',
@@ -98,9 +148,20 @@ $aModule = [
         ],
         [
             'template' => 'page/list/list.tpl',
-            'block' => 'page_list_listbody',
+            'block' => 'search_results',
             'file' => 'Application/views/blocks/search_results.tpl'
         ],
+        */
+        // <==
+
+
+        [
+            'template' => 'layout/sidebar.tpl',
+            'block' => 'sidebar_categoriestree',
+            'file' => 'Application/views/blocks/sidebar_categoriestree.tpl'
+        ],
+
+
         [
             'template' => 'widget/locator/attributes.tpl',
             'block' => 'widget_locator_attributes',

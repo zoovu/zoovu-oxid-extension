@@ -160,7 +160,10 @@ class Search extends Search_parent
 
         // add Filter to articleList
         $sxAvailableFiltersFromResponse = $this->_sxSearchResponse->getAvailableFilters();
-        $oArtList = $this->_sxHelper->addFilterToArticleList($oArtList, $sxAvailableFiltersFromResponse);
+        $articleListFilter = $this->_sxHelper->addFilterToArticleList($sxAvailableFiltersFromResponse);
+        $oArtList->setAvailableFilters($articleListFilter['availableFilters']);
+        $oArtList->setAvailableRangeFilters($articleListFilter['availableRangeFilters']);
+        $oArtList->setAttributeOptions($articleListFilter['attributeOptions']);
 
 
         // add search interpretation text

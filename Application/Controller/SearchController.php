@@ -138,4 +138,11 @@ class SearchController extends SearchController_parent
         */
     }
 
+
+    // used in /Application/views/blocks/header.tpl
+    public function isSearchPage()
+    {
+        return true;
+    }
+
 }
