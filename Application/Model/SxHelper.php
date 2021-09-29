@@ -283,7 +283,8 @@ class SxHelper {
             Registry::getSession()->setVariable('attrfilter', $filter);
         }
 
-        $filter = Registry::getSession()->getVariable('attrfilter');
+        $filter = Registry::getSession()->getVariable('attrfilter') ;
+        $filter = $filter && is_array($filter) ? $filter : [];
 
         $filterReturn = [];
         foreach ($filter as $filterId => $options) {
