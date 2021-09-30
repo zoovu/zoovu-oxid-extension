@@ -410,6 +410,7 @@ class SxHelper {
                             $activeOptions = array_merge($activeOptions, $option->parentIds);
                         }
                     }
+
                     // mark active paths
                     foreach ($options as &$option) {
                         if (in_array($option->getId(), $activeOptions) || in_array($option->parentId, $activeOptions)) {
@@ -424,9 +425,10 @@ class SxHelper {
                             $option->isFolded = false;
                         }
                     }
+
                 }
-                
-                foreach ($options as $option) {
+
+                foreach ($options as &$option) {
 
                     $optionName = $option->getName();
 
@@ -461,6 +463,7 @@ class SxHelper {
                     $sxAttributeOptions['attrfilter[' . $filter->getName() . ']'][$optionName] = $sxAttributeOption;
                 }
 
+
                 $attribute->setActiveValue(implode('###', $activeValues));
 
                 if (!count($options)) continue;
@@ -482,7 +485,7 @@ class SxHelper {
         $parentActive = !$level ? true : $parent->isActive();
         
 
-        foreach ($options as $option) {
+        foreach ($options as &$option) {
             /* @var $option \Semknox\Core\Services\Search\Filters\Option */
            
             $option->isTreeNode = true;
@@ -501,6 +504,12 @@ class SxHelper {
             $option->parentIds = $parent ? array_merge($parent->parentIds,[$option->parentId]) : [];
             
             $returnOptions[] = $option;
+
+            /*
+            echo '<pre>';
+            var_dump($option->getName().': '. $option->getId());
+            echo '</pre>';
+            */
 
             // iterate through children
             if($option->hasChildren()) {
