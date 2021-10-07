@@ -443,7 +443,7 @@ Sidebar CSS
     border: 0;
 }
 
-#filterList li .caret.folded {
+#filterList li.folded .caret {
     -webkit-transform: translateY(-15%) scaleY(-1);
     -ms-transform: translateY(-15%) scaleY(-1);
     transform: translateY(-15%) scaleY(-1);

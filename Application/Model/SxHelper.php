@@ -278,7 +278,7 @@ class SxHelper {
     {
         $actControl = Registry::getConfig()->getRequestParameter('actcontrol', false);
         $stoken = Registry::getConfig()->getRequestParameter('stoken', false);
-        if ($actControl == 'search' || $stoken) { // workaround to find out if filter have been changed
+        if (in_array($actControl,['search','alist']) || $stoken) { // workaround to find out if filter have been changed
             $filter = Registry::getConfig()->getRequestParameter('attrfilter', []);
             Registry::getSession()->setVariable('attrfilter', $filter);
         }
@@ -304,8 +304,8 @@ class SxHelper {
                 $options = array_values($options);
             }
 
-            foreach ($options as &$option) {
-                $option = html_entity_decode($option);
+            foreach ($options as $key => $option) {
+                $options[$key] = html_entity_decode($option);
             }
 
             $filterReturn[$filterId] = $options;
@@ -338,16 +338,11 @@ class SxHelper {
             $attribute = new Attribute();
 
             $filterName = $filter->getName();
+
             $attribute->setTitle($filterName);
             $attribute->setId($filterName); // since api changed
 
             if ($filter->getType() == 'RANGE') {
-
-                /*
-                echo '<pre>';
-                var_dump($filter);
-                echo '</pre>';
-                */
 
                 $minValue = $filter->getMin();
                 $maxValue = $filter->getMax();
@@ -391,12 +386,16 @@ class SxHelper {
 
             } else {
 
-                $attribute->setTitle($filterName);
-                $attribute->setId($filterName); // since api changed
-
                 $activeValues = [];
-
                 $options = $filter->getOptions();
+
+                // get active values
+                foreach ($options as $option) {
+                    if ($option->isActive()) {
+                        $activeValues[] = $option->getValue();
+                    }
+                }
+
 
                 if ($filter->getType() == 'TREE'){
                     $options = $this->iterateThroughCategoryOptions($options);
@@ -408,65 +407,66 @@ class SxHelper {
                         if ($option->isActive()) {
                             $notFoldedParents[] = $option->parentId;
                             $activeOptions = array_merge($activeOptions, $option->parentIds);
+                            $activeValues[] = $option->getValue();
                         }
                     }
 
                     // mark active paths
-                    foreach ($options as &$option) {
+                    foreach ($options as $key => $option) {
                         if (in_array($option->getId(), $activeOptions) || in_array($option->parentId, $activeOptions)) {
-                            $option->isHidden = false;
+                            $options[$key]->isHidden = false;
                             $notFoldedParents[] = $option->parentId;
                         }
                     }
 
                     // marke not folded parents
-                    foreach ($options as &$option) {
+                    foreach ($options as $key => $option) {
                         if (in_array($option->getId(), $notFoldedParents)) {
-                            $option->isFolded = false;
+                            $options[$key]->isFolded = false;
                         }
                     }
-
                 }
 
-                foreach ($options as &$option) {
+                $activeValues = \array_unique($activeValues);
 
-                    $optionName = $option->getName();
+                foreach ($options as $option) {
 
                     if (!strlen($option->getName())) continue;
 
-                    $attribute->addValue($optionName);
+                    $optionName = $option->getName();
 
-                    $sxAttributeOption = [
-                        'value' => $option->getValue(),
-                        'active' => false
-                    ];
-
+                    $sxAttributeOption = [];
                     if ($this->_sxConfigValues['filterOptionCounterActive']) {
                         $sxAttributeOption['count'] = $option->getNumberOfResults();
                     }
 
                     if($filter->getType() == 'TREE'){
+
+                        $optionName = $option->getId().$optionName;
+
                         $sxAttributeOption['css'] = isset($option->css) ? $option->css : '';
                         $sxAttributeOption['isParent'] = isset($option->isParent) ? $option->isParent : false;
                         $sxAttributeOption['id'] = $option->getId();
                         $sxAttributeOption['parentId'] = $option->parentId;
+                        $sxAttributeOption['parentIds'] = $option->parentIds;
                         $sxAttributeOption['isTreeNode'] = isset($option->isTreeNode) ? $option->isTreeNode : false;
                         $sxAttributeOption['isHidden'] = isset($option->isHidden) ? $option->isHidden : false;
                         $sxAttributeOption['isFolded'] = isset($option->isFolded) ? $option->isFolded : true;
                     }
 
                     if ($option->isActive()) {
-                        $activeValues[] = $optionName;
                         $sxAttributeOption['active'] = true;
+                        $sxAttributeOption['value'] = implode('###', array_diff($activeValues, [$option->getValue()]));
+                    } else {
+                        $sxAttributeOption['active'] = false;
+                        $sxAttributeOption['value'] = implode('###',array_merge([$option->getValue()], $activeValues));
                     }
 
-                    $sxAttributeOptions['attrfilter[' . $filter->getName() . ']'][$optionName] = $sxAttributeOption;
+                    $attribute->addValue($optionName);
+                    $sxAttributeOptions['attrfilter[' . $filterName. ']'][$optionName] = $sxAttributeOption;
                 }
 
-
                 $attribute->setActiveValue(implode('###', $activeValues));
-
-                if (!count($options)) continue;
 
                 $sxAvailableFilters->add($attribute);
             }
@@ -485,7 +485,7 @@ class SxHelper {
         $parentActive = !$level ? true : $parent->isActive();
         
 
-        foreach ($options as &$option) {
+        foreach ($options as $key => $option) {
             /* @var $option \Semknox\Core\Services\Search\Filters\Option */
            
             $option->isTreeNode = true;
@@ -504,12 +504,6 @@ class SxHelper {
             $option->parentIds = $parent ? array_merge($parent->parentIds,[$option->parentId]) : [];
             
             $returnOptions[] = $option;
-
-            /*
-            echo '<pre>';
-            var_dump($option->getName().': '. $option->getId());
-            echo '</pre>';
-            */
 
             // iterate through children
             if($option->hasChildren()) {

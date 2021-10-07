@@ -348,7 +348,7 @@ class ArticleList extends ArticleList_parent
         } catch (Exception $e) {
             // fallback
             $this->_sxConfigValues = null;
-            $this->_logger->error($e->getMessage(), [__CLASS__, __FUNCTION__]);
+            $this->_sxHelper->log($e->getMessage() . ' | ' . __CLASS__ . '::' . __FUNCTION__, 'error');
             return parent::_getCategorySelect($sFields, $sCatId, $aSessionFilter);
         }
 
@@ -392,37 +392,5 @@ class ArticleList extends ArticleList_parent
 
         return $sSelect;
     }
-
-
-    /*
-    public function loadCategoryArticles($sCatId, $aSessionFilter, $iLimit = null)
-    {
-        return parent::loadCategoryArticles($sCatId, $aSessionFilter, $iLimit);
-
-
-        if(!isset($this->_sxConfigValues['categoryQuery']) || !$this->_sxConfigValues['categoryQuery']){
-            return parent::loadCategoryArticles($sCatId, $aSessionFilter, $iLimit);
-        }
-
-        $categoryPath = $this->_sxHelper->getCategoryPath($sCatId);
-
-        // get articles
-        $sxSearch = $this->_sxSearch->queryCategory($categoryPath);
-
-        $sxSearch->setLimit($this->_sxHelper->getPageLimit());
-        $sxSearch->setPage($this->_sxHelper->getPageNr());
-
-        $this->_sxSearchResponse = $sxSearch->search();
-        $oxArticleIds = array();
-        foreach ($this->_sxSearchResponse->getProducts() as $sxArticle) {
-            $oxArticleIds[] = $sxArticle->getId();
-        }
-
-        $this->loadIdsByGivenOrder($oxArticleIds);
-
-        return $this->_sxSearchResponse->getTotalProductResults();
-
-    }
-    */
 
 }

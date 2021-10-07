@@ -56,15 +56,22 @@ function startSx() {
 
             if (sxAttributeOptions[filterName] && sxAttributeOptions[filterName][dataSelectionId]) {
 
+                // set data-selection-id
                 filterOptionElement.setAttribute('data-selection-id', sxAttributeOptions[filterName][dataSelectionId]['value']);
 
+                // set active if active
+                if (sxAttributeOptions[filterName][dataSelectionId]['active']) {
+                    filterOptionElement.classList.add('selected');
+                }
+
+                // remove id from label
+                filterOptionElement.innerHTML = filterOptionElement.innerHTML.replace(sxAttributeOptions[filterName][dataSelectionId]['id'], '');
+
+                // add results count if active
                 if (sxAttributeOptions[filterName][dataSelectionId]['count'] && sxAttributeOptions[filterName][dataSelectionId]['count'] >= 0) {
                     filterOptionElement.innerHTML = filterOptionElement.innerHTML + ' (' + sxAttributeOptions[filterName][dataSelectionId]['count'] + ')';
                 }
 
-                if (sxAttributeOptions[filterName][dataSelectionId]['active']) {
-                    filterOptionElement.classList.add('selected');
-                }
 
                 if (sxAttributeOptions[filterName][dataSelectionId]['isTreeNode']) {
                    
@@ -74,22 +81,21 @@ function startSx() {
                     if (sxAttributeOptions[filterName][dataSelectionId]['isHidden']) {
                         filterOptionElement.parentNode.classList.add('hidden');
                     }
-
+                    
                     filterOptionElement.parentNode.setAttribute('data-id', sxAttributeOptions[filterName][dataSelectionId]['id']);
                     filterOptionElement.parentNode.setAttribute('data-parent-id', sxAttributeOptions[filterName][dataSelectionId]['parentId']);
+                    filterOptionElement.parentNode.setAttribute('data-parent-ids', sxAttributeOptions[filterName][dataSelectionId]['parentIds']);
 
                     if (sxAttributeOptions[filterName][dataSelectionId]['isParent']) {
                         filterOptionElement.setAttribute('data-is-parent', true);
 
-                        folded = "";
                         if (sxAttributeOptions[filterName][dataSelectionId]['isFolded']) {
-                            folded = " folded ";
+                            filterOptionElement.parentNode.classList.add("folded")
                         }
-                        filterOptionElement.outerHTML = filterOptionElement.outerHTML + ' <span class="caret ' + folded + '" onclick="return sxExpandCategory(this, \'' + sxAttributeOptions[filterName][dataSelectionId]['id'] + '\')"></span>';
+                        filterOptionElement.outerHTML = filterOptionElement.outerHTML + ' <span class="caret" onclick="return sxExpandCategory(this, \'' + sxAttributeOptions[filterName][dataSelectionId]['id'] + '\')"></span>';
+
                     }
-
                 } 
-
 
             }
             else {
@@ -103,39 +109,7 @@ function startSx() {
                 }
                 filterOptionElement.classList.add('resetFilter');
             }
-
-            // set filter value
-            let filterValue = filterInputElement.value;
-            let filterValues = filterValue.split('###');
-
-            if (!elementsDone[filterName]) {
-                let newFilterValue = [];
-                filterValues.forEach(fv => {
-                    if (sxAttributeOptions[filterName] && sxAttributeOptions[filterName][fv]) {
-                        newFilterValue.push(sxAttributeOptions[filterName][fv]['value']);
-                    }
-                });
-                filterValue = newFilterValue.join('###');
-                filterInputElement.setAttribute('value', filterValue);
-
-                elementsDone[filterName] = true;
-            }
-
-
-            li.addEventListener('click', function (event) {
-
-                var dataSelectionId = filterOptionElement.getAttribute('data-selection-id');
-
-                if (dataSelectionId.length == 0) filterValue = '';
-
-                if (filterValue.indexOf(dataSelectionId) > -1) {
-                    filterOptionElement.setAttribute('data-selection-id', filterValue.replace(dataSelectionId, ''));
-                } else {
-                    if (filterValue.length > 0) filterValue = filterValue + '###';
-
-                    filterOptionElement.setAttribute('data-selection-id', filterValue + dataSelectionId);
-                }
-            })
+            
         }
         // sometimes, looks like things are not loaded yet... and no one is that fast anyway
         setTimeout(function () {
@@ -143,10 +117,6 @@ function startSx() {
             justStyleEvents();
         }, 2000);
     }
-}
-
-function expandCategory(category) {
-    console.log(category);
 }
 
 function sidebarFiltersEvents() {                                                        // this btn-filter is for sonepar
@@ -203,20 +173,23 @@ function sxExpandCategory(element, parentId) {
 
     if (parentId <= 0) return false;
 
-    var folded = element.classList.contains('folded');
+    var folded = element.parentNode.classList.contains('folded');
 
     if (folded) {
-        element.classList.remove('folded');
+        element.parentNode.classList.remove('folded');
     } else {
-        element.classList.add('folded');
+        element.parentNode.classList.add('folded');
     }
 
     document.querySelectorAll('#filterList .dropdown-menu li').forEach(function (node) {
-        if (node.getAttribute("data-parent-id") == parentId) {
-            if (folded) {
+        if (folded) {
+            if (node.getAttribute("data-parent-id") && node.getAttribute("data-parent-id").indexOf(parentId) > -1) {
                 node.classList.remove('hidden');
-            } else {
+            }
+        } else {
+            if (node.getAttribute("data-parent-ids") && node.getAttribute("data-parent-ids").indexOf(parentId) > -1) {
                 node.classList.add('hidden');
+                node.classList.add('folded');
             }
         }
     });

@@ -12,15 +12,19 @@
         [{include file="widget/locator/listlocator.tpl" locator=$oView->getPageNavigationLimitedTop() listDisplayType=true itemsPerPage=true sort=true attributes=$oView->getAttributes()}]
 
         [{capture append="oxidBlock_sidebar"}]
-            <div class="box well well-sm hidden-sm hidden-xs    [{* <= default classes/styling of flow-theme*}]
-                        card bg-light d-none d-lg-block         [{* <= default classes/styling of wave-theme*}]
-                        sxFilterBoxSidebar" id="filterBox">
-                <div class="page-header h3   [{* <= default classes/styling of flow-theme*}]
-                            card-header      [{* <= default classes/styling of wave-theme*}]"
-                            >[{oxmultilang ident="DD_LISTLOCATOR_FILTER_ATTRIBUTES"}]</div>
-    
-                [{include file="widget/locator/listlocator.tpl" attributes=$oView->getAttributes() inSidebar=true}]
-            </div>
+
+            [{if count($oView->getAttributes()) gt 0 }]
+                <div class="box well well-sm hidden-sm hidden-xs    [{* <= default classes/styling of flow-theme*}]
+                            card bg-light d-none d-lg-block         [{* <= default classes/styling of wave-theme*}]
+                            sxFilterBoxSidebar" id="filterBox">
+                    <div class="page-header h3   [{* <= default classes/styling of flow-theme*}]
+                                card-header      [{* <= default classes/styling of wave-theme*}]"
+                                >[{oxmultilang ident="DD_LISTLOCATOR_FILTER_ATTRIBUTES"}]</div>
+        
+                    [{include file="widget/locator/listlocator.tpl" attributes=$oView->getAttributes() inSidebar=true}]
+                </div>
+            [{/if}]
+
         [{/capture}]
 
     [{else}]
