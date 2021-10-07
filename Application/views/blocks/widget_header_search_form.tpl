@@ -34,8 +34,13 @@
             },
             callbacks: {
                 preSearch: function (query) { // handle query suggestions
-                    var searchForm = document.getElementsByName('search')[0];
-                    var searchBox = document.getElementsByName('search')[0];
+
+                    var searchForm = document.querySelectorAll('form.form.search')[0];
+                    //var searchForm = document.getElementsByName('search')[0];
+
+                    var searchBox = document.querySelectorAll('form.form.search input[name=searchparam]')[0]; 
+                    //var searchBox = document.getElementsByName('searchparam')[0];
+
                     searchBox.value = query;
                     searchForm.submit();
                     return false; // prevent search
