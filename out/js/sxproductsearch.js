@@ -76,6 +76,7 @@ function startSx() {
                 if (sxAttributeOptions[filterName][dataSelectionId]['isTreeNode']) {
                    
                     filterOptionElement.parentNode.parentNode.classList.add('showAll');
+                    filterOptionElement.parentNode.parentNode.classList.add('categoryTree');
 
                     filterOptionElement.parentNode.setAttribute('style', sxAttributeOptions[filterName][dataSelectionId]['css']);
                     if (sxAttributeOptions[filterName][dataSelectionId]['isHidden']) {
@@ -93,6 +94,7 @@ function startSx() {
                             filterOptionElement.parentNode.classList.add("folded")
                         }
                         filterOptionElement.outerHTML = filterOptionElement.outerHTML + ' <span class="caret" onclick="return sxExpandCategory(this, \'' + sxAttributeOptions[filterName][dataSelectionId]['id'] + '\')"></span>';
+                        //filterOptionElement.outerHTML = ' <span class="caret" onclick="return sxExpandCategory(this, \'' + sxAttributeOptions[filterName][dataSelectionId]['id'] + '\')"></span>' + filterOptionElement.outerHTML;
 
                     }
                 } 

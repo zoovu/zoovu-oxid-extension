@@ -443,6 +443,16 @@ Sidebar CSS
     border: 0;
 }
 
+/*
+#filterList ul.categoryTree li a::before{
+    display: none !important;
+}
+
+#filterList ul.categoryTree li a{
+    padding-left: 0px;
+}
+*/
+
 #filterList li.folded .caret {
     -webkit-transform: translateY(-15%) scaleY(-1);
     -ms-transform: translateY(-15%) scaleY(-1);
