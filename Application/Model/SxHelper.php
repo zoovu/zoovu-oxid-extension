@@ -327,7 +327,7 @@ class SxHelper {
         return $oArtList;
     }
 
-    public function addFilterToArticleList($sxAvailableFiltersFromResponse)
+    public function addFilterToArticleList($sxAvailableFiltersFromResponse, $sxConfigValues = [])
     {
         $sxAvailableFilters = new AttributeList();
         $sxAvailableRangeFilters = new AttributeList();
@@ -366,7 +366,7 @@ class SxHelper {
 
 
                 $attribute->sxTitle = $filterName;
-                if (!$this->_sxConfigValues['hideRangeInRangeSliderTitle']) {
+                if (!$sxConfigValues['hideRangeInRangeSliderTitle']) {
                     $attribute->sxTitle .= " <span class='sxTitleRange'>(" . $filter->getActiveMin() . ' ' . $filter->getUnit() . " - " . $filter->getActiveMax() . ' ' . $filter->getUnit() . ")</span>";
                 }
                 $attribute->setTitle($filterName);
@@ -436,9 +436,9 @@ class SxHelper {
                     $optionName = $option->getName();
 
                     $sxAttributeOption = [];
-                    if ($this->_sxConfigValues['filterOptionCounterActive']) {
+                    if ($sxConfigValues['filterOptionCounterActive']) {
                         $sxAttributeOption['count'] = $option->getNumberOfResults();
-                    }
+                    } 
 
                     if($filter->getType() == 'TREE'){
 

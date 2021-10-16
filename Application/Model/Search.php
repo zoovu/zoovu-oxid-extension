@@ -161,7 +161,7 @@ class Search extends Search_parent
 
         // add Filter to articleList
         $sxAvailableFiltersFromResponse = $this->_sxSearchResponse->getAvailableFilters();
-        $articleListFilter = $this->_sxHelper->addFilterToArticleList($sxAvailableFiltersFromResponse);
+        $articleListFilter = $this->_sxHelper->addFilterToArticleList($sxAvailableFiltersFromResponse, $this->_sxConfigValues);
         $oArtList->setAvailableFilters($articleListFilter['availableFilters']);
         $oArtList->setAvailableRangeFilters($articleListFilter['availableRangeFilters']);
         $oArtList->setAttributeOptions($articleListFilter['attributeOptions']);

@@ -304,6 +304,7 @@ class ArticleList extends ArticleList_parent
 
         // create search AND set category array
         $sxSearch = $this->_sxSearch->queryCategory($categoryPath);
+                        \var_dump('Test');
         $sxSearch->setLimit(1000); // todo: improve
 
 
@@ -370,7 +371,7 @@ class ArticleList extends ArticleList_parent
 
         // add Filter to articleList
         $sxAvailableFiltersFromResponse = $this->_sxSearchResponse->getAvailableFilters();
-        $articleListFilter = $this->_sxHelper->addFilterToArticleList($sxAvailableFiltersFromResponse);
+        $articleListFilter = $this->_sxHelper->addFilterToArticleList($sxAvailableFiltersFromResponse, $this->_sxConfigValues);
         $this->setAvailableFilters($articleListFilter['availableFilters']);
         $this->setAvailableRangeFilters($articleListFilter['availableRangeFilters']);
         $this->setAttributeOptions($articleListFilter['attributeOptions']);
