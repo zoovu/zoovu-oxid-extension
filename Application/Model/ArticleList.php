@@ -304,7 +304,6 @@ class ArticleList extends ArticleList_parent
 
         // create search AND set category array
         $sxSearch = $this->_sxSearch->queryCategory($categoryPath);
-                        \var_dump('Test');
         $sxSearch->setLimit(1000); // todo: improve
 
 
