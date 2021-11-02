@@ -358,7 +358,12 @@ class ArticleList extends ArticleList_parent
          */
 
         // set IsSemknox ArticleList
-        $this->isSxArticleList = true;
+        if($this->_sxSearchResponse->getTotalResults()){
+            $this->isSxArticleList = true;
+        } else {
+            return parent::_getCategorySelect($sFields, $sCatId, $aSessionFilter);
+        }
+        
 
         // add available sorting options to articleList
         $sxAvailableSortingOptions = array();
