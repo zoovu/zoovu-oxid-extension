@@ -423,6 +423,7 @@ class SxHelper {
                     foreach ($options as $key => $option) {
                         if (in_array($option->getId(), $notFoldedParents)) {
                             $options[$key]->isFolded = false;
+                            $options[$key]->setActive(true);
                         }
                     }
                 }
@@ -451,7 +452,7 @@ class SxHelper {
                         $sxAttributeOption['parentIds'] = $option->parentIds;
                         $sxAttributeOption['isTreeNode'] = isset($option->isTreeNode) ? $option->isTreeNode : false;
                         $sxAttributeOption['isHidden'] = isset($option->isHidden) ? $option->isHidden : false;
-                        
+
                         $sxAttributeOption['isFolded'] = isset($option->isFolded) ? $option->isFolded : true;
                         $sxAttributeOption['isFolded'] = $option->isActive() ? false : $sxAttributeOption['isFolded'];
                     }
