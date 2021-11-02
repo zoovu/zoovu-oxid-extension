@@ -246,7 +246,8 @@ class SxHelper {
         while ($oxCategory) {
 
             if ((string) $oxCategory->oxcategories__oxactive == '1' && (string) $oxCategory->oxcategories__oxhidden == '0') {
-                $categoryPath[] = strlen($oxCategory->getTitle()) ? $oxCategory->getTitle() : $oxCategory->getId();
+                $categoryTitle = strlen($oxCategory->getTitle()) ? $oxCategory->getTitle() : $oxCategory->getId();
+                $categoryPath[] = html_entity_decode($categoryTitle);
             }
 
             $oxCategory = $oxCategory->getParentCategory();
