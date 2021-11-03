@@ -279,6 +279,7 @@ class SxHelper {
     {
         $actControl = Registry::getConfig()->getRequestParameter('actcontrol', false);
         $stoken = Registry::getConfig()->getRequestParameter('stoken', false);
+
         if (in_array($actControl,['search','alist']) || $stoken) { // workaround to find out if filter have been changed
             $filter = Registry::getConfig()->getRequestParameter('attrfilter', []);
             Registry::getSession()->setVariable('attrfilter', $filter);
@@ -424,7 +425,7 @@ class SxHelper {
                     foreach ($options as $key => $option) {
                         if (in_array($option->getId(), $notFoldedParents)) {
                             $options[$key]->isFolded = false;
-                            $options[$key]->setActive(true);
+                            //$options[$key]->setActive(true);
                         }
                     }
                 }
@@ -456,14 +457,22 @@ class SxHelper {
 
                         $sxAttributeOption['isFolded'] = isset($option->isFolded) ? $option->isFolded : true;
                         $sxAttributeOption['isFolded'] = $option->isActive() ? false : $sxAttributeOption['isFolded'];
-                    }
 
+                    } 
+
+                    // set active or not active
+                    $sxAttributeOption['active'] = 
+                        ($filter->getType() == 'TREE' && in_array($option->getId(), $notFoldedParents)) ? true : $option->isActive();
+
+                    // set value
                     if ($option->isActive()) {
-                        $sxAttributeOption['active'] = true;
                         $sxAttributeOption['value'] = implode('###', array_diff($activeValues, [$option->getValue()]));
                     } else {
-                        $sxAttributeOption['active'] = false;
-                        $sxAttributeOption['value'] = implode('###',array_merge([$option->getValue()], $activeValues));
+                        if($filter->getType() == 'TREE'){
+                            $sxAttributeOption['value'] = $option->getValue();
+                        } else {
+                            $sxAttributeOption['value'] = implode('###', array_merge([$option->getValue()], $activeValues));
+                        }     
                     }
 
                     $attribute->addValue($optionName);

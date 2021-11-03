@@ -455,11 +455,19 @@ Sidebar CSS
 }
 
 .sxFilterBoxSidebar .dropdown-menu.categoryTree>li>a {
-    padding-left: 5px;
+    padding-left: 25px;
     padding-right: 0;
 }
+.sxFilterBoxSidebar .dropdown-menu.categoryTree li {
+    position: relative;
+}
 
-
+.sxFilterBoxSidebar .dropdown-menu .caret {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: whitesmoke;
+}
 
 
 .sxFilterBoxSidebar .dropdown-menu li a.resetFilter {

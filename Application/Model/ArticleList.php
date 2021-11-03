@@ -304,6 +304,9 @@ class ArticleList extends ArticleList_parent
 
         // create search AND set category array
         $sxSearch = $this->_sxSearch->queryCategory($categoryPath);
+        
+        //$limit = $this->_sxHelper->getPageLimit();
+        //$sxSearch->setLimit($limit);
         $sxSearch->setLimit(1000); // todo: improve
 
 
@@ -358,9 +361,10 @@ class ArticleList extends ArticleList_parent
          */
 
         // set IsSemknox ArticleList
-        if($this->_sxSearchResponse->getTotalResults()){
+        if($this->_sxTotalResults = $this->_sxSearchResponse->getTotalResults()){
             $this->isSxArticleList = true;
         } else {
+            Registry::getSession()->setVariable('attrfilter', []);
             return parent::_getCategorySelect($sFields, $sCatId, $aSessionFilter);
         }
         
@@ -396,6 +400,27 @@ class ArticleList extends ArticleList_parent
         $sSelect .= " ORDER BY FIELD(`oxid`, $oxIdsSql)";
 
         return $sSelect;
+    }
+
+
+    public function loadCategoryArticles($sCatId, $aSessionFilter, $iLimit = null)
+    {
+        if (!isset($this->_sxConfigValues['categoryQuery']) || !$this->_sxConfigValues['categoryQuery']) {
+            return parent::loadCategoryArticles($sCatId, $aSessionFilter, $iLimit);
+        }
+        
+        $sArticleFields = $this->getBaseObject()->getSelectFields();
+        $sSelect = $this->_getCategorySelect($sArticleFields, $sCatId, $aSessionFilter);
+
+
+        if ($iLimit = (int) $iLimit) {
+            //$sSelect .= " LIMIT $iLimit";
+        }
+
+        $this->selectString($sSelect);
+
+        // this select is FAST so no need to hazzle here with getNrOfArticles()
+        return $this->_sxTotalResults;
     }
 
 }
