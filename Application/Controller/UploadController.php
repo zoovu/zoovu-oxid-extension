@@ -275,12 +275,14 @@ class UploadController
         $currentLanguage = $this->_oxLang->getBaseLanguage();
 
         $oxShopList = new ShopList;
-        $oxShopList->getIdTitleList();
+        $oxShopList->getAll();
 
         $languages = $this->_getLanguages();
         $sxShopConfigs = array();
 
         foreach ($oxShopList->getArray() as $oxShop) {
+
+            if((int) $oxShop->oxshops__oxactive < 1) continue; // ignore inactive shops
 
             $shopId = (string) $oxShop->oxshops__oxid;
 
@@ -360,6 +362,9 @@ class UploadController
         $languages = array();
 
         foreach ($this->_oxLang->getLanguageArray() as $lang) {
+
+            if ((int) $lang->active < 1) continue; // ignore inactive languages
+            
             $languages[$lang->id] = ucfirst($lang->oxid);
         }
 
