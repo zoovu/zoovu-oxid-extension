@@ -106,10 +106,13 @@ function startSx() {
                 if (document.querySelector("#resetFilter button")) {
                     const text = document.querySelector("#resetFilter button").innerText;
                     filterOptionElement.innerText = text;
+                    filterOptionElement.classList.add('resetFilter');
                 } else {
-                    filterOptionElement.innerText = "Clear";
+                    //old: filterOptionElement.innerText = "Clear";
+
+                    // new: if button not found, remove element
+                    filterOptionElement.remove();
                 }
-                filterOptionElement.classList.add('resetFilter');
             }
             
         }
