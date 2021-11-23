@@ -193,7 +193,7 @@ class SxHelper {
      */
     static function isEncodedOption($sStringToTranslate = '')
     {
-        return stripos((string) $sStringToTranslate, 'sxoption') === 0;
+        return stripos((string) $sStringToTranslate, 'sxoption') === 0 || $sStringToTranslate == 'choose';
     }
 
 
@@ -320,11 +320,13 @@ class SxHelper {
     public function addSortingToArticleList($oArtList, $sxAvailableSortingsFromResponse = [])
     {
         $sortings = [];
+        $sortings[0] = 'choose';
+
         foreach ($sxAvailableSortingsFromResponse as $option) {
             $sortings[$option->getKey()] = $this->encodeSortOption($option);
         }
 
-        if (count($sortings)) $oArtList->setAvailableSortingOptions($sortings);
+        if (count($sortings) > 1) $oArtList->setAvailableSortingOptions($sortings);
 
         return $oArtList;
     }

@@ -490,3 +490,8 @@ Sidebar CSS
 .sxFilterBoxSidebar .dropdown-menu li a.resetFilter:before {
     display: none;
 }
+
+/* hide sorting options */
+.dropdown-menu .asc, .dropdown-menu .desc i {
+    display: none !important;
+}

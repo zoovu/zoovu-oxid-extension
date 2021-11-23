@@ -367,15 +367,12 @@ class ArticleList extends ArticleList_parent
             Registry::getSession()->setVariable('attrfilter', []);
             return parent::_getCategorySelect($sFields, $sCatId, $aSessionFilter);
         }
-        
+
 
         // add available sorting options to articleList
-        $sxAvailableSortingOptions = array();
-        foreach ($this->_sxSearchResponse->getAvailableSortingOptions() as $option) {
-            $sxAvailableSortingOptions[$option->getKey()] = $this->_sxHelper->encodeSortOption($option);
-        }
-        $this->setAvailableSortingOptions($sxAvailableSortingOptions);
-
+        $sxAvailableSortingOptions = $this->_sxSearchResponse->getAvailableSortingOptions();
+        $this->_sxHelper->addSortingToArticleList($this, $sxAvailableSortingOptions);
+        
 
         // add Filter to articleList
         $sxAvailableFiltersFromResponse = $this->_sxSearchResponse->getAvailableFilters();
