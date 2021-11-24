@@ -201,11 +201,12 @@ class SxHelper {
      * encode semknox sort option to usable string
      * 
      * @param Option $filter 
-     * @return string 
+     * @return array 
      */
-    public function encodeSortOption(SortingOption $option)
+    public function encodeSortOption(SortingOption $option, $sortings = [])
     {
-        return 'sxoption_'.$option->getKey().'_' .$option->getName();
+        $key = $option->getKey(). '-'. $option->getSort();
+        return array_merge([$key => 'sxoption_' . $key . '_' . $option->getName()], $sortings);
     }
 
     
@@ -323,9 +324,11 @@ class SxHelper {
         $sortings[0] = 'choose';
 
         foreach ($sxAvailableSortingsFromResponse as $option) {
-            $sortings[$option->getKey()] = $this->encodeSortOption($option);
+            $sortings = $this->encodeSortOption($option, $sortings);
         }
 
+        sort($sortings);
+        
         if (count($sortings) > 1) $oArtList->setAvailableSortingOptions($sortings);
 
         return $oArtList;

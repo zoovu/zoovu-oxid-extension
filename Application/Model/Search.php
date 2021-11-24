@@ -110,7 +110,7 @@ class Search extends Search_parent
 
         // set sort
         if(is_array($sSortBy)){
-            $option = $this->_sxHelper->decodeSortOption($sSortBy['sortby'], ['sort' => $sSortBy['sortdir']]);
+            $option = $this->_sxHelper->decodeSortOption($sSortBy['sortby'] /*, ['sort' => $sSortBy['sortdir']]*/);
             $sxSearch->sortBy($option->getKey(), $option->getSort());
         }
 
