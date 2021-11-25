@@ -313,9 +313,8 @@ class ArticleList extends ArticleList_parent
         // set sort/order
         $request = Registry::get(\OxidEsales\Eshop\Core\Request::class);
         $sortBy = $request->getRequestParameter('listorderby');
-        $sortOrder = $request->getRequestParameter('listorder', 'desc');
-        if($sortOrder && $sortBy && $this->_sxHelper->isEncodedOption($sortBy)){
-            $sortOption = $this->_sxHelper->decodeSortOption($sortBy, ['sort' => $sortOrder]);
+        if($sortBy && $this->_sxHelper->isEncodedOption($sortBy)){
+            $sortOption = $this->_sxHelper->decodeSortOption($sortBy);
             $sxSearch->sortBy($sortOption->getKey(),$sortOption->getSort());
         }
 

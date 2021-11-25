@@ -223,9 +223,14 @@ class SxHelper {
         // empty option if decoding impossible
         if(count($optionArray) < 3) return new SortingOption([]);
 
+        $sortArray = explode('-',$optionArray[1], 2);
+        $sort = count($sortArray) == 2 ? $sortArray[1] : 'ASC';
+        $key = count($sortArray) == 2 ? $sortArray[0] : $optionArray[1];
+
         $optionData = [
-            'key' => $optionArray[1],
-            'name' => $optionArray[2]
+            'key' => $key,
+            'name' => $optionArray[2],
+            'sort' => $sort
         ];
 
         $optionData = array_merge($optionData, $additionalData);
