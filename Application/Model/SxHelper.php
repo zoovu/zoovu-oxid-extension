@@ -18,8 +18,8 @@ class SxHelper {
     protected $_sxCollectBatchSize = 100;
     protected $_sxRequestTimeout = 15;
 
-    protected $_sxSandboxApiUrl = "https://stage-oxid-v3.semknox.com/";
-    protected $_sxApiUrl = "https://api-oxid-v3.semknox.com/";
+    protected $_sxSandboxApiUrl = "https://api-oxid.sitesearch360.com/";
+    protected $_sxApiUrl = "https://api-oxid.sitesearch360.com/";
 
     protected $_sxMasterConfig = false;
     protected $_sxMasterConfigPath = "masterConfig%s.json";
