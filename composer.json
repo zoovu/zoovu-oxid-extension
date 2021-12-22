@@ -2,7 +2,7 @@
   "name": "semknox/semknox-oxid",
   "description": "This is the SEMKNOX module for the OXID eShop.",
   "homepage": "https://www.semknox.com",
-  "version": "3.1.7",
+  "version": "3.1.8",
   "type": "oxideshop-module",
   "keywords": [
     "semknox",
@@ -20,6 +20,12 @@
     "php": ">=5.6",
     "semknox/semknox-core": "*"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@bitbucket.org:SEMKNOX/semknox-php-extension-core"
+    }
+  ],
   "require-dev": {
     "oxid-esales/coding-standards": "^3.0"
   },
