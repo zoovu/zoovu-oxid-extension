@@ -154,7 +154,6 @@ class Search extends Search_parent
                 $oxArticleIds[] = $sxArticle->getGroupId(); // show parent
             }
         }
-
         $oxArticleIds = \array_unique($oxArticleIds);
 
         try {

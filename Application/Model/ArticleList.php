@@ -400,7 +400,7 @@ class ArticleList extends ArticleList_parent
             }
         }
         $sArticleTable = getViewName('oxarticles');
-        //$oxArticleIds = \array_reverse($oxArticleIds);
+        $oxArticleIds = \array_unique($oxArticleIds);
 
         $oxIdsSql = implode(',', \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->quoteArray($oxArticleIds));
 
