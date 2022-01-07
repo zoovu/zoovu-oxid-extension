@@ -147,8 +147,15 @@ class Search extends Search_parent
         // add articles
         $oxArticleIds = array();
         foreach ($this->_sxSearchResponse->getProducts() as $sxArticle) {
-            $oxArticleIds[] = $sxArticle->getId();
+
+            if($this->_sxConfigValues['resultProduct'] == 'individualVariantProduct'){
+                $oxArticleIds[] = $sxArticle->getId();
+            } else {
+                $oxArticleIds[] = $sxArticle->getGroupId(); // show parent
+            }
         }
+
+        $oxArticleIds = \array_unique($oxArticleIds);
 
         try {
             $sxAvailableFiltersFromResponse = $this->_sxSearchResponse->getAvailableFilters();

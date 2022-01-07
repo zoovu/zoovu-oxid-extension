@@ -56,10 +56,19 @@ class ArticleList extends ArticleList_parent
         return;
     }
 
+    // if article is parent and has children, do not add
+    public function loadAllArticlesWithoutParentsThatHaveChildren($pageSize = 50, $page = 1, $shopId = null, $additionalWhere = "")
+    {
+        $additionalCondition = "AND (SELECT COUNT(*) FROM oxarticles as suba WHERE suba.oxactive = 1 AND suba.oxhidden = 0";
 
+        if ($shopId) {
+            $additionalCondition .= " AND suba.oxshopid = '$shopId' AND a.oxid = suba.oxparentid";
+        }
 
+        $additionalCondition .= " LIMIT 1) = 0";
 
-
+        $this->loadAllArticles($pageSize, $page, $shopId, $additionalCondition);
+    }
 
     /**
      * Load all Article in pages articles
@@ -67,17 +76,17 @@ class ArticleList extends ArticleList_parent
      * @param int $pageSize number of articles to get per page
      * @param int $page nr page to get
      */
-    public function loadAllArticles($pageSize = 50, $page = 1, $shopId = null)
+    public function loadAllArticles($pageSize = 50, $page = 1, $shopId = null, $additionalCondition = "")
     {
         $offset = ($page < 1) ? 0 : (($page - 1) * $pageSize);
 
-        $sSelect = "SELECT * FROM oxarticles WHERE oxactive = 1 AND oxhidden = 0";
+        $sSelect = "SELECT * FROM oxarticles as a WHERE a.oxactive = 1 AND a.oxhidden = 0 $additionalCondition";
 
         if ($shopId) {
-            $sSelect .= " AND oxshopid = '$shopId'";
+            $sSelect .= " AND a.oxshopid = '$shopId'";
         }
 
-        $sSelect .= " ORDER BY oxartnum LIMIT $pageSize";
+        $sSelect .= " ORDER BY a.oxartnum LIMIT $pageSize";
 
         if ($offset) $sSelect .= " OFFSET $offset";
 
@@ -121,11 +130,12 @@ class ArticleList extends ArticleList_parent
      */
     public function getAllArticlesCount($shopId = null)
     {
-        $sSelect = "SELECT COUNT(*) FROM oxarticles WHERE oxactive = 1 AND oxhidden = 0";
-
-        if($shopId){
-            $sSelect .= " AND oxshopid = '$shopId' ";
+        if ($shopId) {
+            $shopIdQuery = " AND a.oxshopid = '$shopId' ";
         }
+
+        $sSelect = "SELECT COUNT(*) FROM oxarticles as a WHERE a.oxactive = 1 AND a.oxhidden = 0 $shopIdQuery";
+        $sSelect .= " AND (SELECT COUNT(*) FROM oxarticles as suba WHERE suba.oxactive = 1 AND suba.oxhidden = 0 $shopIdQuery AND a.oxid = suba.oxparentid LIMIT 1) = 0";
 
         return \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->getOne($sSelect);
     }
@@ -383,7 +393,11 @@ class ArticleList extends ArticleList_parent
         // add articles
         $oxArticleIds = array();
         foreach ($this->_sxSearchResponse->getProducts() as $sxArticle) {
-            $oxArticleIds[] = $sxArticle->getId();
+            if ($this->_sxConfigValues['resultProduct'] == 'individualVariantProduct') {
+                $oxArticleIds[] = $sxArticle->getId();
+            } else {
+                $oxArticleIds[] = $sxArticle->getGroupId(); // show parent
+            }
         }
         $sArticleTable = getViewName('oxarticles');
         //$oxArticleIds = \array_reverse($oxArticleIds);

@@ -226,6 +226,16 @@ if(function_exists('oxNew')){
             'value' => 'false',
             'position' => 11
         );
+
+        $settings[] = array(
+            'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
+            'name' => 'sxResultProduct' . $oxid,
+            'type' => 'select',
+            'value' => 'individualVariantProduct',
+            'constraints' => 'individualVariantProduct|parentProduct',
+            'position' => 12
+        );
+
     }
 }
 
