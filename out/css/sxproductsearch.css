@@ -310,7 +310,7 @@ Sidebar CSS
             box-shadow: none;
     background: transparent;
 }
-.sxFilterBoxSidebar .btn-group.sideclosed>.dropdown-menu {
+.sxFilterBoxSidebar .btn-group.sideclosed>.dropdown-menu, .sxFilterBoxSidebar .btn-group.sideclosed>.show-more{
     display: none;
 }
 .sxFilterBoxSidebar .btn-group .dropdown-toggle:hover {

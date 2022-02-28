@@ -212,5 +212,26 @@ document.querySelectorAll('#filterList .dropdown-menu .caret').forEach(function 
             e.stopPropagation();
         }
     });
-
 })
+
+document.addEventListener("DOMContentLoaded", function () {
+    var unfoldCounter = sxFilterGroupUnfoldCount;
+    // fold out just first X filter-groups
+    document.querySelectorAll('#sidebar #filterList .btn-group, .sxRangeFilter').forEach(function (node) {
+    
+        if (node.style.display === 'none') {
+            node.classList.remove('sideclosed');
+        } else {
+            unfoldCounter = unfoldCounter - 1;
+            if (unfoldCounter < 0) node.classList.add('sideclosed');
+        }
+    });
+
+    // fold out active filter groups
+    document.querySelectorAll('#sidebar #filterList .btn-group a.selected, #sidebar #filterList .sxRangeFilter input.selected').forEach(function (node) {
+        node.parentNode.parentNode.parentNode.classList.remove('sideclosed');
+    });
+});
+
+
+

@@ -3,6 +3,7 @@
 [{if $oView->isSxSearch && $oView->getAttributeOptions()}]
     <script type="text/javascript">
         var sxAttributeOptions = [{$oView->getAttributeOptions()}];
+        var sxFilterGroupUnfoldCount = [{$oViewConf->getSxConfigValue('filterGroupUnfoldCount', 5)}];
     </script>
 [{/if}]
 
@@ -27,11 +28,17 @@
             [{/foreach}]
             [{assign var="activeValueRange" value="___"|explode:$oFilterAttr->getActiveValue()}]
 
+            [{if $activeValueRange[0] !== $valueRange[0] || $activeValueRange[1] !== $valueRange[1] }]
+                [{assign var="selectedClass" value="selected"}]
+            [{else}]
+                [{assign var="selectedClass" value=""}]
+            [{/if}]
+
             <label>[{$oFilterAttr->sxTitle}]: </label>
             <div class="slider-wrapper">
                 <div class="slider" id="[{$sAttrID}][{$idSuffix}]"></div>
                 <div class="slider-helper">
-                    <input id="[{$sAttrID}][{$idSuffix}]input1" class="js-style form-control form-control-sm" data-input-type="min" value="[{$activeValueRange[0]}]" min="[{$valueRange[0]}]" type="number">
+                    <input id="[{$sAttrID}][{$idSuffix}]input1" class="js-style form-control form-control-sm [{$selectedClass}]" data-input-type="min" value="[{$activeValueRange[0]}]" min="[{$valueRange[0]}]" type="number">
                     <span>-</span>
                     <input id="[{$sAttrID}][{$idSuffix}]input2" class="js-style form-control form-control-sm" data-input-type="max" value="[{$activeValueRange[1]}]" max="[{$valueRange[1]}]" type="number">
                     <span class="unit">[{$oFilterAttr->unit}]</span>
