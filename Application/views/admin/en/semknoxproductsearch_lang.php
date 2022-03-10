@@ -19,6 +19,7 @@ $aLang = array(
   'SHOP_MODULE_sxMoveFilterToSidebar' => 'move filter to sidebar',
   'SHOP_MODULE_sxHideRangeInRangeSliderTitle' => 'hide range in Range-Slider title',
   'SHOP_MODULE_sxResultProduct' => 'Search result product',
+  'SHOP_MODULE_sxFilterGroupUnfoldCount' => 'Number of unfolded filtergroups',
   'SHOP_MODULE_sxResultProduct_parentProduct' => 'Parent-product as search result',
   'SHOP_MODULE_sxResultProduct_individualVariantProduct' => 'variant-product as search result',
   'SHOP_MODULE_sxCategoryQuery' => 'show category products via SEMKNOX',
@@ -58,4 +59,5 @@ foreach ($oxLanguage->getLanguageArray() as $lang) {
   $aLang['SHOP_MODULE_sxResultProduct' . $oxid. '_parentProduct'] = $aLang['SHOP_MODULE_sxResultProduct_parentProduct'] . ' - Shop-Language: ' . $language;
   $aLang['SHOP_MODULE_sxResultProduct' .$oxid . '_individualVariantProduct'] = $aLang['SHOP_MODULE_sxResultProduct_individualVariantProduct'] . ' - Shop-Language: ' . $language;
   $aLang['SHOP_MODULE_sxResultProduct' . $oxid] = $aLang['SHOP_MODULE_sxResultProduct'] . ' - Shop-Language: ' . $language;
+  $aLang['SHOP_MODULE_sxFilterGroupUnfoldCount' . $oxid] = $aLang['SHOP_MODULE_sxFilterGroupUnfoldCount'] . ' - Shop-Language: ' . $language;
 }

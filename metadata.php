@@ -236,6 +236,14 @@ if(function_exists('oxNew')){
             'position' => 12
         );
 
+        $settings[] = array(
+            'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
+            'name' => 'sxFilterGroupUnfoldCount' . $oxid,
+            'type' => 'str',
+            'value' => '5',
+            'position' => 13
+        );
+
     }
 }
 

@@ -20,6 +20,7 @@ $aLang = array(
   'SHOP_MODULE_sxHideRangeInRangeSliderTitle' => 'Werte im Slider-Filter Titel ausblenden',
   'SHOP_MODULE_sxCategoryQuery' => 'Kategorieprodukte über SEMKNOX ausspielen',
   'SHOP_MODULE_sxResultProduct' => 'Suchergebnisprodukt',
+  'SHOP_MODULE_sxFilterGroupUnfoldCount' => 'Anzahl ausgeklappter Filtergruppen',
   'SHOP_MODULE_sxResultProduct_parentProduct' => 'Elternprodukt in Suchergebnis anzeigen',
   'SHOP_MODULE_sxResultProduct_individualVariantProduct' => 'Variantenprodukt in Suchergebnis anzeigen',
   'SHOP_MODULE_sxIsSandbox' => 'Sandbox-Modus aktivieren',
@@ -59,5 +60,5 @@ foreach ($oxLanguage->getLanguageArray() as $lang) {
   $aLang['SHOP_MODULE_sxResultProduct' . $oxid. '_parentProduct'] = $aLang['SHOP_MODULE_sxResultProduct_parentProduct'] . ' - Shopsprache: ' . $language;
   $aLang['SHOP_MODULE_sxResultProduct' . $oxid . '_individualVariantProduct'] = $aLang['SHOP_MODULE_sxResultProduct_individualVariantProduct'] . ' - Shopsprache: ' . $language;
   $aLang['SHOP_MODULE_sxResultProduct' . $oxid] = $aLang['SHOP_MODULE_sxResultProduct'] . ' - Shopsprache: ' . $language;
-
+  $aLang['SHOP_MODULE_sxFilterGroupUnfoldCount' . $oxid] = $aLang['SHOP_MODULE_sxFilterGroupUnfoldCount'] . ' - Shopsprache: ' . $language;
 }
