@@ -217,7 +217,7 @@ document.querySelectorAll('#filterList .dropdown-menu .caret').forEach(function 
 document.addEventListener("DOMContentLoaded", function () {
     var unfoldCounter = sxFilterGroupUnfoldCount;
     // fold out just first X filter-groups
-    document.querySelectorAll('#sidebar #filterList .btn-group, .sxRangeFilter').forEach(function (node) {
+    document.querySelectorAll('#sidebar #filterList .btn-group, #sidebar #filterList .btn-filter, .sxRangeFilter').forEach(function (node) {
     
         if (node.style.display === 'none') {
             node.classList.remove('sideclosed');
@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // fold out active filter groups
-    document.querySelectorAll('#sidebar #filterList .btn-group a.selected, #sidebar #filterList .sxRangeFilter input.selected').forEach(function (node) {
+    document.querySelectorAll('#sidebar #filterList .btn-group a.selected, #sidebar #filterList .btn-filter a.selected, #sidebar #filterList .sxRangeFilter input.selected').forEach(function (node) {
         node.parentNode.parentNode.parentNode.classList.remove('sideclosed');
     });
 });
