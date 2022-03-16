@@ -10,6 +10,8 @@ use Semknox\Productsearch\Application\Model\SxHelper;
 
 class SearchController extends SearchController_parent
 {
+    // used in /Application/views/blocks/header.tpl
+    public $isSearchPage = true;
 
     /**
      * get search page headline
@@ -136,13 +138,6 @@ class SearchController extends SearchController_parent
         unset($sessionFilter[$activeCategory]);
         Registry::getSession()->setVariable('session_attrfilter', $sessionFilter);
         */
-    }
-
-
-    // used in /Application/views/blocks/header.tpl
-    public function isSearchPage()
-    {
-        return true;
     }
 
 }

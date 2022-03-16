@@ -9,7 +9,8 @@ use Semknox\Productsearch\Application\Model\SxHelper;
 
 class ArticleListController extends ArticleListController_parent
 {
-
+    // used in /Application/views/blocks/header.tpl
+    public $isSearchPage = false;
 
     /**
      * Template variable getter. Returns sorting columns
@@ -92,12 +93,5 @@ class ArticleListController extends ArticleListController_parent
     {
         return $this->_aArticleList->getAttributeOptions();
     }
-
-    // used in /Application/views/blocks/header.tpl
-    public function isSearchPage()
-    {
-        return false;
-    }
-
 
 }

@@ -1,4 +1,4 @@
-[{if $oView->isSearchPage()}]
+[{if $oView->isSearchPage}]
     [{if $oViewConf->getSxConfigValue('moveFilterToSidebar')}]
         [{assign var="sidebar" value="left"}]
     [{/if}]

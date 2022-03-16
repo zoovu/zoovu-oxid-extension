@@ -1,4 +1,4 @@
-[{if $oView->isSearchPage() || $oViewConf->getSxConfigValue('categoryQuery')}]
+[{if $oView->isSearchPage || $oViewConf->getSxConfigValue('categoryQuery')}]
 
     [{capture append="oxidBlock_head"}]
         <script type="text/javascript">
