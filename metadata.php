@@ -244,6 +244,22 @@ if(function_exists('oxNew')){
             'position' => 13
         );
 
+        $settings[] = array(
+            'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
+            'name' => 'sxSendInactiveArticles' . $oxid,
+            'type' => 'bool',
+            'value' => 'false',
+            'position' => 14
+        );
+
+        $settings[] = array(
+            'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
+            'name' => 'sxIgnoreOutOfStockArticles' . $oxid,
+            'type' => 'bool',
+            'value' => 'false',
+            'position' => 14
+        );
+
     }
 }
 

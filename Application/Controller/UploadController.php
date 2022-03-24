@@ -106,8 +106,9 @@ class UploadController
             $page = ((int) $this->_sxUploader->getNumberOfCollected() / $pageSize) + 1;
 
             $oxArticleList = new ArticleList;
-            //$oxArticleList->loadAllArticles($pageSize, $page, $shopId);
-            $oxArticleList->loadAllArticlesWithoutParentsThatHaveChildren($pageSize, $page, $shopId);
+            
+            $oxArticleList->loadAllArticles($pageSize, $page, $shopId);
+            //$oxArticleList->loadAllArticlesWithoutParentsThatHaveChildren($pageSize, $page, $shopId);
 
             // get default currency 
             $currencySymbol = '';

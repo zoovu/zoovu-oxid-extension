@@ -21,6 +21,8 @@ $aLang = array(
   'SHOP_MODULE_sxCategoryQuery' => 'Kategorieprodukte über SEMKNOX ausspielen',
   'SHOP_MODULE_sxResultProduct' => 'Suchergebnisprodukt',
   'SHOP_MODULE_sxFilterGroupUnfoldCount' => 'Anzahl ausgeklappter Filtergruppen',
+  'SHOP_MODULE_sxSendInactiveArticles' => 'auch inaktive Produkte an SEMKNOX senden',
+  'SHOP_MODULE_sxIgnoreOutOfStockArticles' => 'nur Produkte mit positiven Lagerbestand an SEMKNOX senden',
   'SHOP_MODULE_sxResultProduct_parentProduct' => 'Elternprodukt in Suchergebnis anzeigen',
   'SHOP_MODULE_sxResultProduct_individualVariantProduct' => 'Variantenprodukt in Suchergebnis anzeigen',
   'SHOP_MODULE_sxIsSandbox' => 'Sandbox-Modus aktivieren',
@@ -44,21 +46,7 @@ foreach ($oxLanguage->getLanguageArray() as $lang) {
   $oxid = ucfirst($lang->oxid);
   $language = $lang->name;
 
-  $aLang['SHOP_MODULE_GROUP_SemknoxProductsearchLanguageSettings' . $oxid] = $aLang['SHOP_MODULE_GROUP_SemknoxProductsearchLanguageSettings'] . ' - Shopsprache ' . $language;
-  $aLang['SHOP_MODULE_sxProjectId' . $oxid] = $aLang['SHOP_MODULE_sxProjectId'] . ' - Shopsprache: ' . $language;
-  $aLang['SHOP_MODULE_sxApiKey' . $oxid] = $aLang['SHOP_MODULE_sxApiKey'] . ' - Shopsprache: ' . $language;
-
-  $aLang['SHOP_MODULE_sxIsSandbox' . $oxid] = $aLang['SHOP_MODULE_sxIsSandbox'] . ' - Shopsprache: ' . $language;
-  $aLang['SHOP_MODULE_sxFrontendActive' . $oxid] = $aLang['SHOP_MODULE_sxFrontendActive'] . ' - Shopsprache: ' . $language;
-  $aLang['SHOP_MODULE_sxUploadActive' . $oxid] = $aLang['SHOP_MODULE_sxUploadActive'] . ' - Shopsprache: ' . $language;
-  $aLang['SHOP_MODULE_sxAnswerActive' . $oxid] = $aLang['SHOP_MODULE_sxAnswerActive'] . ' - Shopsprache: ' . $language;
-  $aLang['SHOP_MODULE_sxFilterOptionCounterActive' . $oxid] = $aLang['SHOP_MODULE_sxFilterOptionCounterActive'] . ' - Shopsprache: ' . $language;
-  $aLang['SHOP_MODULE_sxIncrementalUpdatesActive' . $oxid] = $aLang['SHOP_MODULE_sxIncrementalUpdatesActive'] . ' - Shopsprache: ' . $language;
-  $aLang['SHOP_MODULE_sxMoveFilterToSidebar' . $oxid] = $aLang['SHOP_MODULE_sxMoveFilterToSidebar'] . ' - Shopsprache: ' . $language;
-  $aLang['SHOP_MODULE_sxHideRangeInRangeSliderTitle' . $oxid] = $aLang['SHOP_MODULE_sxHideRangeInRangeSliderTitle'] . ' - Shopsprache: ' . $language;
-  $aLang['SHOP_MODULE_sxCategoryQuery' . $oxid] = $aLang['SHOP_MODULE_sxCategoryQuery'] . ' - Shopsprache: ' . $language;
-  $aLang['SHOP_MODULE_sxResultProduct' . $oxid. '_parentProduct'] = $aLang['SHOP_MODULE_sxResultProduct_parentProduct'] . ' - Shopsprache: ' . $language;
-  $aLang['SHOP_MODULE_sxResultProduct' . $oxid . '_individualVariantProduct'] = $aLang['SHOP_MODULE_sxResultProduct_individualVariantProduct'] . ' - Shopsprache: ' . $language;
-  $aLang['SHOP_MODULE_sxResultProduct' . $oxid] = $aLang['SHOP_MODULE_sxResultProduct'] . ' - Shopsprache: ' . $language;
-  $aLang['SHOP_MODULE_sxFilterGroupUnfoldCount' . $oxid] = $aLang['SHOP_MODULE_sxFilterGroupUnfoldCount'] . ' - Shopsprache: ' . $language;
+  foreach ($aLang as $langKey => $langText) {
+    $aLang[$langKey . $oxid] = $aLang[$langKey] . ' - Shopsprache: ' . $language;
+  }
 }
