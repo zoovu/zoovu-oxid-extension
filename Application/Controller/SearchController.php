@@ -120,7 +120,8 @@ class SearchController extends SearchController_parent
      */
     public function executefilter()
     {
-        return ArticleListController::executefilter();
+        $articleListController = new ArticleListController();
+        return $articleListController->executefilter();
     }
 
     /**
@@ -128,8 +129,8 @@ class SearchController extends SearchController_parent
      */
     public function resetFilter()
     {
-        return ArticleListController::resetFilter();
-
+        $articleListController = new ArticleListController();
+        return $articleListController->resetFilter();
 
         /*
         $activeCategory = Registry::getConfig()->getRequestParameter('cnid');
