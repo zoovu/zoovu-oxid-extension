@@ -18,7 +18,6 @@ class ArticleList extends ArticleList_parent
     public $isSxArticleList = false;
 
 
-
     public function __construct()
     {
         parent::__construct();
@@ -308,14 +307,9 @@ class ArticleList extends ArticleList_parent
     }
 
 
-
-
-
-
-
-
     protected function _getCategorySelect($sFields, $sCatId, $aSessionFilter) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
+
         // fallback if disabled
         if (!isset($this->_sxConfigValues['categoryQuery']) || !$this->_sxConfigValues['categoryQuery']) {
             return parent::_getCategorySelect($sFields, $sCatId, $aSessionFilter);
@@ -331,11 +325,6 @@ class ArticleList extends ArticleList_parent
         // create search AND set category array
         $sxSearch = $this->_sxSearch->queryCategory($categoryPath);
         
-        //$limit = $this->_sxHelper->getPageLimit();
-        //$sxSearch->setLimit($limit);
-        $sxSearch->setLimit(1000); // todo: improve
-
-
         // set sort/order
         $request = Registry::get(\OxidEsales\Eshop\Core\Request::class);
         $sortBy = $request->getRequestParameter('listorderby');
@@ -345,16 +334,13 @@ class ArticleList extends ArticleList_parent
         }
 
         // sets current page
-        /*
         $this->iActPage = $this->_sxHelper->getPageNr();
         $sxSearch->setPage($this->iActPage);
-        */
 
         // set Page Limit
-        /* 
         $iNrofCatArticles = $this->_sxHelper->getPageLimit();
         $sxSearch->setLimit($iNrofCatArticles);
-        */
+        //$sxSearch->setLimit(1000); // todo: improve
 
         // set filters
         $filters = $this->_sxHelper->getRequestFilter();
@@ -434,15 +420,17 @@ class ArticleList extends ArticleList_parent
         if (!isset($this->_sxConfigValues['categoryQuery']) || !$this->_sxConfigValues['categoryQuery']) {
             return parent::loadCategoryArticles($sCatId, $aSessionFilter, $iLimit);
         }
-        
+
         $sArticleFields = $this->getBaseObject()->getSelectFields();
         $sSelect = $this->_getCategorySelect($sArticleFields, $sCatId, $aSessionFilter);
 
 
         if ($iLimit = (int) $iLimit) {
-            //$sSelect .= " LIMIT $iLimit";
+            $sSelect .= " LIMIT $iLimit";
         }
 
+        unset($this->_aSqlLimit[0]);
+        unset($this->_aSqlLimit[1]);
         $this->selectString($sSelect);
 
         // this select is FAST so no need to hazzle here with getNrOfArticles()
