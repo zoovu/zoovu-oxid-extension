@@ -215,7 +215,7 @@ class UploadController
     public function isReadyToUpload()
     {
         if ($shopStatus = $this->getCurrentShopStatus()) {
-            return $shopStatus->getPhase() == "UPLOADING" && $shopStatus->getCollectingProgress() >= 100;
+            return $shopStatus->getPhase() == "UPLOADING" /*&& $shopStatus->getCollectingProgress() >= 100*/;
         }
 
         return false;
@@ -229,7 +229,7 @@ class UploadController
     public function isReadyToFinalize()
     {
         if ($shopStatus = $this->getCurrentShopStatus()) {
-            return $shopStatus->getPhase() == "UPLOADING" && $shopStatus->getCollectingProgress() >= 100 && $shopStatus->getUploadingProgress() >= 100;
+            return $shopStatus->getPhase() == "UPLOADING" /*&& $shopStatus->getCollectingProgress() >= 100*/ && $shopStatus->getUploadingProgress() >= 100;
         }
 
         return false;
