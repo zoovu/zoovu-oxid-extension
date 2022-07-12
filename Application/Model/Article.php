@@ -103,10 +103,14 @@ class Article extends Article_parent
         $result = \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->select($sSelect);
         foreach ($result->fetchAll() as $row) {
 
-            $lang = isset($languages[$row[2]]) ? $languages[$row[2]] : 'unknownLangID-' . $row[2];
+            $langId = $row[2];
+            $shopId = $row[1];
+            $seoUrl = $row[0];
+
+            $lang = isset($languages[$langId]) ? $languages[$langId] : 'unknownLangID-' . $langId;
             
-            $userGroup = $row[1].'-'. $lang;
-            $subShopMainLinks[$userGroup] = '/'.ltrim($row[0],'/');
+            $userGroup = $shopId.'-'. $lang;
+            $subShopMainLinks[$userGroup] = '/'.ltrim($seoUrl,'/');
         }
         return $subShopMainLinks;
     }

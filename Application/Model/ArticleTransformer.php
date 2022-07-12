@@ -335,11 +335,19 @@ class ArticleTransformer extends AbstractProductTransformer
 
         // get subshop MainLinks
         foreach($this->_product->getUserGroupMainLinks($transformerArgs) as $userGroup => $mainLink){
-            $attributes[] = [
-                'key' => 'shop-specific-url',
-                'userGroups' => [$userGroup],
-                'value' => $mainLink
-            ];
+
+            // to merge redundant urls for multiple usergroups
+            $key = 'shop-specific-url-'. $mainLink;
+
+            if(isset($attributes[$key])){
+                $attributes[$key]['userGroups'][] = $userGroup;
+            } else {
+                $attributes[$key] = [
+                    'key' => 'shop-specific-url',
+                    'userGroups' => [$userGroup],
+                    'value' => $mainLink
+                ];
+            }
         }
 
 
