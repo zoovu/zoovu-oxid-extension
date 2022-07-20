@@ -78,7 +78,8 @@ class ArticleList extends ArticleList_parent
             $sSelect .= " AND a.oxshopid = '$shopId'";
         }
 
-        $sSelect .= " AND (SELECT COUNT(*) FROM oxarticles as suba WHERE suba.oxhidden = 0 AND a.oxid = suba.oxparentid";
+        $sSelect .= " AND (SELECT 1 FROM oxarticles as suba WHERE suba.oxhidden = 0 AND a.oxid = suba.oxparentid";
+        //$sSelect .= " AND (SELECT COUNT(*) FROM oxarticles as suba WHERE suba.oxhidden = 0 AND a.oxid = suba.oxparentid";
 
         if (!isset($this->_sxConfigValues['sendInactiveArticles']) || !$this->_sxConfigValues['sendInactiveArticles']) {
             $sSelect .= " AND suba.oxactive = 1";
@@ -92,7 +93,8 @@ class ArticleList extends ArticleList_parent
             $sSelect .= " AND suba.oxshopid = '$shopId'";
         }
 
-        $sSelect .=  " LIMIT 1) = 0";
+        $sSelect .=  " LIMIT 1) IS NULL";
+        //$sSelect .=  " LIMIT 1) = 0";
 
         if($justCount) return \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->getOne($sSelect);
 
