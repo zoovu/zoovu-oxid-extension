@@ -46,7 +46,7 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
      */
     protected function _cronRunner()
     {
-        $startTime = time(); // for logging duration
+        $startTime = \microtime(true); // for logging duration
         $flags = array();
 
         $sxUpload = new UploadController([]);
@@ -167,7 +167,7 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
             }
         }
 
-        $this->sxResponse = ['status' => 'success', 'duration' => time() - $startTime];
+        $this->sxResponse = ['status' => 'success', 'duration' => (microtime(true) - $startTime) / 1000];
     }
 
 }

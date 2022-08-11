@@ -58,6 +58,7 @@ class ArticleList extends ArticleList_parent
     // if article is parent and has children, do not add
     public function loadAllArticlesWithoutParentsThatHaveChildren($pageSize = 50, $page = 1, $shopId = null, $justCount = false)
     {
+
         // COUNT or SELECT DATA
         $sSelect = $justCount ? "SELECT COUNT(*) " : "SELECT * ";
 
@@ -78,7 +79,20 @@ class ArticleList extends ArticleList_parent
             $sSelect .= " AND a.oxshopid = '$shopId'";
         }
 
-        $sSelect .= " AND (SELECT 1 FROM oxarticles as suba WHERE suba.oxhidden = 0 AND a.oxid = suba.oxparentid";
+        $sSelect .= $this->_excludeParentsWithChildrenSubSelect($shopId);
+
+        if($justCount) return \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->getOne($sSelect);
+
+        $sSelect .= " ORDER BY a.oxartnum LIMIT $pageSize";
+        $sSelect .= " OFFSET " . (($page < 1) ? 0 : (($page - 1) * $pageSize));
+
+        $this->selectString($sSelect);
+    }
+
+    /*
+    private function _excludeParentsWithChildrenSubSelect($shopId){
+
+        $sSelect = " AND (SELECT 1 FROM oxarticles as suba WHERE suba.oxhidden = 0 AND a.oxid = suba.oxparentid";
         //$sSelect .= " AND (SELECT COUNT(*) FROM oxarticles as suba WHERE suba.oxhidden = 0 AND a.oxid = suba.oxparentid";
 
         if (!isset($this->_sxConfigValues['sendInactiveArticles']) || !$this->_sxConfigValues['sendInactiveArticles']) {
@@ -94,17 +108,39 @@ class ArticleList extends ArticleList_parent
         }
 
         $sSelect .=  " LIMIT 1) IS NULL";
-        //$sSelect .=  " LIMIT 1) = 0";
 
-        if($justCount) return \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->getOne($sSelect);
+        return $sSelect;
+    }
+    */
 
-        $sSelect .= " ORDER BY a.oxartnum LIMIT $pageSize";
-        $sSelect .= " OFFSET " . (($page < 1) ? 0 : (($page - 1) * $pageSize));
+    private function _excludeParentsWithChildrenSubSelect($shopId)
+    {
+        // BETTER PERFORMANCE //
 
-        //var_dump($pageSize);
-        //var_dump($sSelect);die;
+        // get alle Parents with children
+        $parentsSelect = "SELECT DISTINCT oxparentid FROM oxarticles WHERE oxparentid!='' AND oxhidden = 0";
 
-        $this->selectString($sSelect);
+        if (!isset($this->_sxConfigValues['sendInactiveArticles']) || !$this->_sxConfigValues['sendInactiveArticles']) {
+            $parentsSelect .= " AND oxactive = 1";
+        }
+
+        if (isset($this->_sxConfigValues['ignoreOutOfStockArticles']) && $this->_sxConfigValues['ignoreOutOfStockArticles']) {
+            $parentsSelect .= " AND oxstock > 0";
+        }
+
+        if ($shopId) {
+            $parentsSelect .= " AND oxshopid = '$shopId'";
+        }
+
+        $parentsWithChildren = \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->getCol($parentsSelect);
+
+        if(count($parentsWithChildren)){
+            $select = " AND a.oxid NOT IN ('" . implode("','", $parentsWithChildren) . "')";
+        } else {
+            $select = "";
+        }
+
+        return $select;
     }
 
     /**
