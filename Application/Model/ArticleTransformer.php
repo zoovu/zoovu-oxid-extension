@@ -350,7 +350,6 @@ class ArticleTransformer extends AbstractProductTransformer
             }
         }
 
-
         return array_values($attributes); // array values... because removing elements makes transforms array to assoziative array => error in validator
     }
 }

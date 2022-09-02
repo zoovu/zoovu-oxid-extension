@@ -116,6 +116,8 @@ class SxHelper {
         $config['shopId'] = $this->_oxConfig->getShopId();
         $config['lang'] = $langAbbr;
 
+        $config['userGroup'] = $config['shopId'].'-'. $config['lang'];
+
         // [5] add masterConfig values
         $config = $this->getMasterConfig($config, $langAbbr);
 

@@ -47,17 +47,16 @@
                 },
                 suggestLine: function (suggestLine, key, index, suggest) {
 
-                    var replaceUrl = "[{$currentStoreUrl}]";
-                    replaceUrl = replaceUrl.substr(0, replaceUrl.lastIndexOf("/"));
-
                     // shop specific url-slug
                     var specificShopUrl = '';
                     if(suggest.dataPoints != undefined){
                         for (i = 0; i < suggest.dataPoints.length; i++) {
                             if(suggest.dataPoints[i].key == 'shop-specific-url'){
+
                                 suggestLine = suggestLine.replace(/href="(.*?)"/, function(m, $1) {
-                                    return 'href="' +replaceUrl + suggest.dataPoints[i].value + '"';
+                                    return 'href="' + suggest.dataPoints[i].value + '"';
                                 });
+
                             }
                         } 
                     }

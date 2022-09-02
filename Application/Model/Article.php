@@ -81,37 +81,32 @@ class Article extends Article_parent
         return $subShopIds;
     }
 
-
     public function getUserGroupMainLinks($transformerArgs = [])
     {
         $subShopMainLinks = [];
-        $languages = isset($transformerArgs['languages']) ? $transformerArgs['languages'] : [];
 
-        if(!count($languages)) return $subShopMainLinks;
+        $oxConfig = \OxidEsales\Eshop\Core\Registry::getConfig();
+        $shopIDs = $oxConfig->getShopIds();
 
-        // articleId
-        $articleId = (string) $this->oxarticles__oxid;
-        if (!$articleId) return [];
+        foreach($shopIDs as $shopId){
 
-        $sSelect = "SELECT oxseourl, oxshopid, oxlang FROM oxseo 
-            WHERE   oxtype='oxarticle'
-            AND     oxobjectid='$articleId'
-            AND     oxexpired=0
-            ORDER BY oxparams ASC
-        ";
+            // set Context
+            $oxConfig->setShopId($shopId);
+            $oxConfig->reinitialize(); // empty cache
 
-        $result = \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->select($sSelect);
-        foreach ($result->fetchAll() as $row) {
+            foreach ($transformerArgs['languages'] as $langId => $lang) {
 
-            $langId = $row[2];
-            $shopId = $row[1];
-            $seoUrl = $row[0];
-
-            $lang = isset($languages[$langId]) ? $languages[$langId] : 'unknownLangID-' . $langId;
-            
-            $userGroup = $shopId.'-'. $lang;
-            $subShopMainLinks[$userGroup] = '/'.ltrim($seoUrl,'/');
+                $seoUrl = $this->getLink($langId);
+                $userGroup = $shopId . '-' . $lang;
+                $subShopMainLinks[$userGroup] = $seoUrl;
+            }
         }
+
+        // go back to original Context
+        $oxConfig->setShopId($transformerArgs['shopId']);
+        $oxConfig->reinitialize(); // empty cache
+
         return $subShopMainLinks;
     }
+
 }

@@ -124,7 +124,8 @@ class UploadController
             // check if groupId is set
             $transformerArgs = [
                 'lang' => $sxLang,
-                'currency' => $currencySymbol
+                'currency' => $currencySymbol,
+                'shopId' => $shopId
             ];
             if ($userGroup = $this->_sxConfig->get('userGroup')) {
                 $transformerArgs['userGroup'] = (string) $userGroup;
