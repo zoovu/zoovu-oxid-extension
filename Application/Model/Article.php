@@ -88,25 +88,30 @@ class Article extends Article_parent
         $oxConfig = \OxidEsales\Eshop\Core\Registry::getConfig();
         $shopIDs = $oxConfig->getShopIds();
 
-        foreach($shopIDs as $shopId){
+        $currentShopId = $this->getShopId();
+
+        foreach ($shopIDs as $shopId) {
 
             // set Context
+            $this->setShopId($shopId);
             $oxConfig->setShopId($shopId);
             $oxConfig->reinitialize(); // empty cache
 
             foreach ($transformerArgs['languages'] as $langId => $lang) {
 
-                $seoUrl = $this->getLink($langId);
+                //$seoUrl = $this->getLink($langId);
+                $seoUrl = $this->getBaseSeoLink($langId, true);
+
                 $userGroup = $shopId . '-' . $lang;
                 $subShopMainLinks[$userGroup] = $seoUrl;
             }
         }
 
         // go back to original Context
-        $oxConfig->setShopId($transformerArgs['shopId']);
+        $this->setShopId($currentShopId);
+        $oxConfig->setShopId($currentShopId);
         $oxConfig->reinitialize(); // empty cache
 
         return $subShopMainLinks;
     }
-
 }
