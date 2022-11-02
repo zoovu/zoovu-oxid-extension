@@ -23,6 +23,7 @@ $aLangDe = array(
   'SHOP_MODULE_sxFilterGroupUnfoldCount%s' => 'Anzahl ausgeklappter Filtergruppen',
   'SHOP_MODULE_sxSendInactiveArticles%s' => 'auch inaktive Produkte an SEMKNOX senden',
   'SHOP_MODULE_sxIgnoreOutOfStockArticles%s' => 'nur Produkte mit positiven Lagerbestand an SEMKNOX senden',
+  'SHOP_MODULE_sxSeoUrlsActive%s' => 'sprechende Artikel-URLs in den Suchvorschlägen verwenden',
   'SHOP_MODULE_sxResultProduct%s_parentProduct' => 'Elternprodukt in Suchergebnis anzeigen',
   'SHOP_MODULE_sxResultProduct%s_individualVariantProduct' => 'Variantenprodukt in Suchergebnis anzeigen',
   'SHOP_MODULE_sxIsSandbox%s' => 'Sandbox-Modus aktivieren',

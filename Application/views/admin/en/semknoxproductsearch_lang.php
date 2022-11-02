@@ -22,6 +22,7 @@ $aLangEn = array(
   'SHOP_MODULE_sxFilterGroupUnfoldCount%s' => 'Number of unfolded filtergroups',
   'SHOP_MODULE_sxSendInactiveArticles%s' => 'also send inactive products to SEMKNOX',
   'SHOP_MODULE_sxIgnoreOutOfStockArticles%s' => 'send only products with positive stock to SEMKNOX',
+  'SHOP_MODULE_sxSeoUrlsActive%s' => 'Use SEO- article URLs in the search suggestions',
   'SHOP_MODULE_sxResultProduct%s_parentProduct' => 'Parent-product as search result',
   'SHOP_MODULE_sxResultProduct%s_individualVariantProduct' => 'variant-product as search result',
   'SHOP_MODULE_sxCategoryQuery%s' => 'show category products via SEMKNOX',

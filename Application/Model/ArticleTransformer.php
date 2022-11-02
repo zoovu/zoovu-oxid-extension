@@ -39,7 +39,7 @@ class ArticleTransformer extends AbstractProductTransformer
 
         $sxArticle['name'] = $oxArticle->oxarticles__oxtitle->value;
 
-        $sxArticle['productUrl'] = $oxArticle->getMainLink(); //$oxArticle->getLink();
+        $sxArticle['productUrl'] = $oxArticle->getSxArticleUrl($transformerArgs); // $oxArticle->getMainLink();
 
         $categories = array();
         if(!isset($transformerArgs['disableCategories']) || !$transformerArgs['disableCategories']){

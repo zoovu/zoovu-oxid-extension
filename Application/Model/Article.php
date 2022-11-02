@@ -87,7 +87,6 @@ class Article extends Article_parent
 
         $oxConfig = \OxidEsales\Eshop\Core\Registry::getConfig();
         $shopIDs = $oxConfig->getShopIds();
-
         $currentShopId = $this->getShopId();
 
         foreach ($shopIDs as $shopId) {
@@ -98,12 +97,12 @@ class Article extends Article_parent
             $oxConfig->reinitialize(); // empty cache
 
             foreach ($transformerArgs['languages'] as $langId => $lang) {
-
-                //$seoUrl = $this->getLink($langId);
-                $seoUrl = $this->getBaseSeoLink($langId, true);
-
                 $userGroup = $shopId . '-' . $lang;
-                $subShopMainLinks[$userGroup] = $seoUrl;
+
+                $transformerArgs['langId'] = $langId;
+                $transformerArgs['shopId'] = $shopId;
+
+                $subShopMainLinks[$userGroup] = $this->getSxArticleUrl($transformerArgs);
             }
         }
 
@@ -113,5 +112,20 @@ class Article extends Article_parent
         $oxConfig->reinitialize(); // empty cache
 
         return $subShopMainLinks;
+    }
+
+    public function getSxArticleUrl($transformerArgs = [])
+    {
+        $langId = isset($transformerArgs['langId']) ? $transformerArgs['langId'] : '';
+        $shopId = isset($transformerArgs['shopId']) ? $transformerArgs['shopId'] : '';
+
+        if (isset($transformerArgs['seoUrlsActive']) && $transformerArgs['seoUrlsActive']) {
+            // take seo URL
+            return $this->getBaseSeoLink($langId, true);
+        } else {
+            // take parameter URL
+            return '/?cl=details&anid=' . $this->getId() . '&shp=' . $shopId . '&lang=' . $langId;
+        }
+
     }
 }

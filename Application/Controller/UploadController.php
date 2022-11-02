@@ -100,7 +100,6 @@ class UploadController
 
             // set Language
             $this->_oxLang->setBaseLanguage($sxLangId);
-            //$this->_oxLang->resetBaseLanguage();
 
             $pageSize = $sxCollectBatchSize;
             $page = ((int) $this->_sxUploader->getNumberOfCollected() / $pageSize) + 1;
@@ -108,7 +107,6 @@ class UploadController
             $oxArticleList = new ArticleList;
             
             $oxArticleList->loadAllArticles($pageSize, $page, $shopId);
-            //$oxArticleList->loadAllArticlesWithoutParentsThatHaveChildren($pageSize, $page, $shopId);
 
             // get default currency 
             $currencySymbol = '';
@@ -124,9 +122,12 @@ class UploadController
             // check if groupId is set
             $transformerArgs = [
                 'lang' => $sxLang,
+                'langId' => $sxLangId,
                 'currency' => $currencySymbol,
-                'shopId' => $shopId
+                'shopId' => $shopId,
+                'seoUrlsActive' =>  $this->_sxHelper->get('sxSeoUrlsActive' . $sxLang, 0)
             ];
+
             if ($userGroup = $this->_sxConfig->get('userGroup')) {
                 $transformerArgs['userGroup'] = (string) $userGroup;
             }
@@ -216,7 +217,7 @@ class UploadController
     public function isReadyToUpload()
     {
         if ($shopStatus = $this->getCurrentShopStatus()) {
-            return $shopStatus->getPhase() == "UPLOADING" /*&& $shopStatus->getCollectingProgress() >= 100*/;
+            return $shopStatus->getPhase() == "UPLOADING";
         }
 
         return false;
@@ -230,7 +231,7 @@ class UploadController
     public function isReadyToFinalize()
     {
         if ($shopStatus = $this->getCurrentShopStatus()) {
-            return $shopStatus->getPhase() == "UPLOADING" /*&& $shopStatus->getCollectingProgress() >= 100*/ && $shopStatus->getUploadingProgress() >= 100;
+            return $shopStatus->getPhase() == "UPLOADING" && $shopStatus->getUploadingProgress() >= 100;
         }
 
         return false;
@@ -399,6 +400,8 @@ class UploadController
         $oxArticleList->loadIds($oxArticleIds);
 
         $transformerArgs['languages'] = $this->_getLanguages();
+        $transformerArgs['seoUrlsActive'] = $this->_sxConfig->get('sxSeoUrlsActive');
+
         foreach ($oxArticleList as $oxArticle) {
             $this->_sxUpdater->addProduct($oxArticle, $transformerArgs);
         }

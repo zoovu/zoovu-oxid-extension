@@ -257,7 +257,15 @@ if(function_exists('oxNew')){
             'name' => 'sxIgnoreOutOfStockArticles' . $oxid,
             'type' => 'bool',
             'value' => 'false',
-            'position' => 14
+            'position' => 15
+        );
+
+        $settings[] = array(
+            'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
+            'name' => 'sxSeoUrlsActive' . $oxid,
+            'type' => 'bool',
+            'value' => 'false',
+            'position' => 16
         );
 
     }
