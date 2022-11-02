@@ -12,6 +12,7 @@
     "sxUploadActive": true|false,
     "sxIncrementalUpdatesActive": true|false,
     "sxAnswerActive": true|false,
+    "sxSeoUrlsActive": true|false,
     "additionalCss": "...", /* minfied css (one line!) */
 
     "imageUrlSuffix": "...", /* suffix for all images */
