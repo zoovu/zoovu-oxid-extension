@@ -88,6 +88,7 @@ class ArticleTransformer extends AbstractProductTransformer
 
         $categories = [];
 
+        $first = true;
         foreach($oxArticle->getCategoryIds() as $oxCategoryId){
 
             $categoryPath = $this->_sxHelper->getCategoryPath($oxCategoryId);
@@ -95,9 +96,11 @@ class ArticleTransformer extends AbstractProductTransformer
             if(!count($categoryPath)) continue;
 
             $categories[] = [
-                'path' => $categoryPath
+                'path' => $categoryPath,
+                'priority' => $first ? 1 : 2
             ];
-            
+
+            $first = false;
         }
 
         return $categories;
