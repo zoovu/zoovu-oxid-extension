@@ -94,7 +94,6 @@ class Article extends Article_parent
             // set Context
             $this->setShopId($shopId);
             $oxConfig->setShopId($shopId);
-            $oxConfig->reinitialize(); // empty cache
 
             foreach ($transformerArgs['languages'] as $langId => $lang) {
                 $userGroup = $shopId . '-' . $lang;
@@ -109,7 +108,6 @@ class Article extends Article_parent
         // go back to original Context
         $this->setShopId($currentShopId);
         $oxConfig->setShopId($currentShopId);
-        $oxConfig->reinitialize(); // empty cache
 
         return $subShopMainLinks;
     }
