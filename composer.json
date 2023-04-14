@@ -12,10 +12,20 @@
   ],
   "authors": [
     {
-      "name": "SEMKNOX GmbH",
-      "email": "oxid@sitesearch360.com"
+      "name": "SEMKNOX",
+      "email": "oxid@sitesearch360.com",
+      "homepage": "https://www.SiteSearch360.com",
+      "role": "Manufacturer"
     }
   ],
+  "supportLink": {
+    "de-DE": "https://www.sitesearch360.com/de/oxid-plugin/",
+    "en-GB": "https://www.sitesearch360.com/oxid-plugin/"
+  },
+  "manufacturerLink": {
+    "de-DE": "https://www.sitesearch360.com/de/",
+    "en-GB": "https://www.sitesearch360.com/"
+  },
   "require": {
     "php": ">=5.6",
     "semknox/semknox-core": ">=3.2.14"
