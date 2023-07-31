@@ -328,7 +328,8 @@ class SxHelper {
     public function addSortingToArticleList($oArtList, $sxAvailableSortingsFromResponse = [])
     {
         $sortings = [];
-        $sortings[0] = 'choose';
+        $relevanceTranslation = $oArtList->_sxConfigValues['relevanceSortingTranslation'];
+        $sortings[] = $relevanceTranslation ? 'sxoption_-DESC_'.$relevanceTranslation : 'choose';
 
         foreach ($sxAvailableSortingsFromResponse as $option) {
             $sortings = $this->encodeSortOption($option, $sortings);

@@ -27,6 +27,7 @@ $aLangDe = array(
   'SHOP_MODULE_sxResultProduct%s_parentProduct' => 'Elternprodukt in Suchergebnis anzeigen',
   'SHOP_MODULE_sxResultProduct%s_individualVariantProduct' => 'Variantenprodukt in Suchergebnis anzeigen',
   'SHOP_MODULE_sxIsSandbox%s' => 'Sandbox-Modus aktivieren',
+  'SHOP_MODULE_sxRelevanceSortingTranslation%s' => 'Bezeichnung der "Relevanz"-Sortierung',
 
   'SHOP_MODULE_sxStartInitialUpload' => 'Produktupload starten',
   'SHOP_MODULE_sxStopInitialUpload' => 'Produktupload abbrechen',

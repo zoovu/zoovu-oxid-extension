@@ -90,9 +90,7 @@ $aModule = [
 
         /*
         * FRONTEND
-        */ 
-
-    
+        */     
         [
             'template' => 'page/search/search.tpl',
             'block' => 'search_header',
@@ -147,6 +145,7 @@ if(function_exists('oxNew')){
             'value' => '',
             'position' => 1
         );
+
         $settings[] = array(
             'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
             'name' => 'sxApiKey' . $oxid,
@@ -266,6 +265,14 @@ if(function_exists('oxNew')){
             'type' => 'bool',
             'value' => 'false',
             'position' => 16
+        );
+
+        $settings[] = array(
+            'group' => 'SemknoxProductsearchLanguageSettings'. $oxid,
+            'name' => 'sxRelevanceSortingTranslation' . $oxid,
+            'type' => 'str',
+            'value' => '',
+            'position' => 17
         );
 
     }

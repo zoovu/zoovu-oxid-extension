@@ -27,6 +27,7 @@ $aLangEn = array(
   'SHOP_MODULE_sxResultProduct%s_individualVariantProduct' => 'variant-product as search result',
   'SHOP_MODULE_sxCategoryQuery%s' => 'show category products via SEMKNOX',
   'SHOP_MODULE_sxIsSandbox%s' => 'Sandbox-Mode active',
+  'SHOP_MODULE_sxRelevanceSortingTranslation%s' => 'Designation of the "Relevance" sorting',
 
   'SHOP_MODULE_sxStartInitialUpload' => 'start product upload',
   'SHOP_MODULE_sxStopInitialUpload' => 'cancel product upload',
