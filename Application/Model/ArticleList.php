@@ -55,8 +55,13 @@ class ArticleList extends ArticleList_parent
         return;
     }
 
+    public function loadArticlesWithoutParentsThatHaveChildrenByIds($shopId, $articleIds)
+    {
+        $this->loadAllArticlesWithoutParentsThatHaveChildren(null, null, $shopId, false, $articleIds);
+    }
+
     // if article is parent and has children, do not add
-    public function loadAllArticlesWithoutParentsThatHaveChildren($pageSize = 50, $page = 1, $shopId = null, $justCount = false)
+    public function loadAllArticlesWithoutParentsThatHaveChildren($pageSize = 50, $page = 1, $shopId = null, $justCount = false, $articleIds = [])
     {
 
         // COUNT or SELECT DATA
@@ -79,12 +84,18 @@ class ArticleList extends ArticleList_parent
             $sSelect .= " AND a.oxshopid = '$shopId'";
         }
 
+        if (count($articleIds)) {
+            $sSelect .= " AND (a.oxid IN ('" . implode("','", $articleIds) . "') OR a.oxparentid IN ('" . implode("','", $articleIds) . "'))";
+        }
+
         $sSelect .= $this->_excludeParentsWithChildrenSubSelect($shopId);
 
         if($justCount) return \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->getOne($sSelect);
 
-        $sSelect .= " ORDER BY a.oxartnum LIMIT $pageSize";
-        $sSelect .= " OFFSET " . (($page < 1) ? 0 : (($page - 1) * $pageSize));
+        if (!count($articleIds)) {
+            $sSelect .= " ORDER BY a.oxartnum LIMIT $pageSize";
+            $sSelect .= " OFFSET " . (($page < 1) ? 0 : (($page - 1) * $pageSize));
+        }
 
         $this->selectString($sSelect);
     }

@@ -390,17 +390,24 @@ class UploadController
         }
 
         // set Store
-        $this->_oxConfig->setShopId($this->_sxConfig->get('shopId'));
+        $shopId = $this->_sxConfig->get('shopId');
+        $this->_oxConfig->setShopId($shopId);
         $this->_oxConfig->reinitialize(); // empty cache
 
         // set Language
-        $this->_oxLang->setBaseLanguage($this->_sxConfig->get('langId'));
+        $langId = $this->_sxConfig->get('langId');
+        $this->_oxLang->setBaseLanguage($langId);
+
+        $sxLang = $this->_sxConfig->get('lang');
 
         $oxArticleList = new ArticleList;
-        $oxArticleList->loadIds($oxArticleIds);
+        //$oxArticleList->loadIds($oxArticleIds);
+        $oxArticleList->loadArticlesWithoutParentsThatHaveChildrenByIds($shopId, $oxArticleIds);
 
         $transformerArgs['languages'] = $this->_getLanguages();
-        $transformerArgs['seoUrlsActive'] = $this->_sxConfig->get('sxSeoUrlsActive');
+        $transformerArgs['seoUrlsActive'] = $this->_sxHelper->get('sxSeoUrlsActive' . $sxLang, 0); //$this->_sxConfig->get('sxSeoUrlsActive');
+        $transformerArgs['shopId'] = $shopId;
+        $transformerArgs['langId'] = $langId;
 
         foreach ($oxArticleList as $oxArticle) {
             $this->_sxUpdater->addProduct($oxArticle, $transformerArgs);
