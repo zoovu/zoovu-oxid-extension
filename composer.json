@@ -1,7 +1,7 @@
 {
   "name": "semknox/semknox-oxid",
-  "description": "This is the SEMKNOX module for the OXID eShop.",
-  "homepage": "https://www.semknox.com",
+  "description": "This is the Site Search 360 module for the OXID eShop.",
+  "homepage": "https://www.sitesearch360.com",
   "version": "3.1.32",
   "type": "oxideshop-module",
   "keywords": [
@@ -12,7 +12,7 @@
   ],
   "authors": [
     {
-      "name": "SEMKNOX",
+      "name": "Zoovu (Deutschland) GmbH",
       "email": "oxid@sitesearch360.com",
       "homepage": "https://www.SiteSearch360.com",
       "role": "Manufacturer"

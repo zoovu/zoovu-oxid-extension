@@ -9,15 +9,16 @@ use Semknox\Productsearch\Application\Controller\UploadController;
 use Semknox\Productsearch\Application\Model\ArticleList;
 use Semknox\Productsearch\Application\Model\ArticleTransformer;
 use Semknox\Productsearch\Application\Model\SxQueue;
+use OxidEsales\Eshop\Core\ShopVersion;
 
 class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendController
 {
     /**
      * @var string
      */
-    protected $_sThisTemplate = 'sxproductsearch_cron.tpl';
+    protected $_sThisTemplate = 'sxproductsearch_cron';
 
-    private $_oxRegistry, $_oxConfig, $_oxLang;
+    private $_oxRegistry, $_oxShopVersion;
     private $_currentMinute, $_currentHour;
 
 
@@ -28,8 +29,14 @@ class CronController extends \OxidEsales\Eshop\Application\Controller\FrontendCo
     {
 
         $this->_oxRegistry = new Registry;
-        $this->_oxConfig = $this->_oxRegistry->getConfig();
-        $this->_oxLang = $this->_oxRegistry->getLang();
+        $this->_oxShopVersion = new ShopVersion();
+
+        if (version_compare($this->_oxShopVersion->getVersion(), "7.0.0") < 0) {
+            $this->setTemplateName($this->_sThisTemplate . '.tpl');
+        } else {
+            $this->setTemplateName('@sxproductsearch/'.$this->_sThisTemplate);
+        }
+
 
         $oxUtilsDate = $this->_oxRegistry->getUtilsDate();
         $time = $oxUtilsDate->getTime();

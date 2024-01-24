@@ -1,3 +1,3 @@
-# SEMKNOX SiteSearch360 Oxid 6.x Module
+# Site Search 360 Oxid Module
 
-This is the SEMKNOX SiteSearch360 module for Oxid 6.x
+This is the Site Search 360 module for Oxid 6.x and Oxid 7.x

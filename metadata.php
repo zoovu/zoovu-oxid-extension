@@ -14,13 +14,13 @@ $version = isset($composerArray['version']) ? $composerArray['version'] : '1.0.0
 $aModule = [
     'version' => $version,
     'id' => 'sxproductsearch',
-    'title' => 'SEMKNOX SiteSearch360',
+    'title' => 'Site Search 360',
     'description' => [
         'en' =>
-        'OXID module for integration and use of the SEMKNOX SiteSearch360.
+        'OXID module for integration and use of the Site Search 360.
         <b style="color:#000;font-size: 15px;padding: 10px 0 10px 0;display: block;">Requirements</b>
         <b style="display: block; margin: 0 0 5px 0">Cronjob</b>
-        The following cronjob is required for the initial product upload and product synchronization with SEMKNOX. 
+        The following cronjob is required for the initial product upload and product synchronization with the Site Search 360 backend. 
         <br/><br/>
         Example: Crontab
         <code style="background-color: #eee; display: block; padding: 5px">* * * * * wget quiet no-cache -O - [https://www.yourdomain.com]/index.php?cl=sxproductsearch_cron > /dev/null
@@ -28,36 +28,36 @@ $aModule = [
         Ideally, the execution should take place every minute, as shown in the example.
         <b style="color:#000;font-size: 15px;padding: 10px 0 10px 0;display: block;">Important notes</b>
         <b style="display: block; margin: 0 0 5px 0">Language configuration</b>
-        You need separate login data for SEMKNOX for each language. You can enter these in the module settings of this plugin. 
-        After you make a change to the language configuration of your system (Menu <i>Master Settings</i> > <i>Languages</i>), e.g. adding a new language, it may be necessary to reinstall the module to enter the SEMKNOX access data for this language.
+        You need separate login data for Site Search 360 for each language. You can enter these in the module settings of this plugin. 
+        After you make a change to the language configuration of your system (Menu <i>Master Settings</i> > <i>Languages</i>), e.g. adding a new language, it may be necessary to reinstall the module to enter the Site Search 360 access data for this language.
         Your previous configuration <b>WONT</b> be lost during this process!
         <br/><br/>
         <b style="display: block; margin: 0 0 5px 0">Global configuration (<i>masterConfig.json</i>)</b>
         Via the file <i>/export/semknox/masterConfigLANGUAGE.json</i>, while LANGUAGE has to be replaced with the Language shortcut (e.g. <i>masterConfigEn.json</i>), module settings can be globally overwritten <b>per language</b>. The values set there apply to <b>ALL active shops and languages</b> (in which the module is activated). 
-        If the values <i>apiKey</i> and <i>projectId</i> are set in this file, all records are synchronized with only one account at SEMKNOX. In this case, different values are realized via different <i>userGroups</i> (corresponds to the oxide <i>ShopIds</i>). The same applies to the search in the frontend.',
+        If the values <i>apiKey</i> and <i>projectId</i> are set in this file, all records are synchronized with only one account at Site Search 360. In this case, different values are realized via different <i>userGroups</i> (corresponds to the oxide <i>ShopIds</i>). The same applies to the search in the frontend.',
         'de' =>
-        'OXID Modul zur Integration und Verwendung der SEMKNOX SiteSearch360.
+        'OXID Modul zur Integration und Verwendung der Site Search 360.
         <b style="color:#000;font-size: 15px;padding: 10px 0 10px 0;display: block;">Voraussetzungen</b>
         <b style="display: block; margin: 0 0 5px 0">Cronjob</b>
-        Der folgende Cronjob wird für den initialen Produktupload und die Produktsynchronisation mit SEMKNOX benötigt. 
+        Der folgende Cronjob wird für den initialen Produktupload und die Produktsynchronisation mit dem Site Search 360 Backend benötigt. 
         <br/><br/>
         Beispiel: Crontab Eintrag
         <code style="background-color: #eee; display: block; padding: 5px">* * * * * wget quiet no-cache -O - [https://www.yourdomain.com]/index.php?cl=sxproductsearch_cron > /dev/null</code>
         Die Ausführung sollte idealerweise, wie im Beispiel gezeigt, jede Minute erfolgen.
         <b style="color:#000;font-size: 15px;padding: 10px 0 10px 0;display: block;">Wichtige Hinweise</b>
         <b style="display: block; margin: 0 0 5px 0">Sprachkonfiguration</b>
-        Sie benötigen für jede Sprache seperate Zugangsdaten für SEMKNOX. Diese können Sie unter den Moduleinstellungen dieses Plugins eingeben. 
-        Nachdem Sie eine Veränderung an der Sprachkonfiguration ihres Systems (Menüpunkt <i>Stammdaten</i> > <i>Sprachen</i>) vornehmen (z.B. Hinzufügen einer neuen Sprache), kann es notwendig sein das Plugin erneut zu installieren, um die SEMKNOX Zugangsdaten für diese Sprache eingeben zu können.
+        Sie benötigen für jede Sprache seperate Zugangsdaten für die Site Search 360. Diese können Sie unter den Moduleinstellungen dieses Plugins eingeben. 
+        Nachdem Sie eine Veränderung an der Sprachkonfiguration ihres Systems (Menüpunkt <i>Stammdaten</i> > <i>Sprachen</i>) vornehmen (z.B. Hinzufügen einer neuen Sprache), kann es notwendig sein das Plugin erneut zu installieren, um die Site Search 360 Zugangsdaten für diese Sprache eingeben zu können.
         Ihre bisherige Konfiguration geht bei diesem Vorgang <b>NICHT</b> verloren!
         <br/><br/>
         <b style="display: block; margin: 0 0 5px 0">Globale Konfiguration auf Dateiebene (<i>masterConfig.json</i>)</b>
         Über die Datei <i>/export/semknox/masterConfigSPRACHE.json</i>, wobei SPRACHE mit dem Sprachkürzel der Sprache ersetzt werden muss (z.B. <i>masterConfigDe.json</i>), können Moduleinstellungen global <b>für jede Sprache</b> überschrieben werden. Die dort gesetzen Werte gelten für <b>ALLE aktiven Shops und Sprachen</b> (in denen das Modul aktiviert ist). 
-        <br/>Werden in dieser Datei die Werte <i>apiKey</i> und <i>projectId</i> gesetzt, so werden die Datensätze mit nur einem einzigen Account bei SEMKNOX synchronisiert. Abweiche Werte werden in diesem Fall über verschieden <i>userGroups</i> (entspricht den Oxid <i>ShopIds</i>) realisiert. Gleiches gilt für die Suche im Frontend.'
+        <br/>Werden in dieser Datei die Werte <i>apiKey</i> und <i>projectId</i> gesetzt, so werden die Datensätze mit nur einem einzigen Account bei Site Search 360 synchronisiert. Abweiche Werte werden in diesem Fall über verschieden <i>userGroups</i> (entspricht den Oxid <i>ShopIds</i>) realisiert. Gleiches gilt für die Suche im Frontend.'
     ],
     'thumbnail' => 'logo.png',
-    'author' => 'SEMKNOX',
-    'url' => 'https://www.semknox.com',
-    'email' => 'oxid@semknox.com',
+    'author' => 'Zoovu (Deutschland) GmbH',
+    'url' => 'https://www.sitesearch360.com',
+    'email' => 'oxid@sitesearch360.com',
     'controllers'  => [
         'sxproductsearch_ajax' => Semknox\Productsearch\Application\Controller\Admin\AjaxController::class,
         'sxproductsearch_cron' => Semknox\Productsearch\Application\Controller\CronController::class

@@ -4,7 +4,7 @@ namespace Semknox\Productsearch\Application\Controller\Admin;
 
 use Semknox\Productsearch\Application\Controller\UploadController;
 use OxidEsales\Eshop\Core\Registry;
-use Semknox\Productsearch\Application\Model\SxHelper;
+use OxidEsales\Eshop\Core\ShopVersion;
 
 
 
@@ -13,10 +13,10 @@ class AjaxController extends \OxidEsales\Eshop\Application\Controller\Admin\Admi
     /**
      * @var string
      */
-    protected $_sThisTemplate = 'admin_sxproductsearch_ajax.tpl';
+    protected $_sThisTemplate = 'admin_sxproductsearch_ajax';
 
     private $_sxUpload;
-    private $_oxRegistry, $_oxConfig;
+    private $_oxRegistry, $_oxShopVersion, $_oxRequest;
 
     /**
      * Class constructor. 
@@ -24,8 +24,15 @@ class AjaxController extends \OxidEsales\Eshop\Application\Controller\Admin\Admi
     public function __construct()
     {
         $this->_oxRegistry = new Registry;
+        $this->_oxRequest = $this->_oxRegistry->getRequest();
         $this->_sxUpload = new UploadController();
-        $this->_oxConfig = $this->_oxRegistry->getConfig();
+        $this->_oxShopVersion = new ShopVersion();
+
+        if (version_compare($this->_oxShopVersion->getVersion(), "7.0.0") < 0) {
+            $this->setTemplateName($this->_sThisTemplate.'.tpl');
+        } else {
+            $this->setTemplateName('@sxproductsearch/'.$this->_sThisTemplate);
+        }
     }
 
     /**
@@ -109,8 +116,8 @@ class AjaxController extends \OxidEsales\Eshop\Application\Controller\Admin\Admi
      */
     protected function _controlFullUpload( $action , $isRunningCondition = false)
     {
-        $shopId = (int) $this->_oxConfig->getRequestParameter('shopId');
-        $shopLang = $this->_oxConfig->getRequestParameter('shopLang');
+        $shopId = (int) $this->_oxRequest->getRequestParameter('shopId');
+        $shopLang = $this->_oxRequest->getRequestParameter('shopLang');
 
         if ($shopId && $shopLang) {
 

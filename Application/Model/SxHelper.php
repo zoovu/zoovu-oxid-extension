@@ -9,6 +9,9 @@ use OxidEsales\Eshop\Application\Model\Attribute;
 
 use OxidEsales\Eshop\Core\Registry;
 use Semknox\Productsearch\Application\Model\SxLogger;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServiceInterface;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Exception\ModuleSettingNotFountException;
 
 class SxHelper {
 
@@ -27,10 +30,12 @@ class SxHelper {
     protected $_sxDeleteQueuePath = "delete-queue/";
     protected $_sxUpdateQueuePath = "update-queue/";
 
+    private $_oxRegistry, $_oxRequest, $_oxConfig, $_logger;
 
     public function __construct()
     {
         $this->_oxRegistry = new Registry();
+        $this->_oxRequest = $this->_oxRegistry->getRequest();
         $this->_oxConfig = $this->_oxRegistry->getConfig();
         $this->_logger = $this->_oxRegistry->getLogger();
 
@@ -55,20 +60,19 @@ class SxHelper {
 
 
     /**
-     * get all exetnsion config values
+     * get all exetnsion config values types
      * 
      */
-    public function getConfig($langAbbr = null)
+    public function getConfigKeyTypes($langAbbr = null)
     {
-        include __DIR__.'/../../metadata.php';
+        include __DIR__ . '/../../metadata.php';
 
-        // [1] get config keys
         $configKeys = ['sxSandboxApiUrl' => 'str', 'sxApiUrl' => 'str'];
 
-        foreach($aModule['settings'] as $field){
+        foreach ($aModule['settings'] as $field) {
 
             // no lang set
-            if(!$langAbbr){
+            if (!$langAbbr) {
                 $configKeys[$field['name']] = $field['type'];
                 continue;
             }
@@ -76,19 +80,31 @@ class SxHelper {
             $group = $field['group'];
 
             // no lang setting
-            if(stripos($group, 'SemknoxProductsearchLanguageSettings') === false){
+            if (stripos($group, 'SemknoxProductsearchLanguageSettings') === false) {
                 $configKeys[$field['name']] = $field['type'];
                 continue;
             }
 
             // lang setting
-            $groupLang = str_replace('SemknoxProductsearchLanguageSettings','', $group);
+            $groupLang = str_replace('SemknoxProductsearchLanguageSettings', '', $group);
 
             if (strtolower($groupLang) == strtolower($langAbbr)) {
                 $configKeys[$field['name']] = $field['type'];
                 continue;
             }
         }
+
+        return $configKeys;
+    }
+
+    /**
+     * get all exetnsion config values
+     * 
+     */
+    public function getConfig($langAbbr = null)
+    {
+        // [1] get config keys
+        $configKeys = $this->getConfigKeyTypes($langAbbr);
 
         // [2] get values
         $config = array();
@@ -125,6 +141,16 @@ class SxHelper {
 
     }
 
+    /**
+     * get extension version
+     */
+
+    public function getExtensionVersion()
+    {
+        include __DIR__ . '/../../metadata.php';
+        return $aModule['version'];
+    }
+
 
     /**
      * Get a value
@@ -140,6 +166,22 @@ class SxHelper {
         $value = trim($this->_oxConfig->getConfigParam($key));
         if($value) return $value;
 
+        // Oxid >= 7.0.0
+        $configKeyTypes= $this->getConfigKeyTypes();
+        if(isset($configKeyTypes[$key]) && in_array($configKeyTypes[$key],['str','bool','select'])) {
+            $typeGetter = $configKeyTypes[$key] == 'bool' ? 'getBoolean' : 'getString';
+
+            try {
+                $moduleSettingService = ContainerFactory::getInstance()->getContainer()->get(ModuleSettingServiceInterface::class);
+                $value = $moduleSettingService->$typeGetter($key, 'sxproductsearch');
+
+                if ($typeGetter == 'getString') $value = (string) $value;
+
+                return $value;
+            } catch (ModuleSettingNotFountException $e) {
+            }
+        }
+        
         // check preset values or take default
         $sxKey = '_'. $key;
 
@@ -270,7 +312,7 @@ class SxHelper {
 
     public function getPageNr()
     {
-        $pageNr = (int) \OxidEsales\Eshop\Core\Registry::getConfig()->getRequestParameter('pgNr');
+        $pageNr = (int) $this->_oxRequest->getRequestParameter('pgNr');
         $pageNr = ($pageNr < 0) ? 0 : $pageNr;
         
         return ++$pageNr;
@@ -285,11 +327,11 @@ class SxHelper {
 
     public function getRequestFilter()
     {
-        $actControl = Registry::getConfig()->getRequestParameter('actcontrol', false);
-        $stoken = Registry::getConfig()->getRequestParameter('stoken', false);
+        $actControl = $this->_oxRequest->getRequestParameter('actcontrol', false);
+        $stoken = $this->_oxRequest->getRequestParameter('stoken', false);
 
         if (in_array($actControl,['search','alist']) || $stoken) { // workaround to find out if filter have been changed
-            $filter = Registry::getConfig()->getRequestParameter('attrfilter', []);
+            $filter = $this->_oxRequest->getRequestParameter('attrfilter', []);
             Registry::getSession()->setVariable('attrfilter', $filter);
         }
 

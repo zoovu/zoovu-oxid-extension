@@ -1,0 +1,42 @@
+{% extends "bottomnaviitem.html.twig" %}
+
+{% block admin_bottomnaviitem %}
+    
+    {% if sModuleId == "sxproductsearch" %}
+        {% for language in languages %}
+            <li id="sxStatusPending{{ language.oxid }}" class="sxHide">
+                <a 	href="javascript: void(0)" 
+                    class="sxUploadAction"
+                    onClick="sxAjaxControllerClick('{{ oViewConf.getSelfLink()|raw }}cl=sxproductsearch_ajax&fnc=startFullUpload&shopId={{ shopid }}&shopLang={{ language.oxid }}')">
+                    {{ translate({ ident: "SHOP_MODULE_sxStartInitialUpload" }) }} ({{ language.name }})
+                </a> |
+            </li>
+            <li id="sxStatusProcessing{{ language.oxid }}" class="sxHide">
+                <span class="sxUploadPercentItem" id="sxUploadPercentItem{{ language.oxid }}">0%</span>
+                <div class="sxProgressBar">
+                    <div class="sxBarStatus export" id="sxBarStatus{{ language.oxid }}"></div>
+                </div>
+                <a 	href="javascript: void(0)"
+                    class="sxUploadAction"
+                    onClick="sxAjaxControllerClick('{{ oViewConf.getSelfLink()|raw }}cl=sxproductsearch_ajax&fnc=stopFullUpload&shopId={{ shopid }}&shopLang={{ language.oxid }}')">
+                    {{ translate({ ident: "SHOP_MODULE_sxStopInitialUpload" }) }} ({{ language.name }})
+                </a> |
+            </li>
+        {% endfor %}
+        <li class="sxHide" id="sxCronCall">
+            <a href="/?cl=sxproductsearch_cron" target="blank">
+                {{ translate({ ident: "SHOP_MODULE_sxCronTester" }) }}
+            </a> |
+        </li>
+
+        <meta name="sxActiveShops" id="sxActiveShops" content='{{ languages|json_encode() }}'>
+        <meta name="sxActiveShopId" id="sxActiveShopId" content='{{ shopid }}'>
+        <meta name="sxUploadStatusUrl" id="sxUploadStatusUrl" content="{{ oViewConf.getSelfLink()|raw }}cl=sxproductsearch_ajax&fnc=getStatus">
+
+        <script type="text/javascript" src="{{ oViewConf.getModuleUrl(sModuleId,'admin/src/js/sxproductsearch.js')|raw }}"></script>
+        <link rel="stylesheet" href="{{ oViewConf.getModuleUrl(sModuleId,'admin/src/css/sxproductsearch.css')|raw }}"> 
+    {% endif %}
+
+    {{ parent() }}
+
+{% endblock %}

@@ -12,10 +12,12 @@ use Semknox\Productsearch\Application\Model\SxLogger;
 use Semknox\Core\SxConfig;
 use Semknox\Core\SxCore;
 use Semknox\Core\Exceptions\DuplicateInstantiationException;
+use OxidEsales\Eshop\Core\ShopVersion;
+
 
 class UploadController
 {
-    private $_sxCore, $_sxConfig, $_sxUploader, $_sxUpdater;
+    private $_sxCore, $_sxConfig, $_sxUploader, $_sxUpdater, $_sxHelper, $_sxLogger, $_oxShopVersion;
     private $_oxRegistry, $_oxConfig, $_oxLang;
 
 
@@ -30,6 +32,7 @@ class UploadController
 
         $this->_sxHelper = new SxHelper;
         $this->_sxLogger = new SxLogger;
+        $this->_oxShopVersion = new ShopVersion;
 
         $this->setConfig($configValues);
     }
@@ -41,6 +44,7 @@ class UploadController
         // really needed 
         $configValues['loggingService'] = $this->_sxLogger;
         $configValues['productTransformer'] = ArticleTransformer::class;
+
         $defaultValues['storagePath'] = $this->_oxConfig->getConfigParam('sShopDir') . $this->_sxHelper->get('sxFolder');
 
         $configValues = array_merge($defaultValues, $configValues);
@@ -298,11 +302,10 @@ class UploadController
                 $this->_oxLang->setBaseLanguage($langId);
                 $this->_oxLang->resetBaseLanguage();
 
-                $projectId = $this->_oxConfig->getConfigParam('sxProjectId' . $lang);
-                $apiKey = $this->_oxConfig->getConfigParam('sxApiKey' . $lang);
+                $projectId = $this->_sxHelper->get('sxProjectId' . $lang);
+                $apiKey = $this->_sxHelper->get('sxApiKey' . $lang);
                 $sandbox = $this->_sxHelper->get('sxIsSandbox' . $lang);
-
-                $uploadActive = $this->_oxConfig->getConfigParam('sxUploadActive' . $lang);
+                $uploadActive = $this-> _sxHelper->get('sxUploadActive' . $lang);
 
                 if (!$uploadActive) continue;
 
@@ -333,9 +336,8 @@ class UploadController
 
 
                     'shopsystem' => 'oxid',
-                    //'shopsystemversion' => '2',
-                    //'extensionversion' => '3.2',
-                    
+                    'shopsystemversion' => $this->_oxShopVersion->getVersion(),
+                    'extensionversion' =>  $this->_sxHelper->getExtensionVersion(),
                     
                 ];
 
