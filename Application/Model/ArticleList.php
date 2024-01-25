@@ -478,6 +478,8 @@ class ArticleList extends ArticleList_parent
         $sSelect .= $oBaseObject->getSqlActiveSnippet();
         $sSelect .= " ORDER BY FIELD(`oxid`, $oxIdsSql)";
 
+        //var_dump($oxArticleIds);die;
+
         return $sSelect;
     }
 

@@ -1,0 +1,5 @@
+{% extends "page/search/search.html.twig" %}
+
+{% block search_top_listlocator %}
+    {% include "widget/locator/listlocator.html.twig" with {locator: oView.getPageNavigationLimitedTop(), attributes: oView.getAttributes(), listDisplayType: true, itemsPerPage: true, sort: true} %}
+{% endblock %}
