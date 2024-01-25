@@ -408,6 +408,7 @@ class ArticleList extends ArticleList_parent
 
         // set filters
         $filters = $this->_sxHelper->getRequestFilter();
+        
         foreach ($filters as $filterId => $options) {
             $sxSearch->addFilter($filterId, $options);
         }
