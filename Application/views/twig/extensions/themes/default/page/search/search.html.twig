@@ -1,5 +1,24 @@
 {% extends "page/search/search.html.twig" %}
 
-{% block search_top_listlocator %}
-    {% include "widget/locator/listlocator.html.twig" with {locator: oView.getPageNavigationLimitedTop(), attributes: oView.getAttributes(), listDisplayType: true, itemsPerPage: true, sort: true} %}
+
+{% block search_results %}
+    <div class="container-xxl">
+        {% if oView.getArticleCount() %}
+            {% block search_top_listlocator %}
+                {% include "widget/locator/listlocator.html.twig" with {locator: oView.getPageNavigationLimitedTop(), attributes: oView.getAttributes(), listDisplayType: true, itemsPerPage: true, sort: true} %}
+            {% endblock %}
+        {% else %}
+            <p class="alert alert-info">{{ translate({ ident: "NO_ITEMS_FOUND" }) }}</p>
+        {% endif %}
+        {% if oView.getArticleList() %}
+            {% for product in oView.getArticleList() %}
+                {% include "widget/product/list.html.twig" with {type: oView.getListDisplayType(), listId: "searchList", products: oView.getArticleList(), showMainLink: true} %}
+            {% endfor %}
+        {% endif %}
+        {% if oView.getArticleCount() %}
+            {% block search_bottom_listlocator %}
+                {% include "widget/locator/listlocator.html.twig" with {locator: oView.getPageNavigationLimitedBottom(), place: "bottom"} %}
+            {% endblock %}
+        {% endif %}
+    </div>
 {% endblock %}
