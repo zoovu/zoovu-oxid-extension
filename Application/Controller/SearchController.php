@@ -13,6 +13,12 @@ class SearchController extends SearchController_parent
     // used in /Application/views/blocks/header.tpl
     public $isSearchPage = true;
 
+    public function getIsSearchPage()
+    {
+        return $this->isSearchPage;
+    }
+
+
     /**
      * get search page headline
      * 

@@ -12,6 +12,11 @@ class ArticleListController extends ArticleListController_parent
     // used in /Application/views/blocks/header.tpl
     public $isSearchPage = false;
 
+    public function getIsSearchPage()
+    {
+        return $this->isSearchPage;
+    }
+
     /**
      * Template variable getter. Returns sorting columns
      *

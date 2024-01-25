@@ -356,12 +356,27 @@ class ArticleList extends ArticleList_parent
     }
 
 
+    protected function _parentGetCategorySelect($sFields, $sCatId, $aSessionFilter) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    {
+        if (\method_exists(get_parent_class($this),'_getCategorySelect')) {
+            return parent::_getCategorySelect($sFields, $sCatId, $aSessionFilter);
+        } else {
+            return parent::getCategorySelect($sFields, $sCatId, $aSessionFilter);
+        }
+    }
+
     protected function _getCategorySelect($sFields, $sCatId, $aSessionFilter) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    {
+        return $this->getCategorySelect($sFields, $sCatId, $aSessionFilter);
+    }
+
+
+    protected function getCategorySelect($sFields, $sCatId, $aSessionFilter) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
 
         // fallback if disabled
         if (!isset($this->_sxConfigValues['categoryQuery']) || !$this->_sxConfigValues['categoryQuery']) {
-            return parent::_getCategorySelect($sFields, $sCatId, $aSessionFilter);
+            return $this->_parentGetCategorySelect($sFields, $sCatId, $aSessionFilter);
         }
 
         // get category path
@@ -412,7 +427,7 @@ class ArticleList extends ArticleList_parent
             // fallback
             $this->_sxConfigValues = null;
             $this->_sxHelper->log($e->getMessage() . ' | ' . __CLASS__ . '::' . __FUNCTION__, 'error');
-            return parent::_getCategorySelect($sFields, $sCatId, $aSessionFilter);
+            return $this->_parentGetCategorySelect($sFields, $sCatId, $aSessionFilter);
         }
 
 
@@ -425,7 +440,7 @@ class ArticleList extends ArticleList_parent
             $this->isSxArticleList = true;
         } else {
             Registry::getSession()->setVariable('attrfilter', []);
-            return parent::_getCategorySelect($sFields, $sCatId, $aSessionFilter);
+            return $this->_parentGetCategorySelect($sFields, $sCatId, $aSessionFilter);
         }
 
 
@@ -450,14 +465,16 @@ class ArticleList extends ArticleList_parent
                 $oxArticleIds[] = $sxArticle->getGroupId(); // show parent
             }
         }
-        $sArticleTable = getViewName('oxarticles');
+
+        $oBaseObject = $this->getBaseObject();
+        $sArticleTable = $oBaseObject->getViewName('oxarticles');
         $oxArticleIds = \array_unique($oxArticleIds);
 
         $oxIdsSql = implode(',', \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->quoteArray($oxArticleIds));
 
         $sSelect = "SELECT $sFields, $sArticleTable.oxtimestamp from $sArticleTable ";
         $sSelect .= "WHERE $sArticleTable.oxid IN ( " .  $oxIdsSql . " ) AND ";
-        $sSelect .= $this->getBaseObject()->getSqlActiveSnippet();
+        $sSelect .= $oBaseObject->getSqlActiveSnippet();
         $sSelect .= " ORDER BY FIELD(`oxid`, $oxIdsSql)";
 
         return $sSelect;

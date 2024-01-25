@@ -1,0 +1,21 @@
+{% extends "layout/header.html.twig" %}
+
+{% block header_main %}
+
+    {% if method_exists(oView, 'getIsSearchPage') %}
+
+        {% if oViewConf.getSxConfigValue('moveFilterToSidebar') %}
+            {% set sidebar = 'left' %}
+        {% endif %}
+
+        {% if method_exists(oView, 'getSearchHeader') and oView.getSearchHeader() != "" %}
+            {% set search_head = oView.getSearchHeader() %}
+        {% endif %}
+
+    {% elseif oViewConf.getSxConfigValue('categoryQuery') and oViewConf.getSxConfigValue('moveFilterToSidebar') %}
+        {% set sidebar = 'left' %}
+    {% endif %}
+
+    {{ parent() }}
+
+{% endblock %}

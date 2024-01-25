@@ -1,0 +1,5 @@
+services:
+
+  Semknox\Productsearch\Application\Twig\Extensions\MethodExistsExtension:
+    class: Semknox\Productsearch\Application\Twig\Extensions\MethodExistsExtension
+    tags: ['twig.extension']
