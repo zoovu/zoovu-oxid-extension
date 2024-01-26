@@ -10,8 +10,8 @@ use OxidEsales\Eshop\Application\Model\Attribute;
 use OxidEsales\Eshop\Core\Registry;
 use Semknox\Productsearch\Application\Model\SxLogger;
 use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
-use OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServiceInterface;
-use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Exception\ModuleSettingNotFountException;
+use OxidEsales\Eshop\Core\ShopVersion;
+
 
 class SxHelper {
 
@@ -30,7 +30,7 @@ class SxHelper {
     protected $_sxDeleteQueuePath = "delete-queue/";
     protected $_sxUpdateQueuePath = "update-queue/";
 
-    private $_oxRegistry, $_oxRequest, $_oxConfig, $_logger;
+    private $_oxRegistry, $_oxRequest, $_oxConfig, $_logger, $_oxShopVersion;
 
     public function __construct()
     {
@@ -38,6 +38,7 @@ class SxHelper {
         $this->_oxRequest = $this->_oxRegistry->getRequest();
         $this->_oxConfig = $this->_oxRegistry->getConfig();
         $this->_logger = $this->_oxRegistry->getLogger();
+        $this->_oxShopVersion = new ShopVersion();
 
 
         $workingDir = $this->_oxConfig->getLogsDir().'../'. $this->_sxFolder;
@@ -168,17 +169,17 @@ class SxHelper {
 
         // Oxid >= 7.0.0
         $configKeyTypes= $this->getConfigKeyTypes();
-        if(isset($configKeyTypes[$key]) && in_array($configKeyTypes[$key],['str','bool','select'])) {
+        if(version_compare($this->_oxShopVersion->getVersion(), "7.0.0") >= 0 && isset($configKeyTypes[$key]) && in_array($configKeyTypes[$key],['str','bool','select'])) {
             $typeGetter = $configKeyTypes[$key] == 'bool' ? 'getBoolean' : 'getString';
 
             try {
-                $moduleSettingService = ContainerFactory::getInstance()->getContainer()->get(ModuleSettingServiceInterface::class);
+                $moduleSettingService = ContainerFactory::getInstance()->getContainer()->get(\OxidEsales\EshopCommunity\Internal\Framework\Module\Facade\ModuleSettingServiceInterface::class);
                 $value = $moduleSettingService->$typeGetter($key, 'sxproductsearch');
 
                 if ($typeGetter == 'getString') $value = (string) $value;
 
                 return $value;
-            } catch (ModuleSettingNotFountException $e) {
+            } catch (\OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Exception\ModuleSettingNotFountException $e) {
             }
         }
         
