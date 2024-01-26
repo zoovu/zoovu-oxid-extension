@@ -359,7 +359,7 @@ class SxHelper {
 
             foreach ($options as $key => $option) {
                 $options[$key] = html_entity_decode($option); // kept to be compatible to older api versions (<2?)
-                $options[] = \strtoupper(\str_replace(['ß'],['ss'],$filterId."_#_". $options[$key])); // needed since new semknox api version (>3?)
+                //$options[] = \strtoupper(\str_replace(['ß'],['ss'],$filterId."_#_". $options[$key])); // needed since new semknox api version (>3?)
             }
 
             $filterReturn[$filterId] = $options;
