@@ -145,7 +145,7 @@ function justStyleEvents() {
             filterName = filterName.replace("Sidebar", "");
 
             if (document.getElementsByName("attrfilter[" + filterName + "]").length == 0) {
-                console.warn("SEMKNOX SiteSearch360: filter input for '" + filterName + "' does not exist");
+                console.warn("Site Search 360: filter input for '" + filterName + "' does not exist");
                 return false;
             }
 

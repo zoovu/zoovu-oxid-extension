@@ -426,7 +426,7 @@ class UploadController
         $productsSent = $this->_sxUpdater->sendUploadBatch();
 
         if ($productsSent !== FALSE && $productsSent > 0) {
-            $this->_sxHelper->log($productsSent . ' products sent to SEMKNOX.'. ' | ' . __CLASS__ . '::' . __FUNCTION__, 'info');
+            $this->_sxHelper->log($productsSent . ' products sent to Site Search 360.'. ' | ' . __CLASS__ . '::' . __FUNCTION__, 'info');
         }
 
         return $productsSent;
