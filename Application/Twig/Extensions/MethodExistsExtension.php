@@ -6,6 +6,8 @@ namespace Semknox\Productsearch\Application\Twig\Extensions;
 
 if (class_exists('\Twig\TwigFunction') && class_exists('\Twig\Extension\AbstractExtension')) {
 
+    // >= oxid7
+
     class MethodExistsExtension extends \Twig\Extension\AbstractExtension
     {
         /**
@@ -29,4 +31,9 @@ if (class_exists('\Twig\TwigFunction') && class_exists('\Twig\Extension\Abstract
             return method_exists($object, $methodName);
         }
     }
+} else {
+
+    // < oxid7
+    
+    class MethodExistsExtension {}
 }
