@@ -70,7 +70,14 @@ class SxQueue {
             return [];
         }
 
-        $articleIds = array_diff(scandir($path), array('..', '.'));
+        $files = [];
+        foreach (scandir($path) as $file) {
+            if (in_array($file, ['..', '.'])) continue;
+            $files[$file] = filemtime($path . '/' . $file);
+        }
+
+        asort($files);
+        $articleIds = array_keys($files);
 
         return array_slice($articleIds, 0, $qty);
     }

@@ -8,6 +8,9 @@ $composerJson = str_replace("\\", "", $composerJson);
 $composerArray = json_decode($composerJson,true);
 $version = isset($composerArray['version']) ? $composerArray['version'] : '1.0.0';
 
+$oxidVersion = new OxidEsales\Eshop\Core\ShopVersion();
+$isOxid7 = version_compare($oxidVersion->getVersion(), "7.0.0") >= 0;
+
 /**
  * Module information
  */
@@ -186,37 +189,47 @@ if(function_exists('oxNew')){
             'position' => 6
         );
 
-        $settings[] = array(
-            'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
-            'name' => 'sxAnswerActive' . $oxid,
-            'type' => 'bool',
-            'value' => 'true',
-            'position' => 7
-        );
+        if(!$isOxid7){
+            $settings[] = array(
+                'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
+                'name' => 'sxAnswerActive' . $oxid,
+                'type' => 'bool',
+                'value' => 'true',
+                'position' => 7
+            );
 
-        $settings[] = array(
-            'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
-            'name' => 'sxFilterOptionCounterActive' . $oxid,
-            'type' => 'bool',
-            'value' => 'false',
-            'position' => 8
-        );
+            $settings[] = array(
+                'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
+                'name' => 'sxFilterOptionCounterActive' . $oxid,
+                'type' => 'bool',
+                'value' => 'false',
+                'position' => 8
+            );
 
-        $settings[] = array(
-            'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
-            'name' => 'sxMoveFilterToSidebar' . $oxid,
-            'type' => 'bool',
-            'value' => 'false',
-            'position' => 9
-        );
+            $settings[] = array(
+                'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
+                'name' => 'sxMoveFilterToSidebar' . $oxid,
+                'type' => 'bool',
+                'value' => 'false',
+                'position' => 9
+            );
 
-        $settings[] = array(
-            'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
-            'name' => 'sxHideRangeInRangeSliderTitle' . $oxid,
-            'type' => 'bool',
-            'value' => 'false',
-            'position' => 10
-        );
+            $settings[] = array(
+                'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
+                'name' => 'sxHideRangeInRangeSliderTitle' . $oxid,
+                'type' => 'bool',
+                'value' => 'false',
+                'position' => 10
+            );
+
+            $settings[] = array(
+                'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
+                'name' => 'sxFilterGroupUnfoldCount' . $oxid,
+                'type' => 'str',
+                'value' => '5',
+                'position' => 13
+            );
+        }
 
         $settings[] = array(
             'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
@@ -233,14 +246,6 @@ if(function_exists('oxNew')){
             'value' => 'individualVariantProduct',
             'constraints' => 'individualVariantProduct|parentProduct',
             'position' => 12
-        );
-
-        $settings[] = array(
-            'group' => 'SemknoxProductsearchLanguageSettings' . $oxid,
-            'name' => 'sxFilterGroupUnfoldCount' . $oxid,
-            'type' => 'str',
-            'value' => '5',
-            'position' => 13
         );
 
         $settings[] = array(
