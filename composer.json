@@ -2,7 +2,7 @@
   "name": "semknox/semknox-oxid",
   "description": "This is the Site Search 360 module for the OXID eShop.",
   "homepage": "https://www.sitesearch360.com",
-  "version": "3.2.2",
+  "version": "3.2.3",
   "type": "oxideshop-module",
   "keywords": [
     "semknox",
