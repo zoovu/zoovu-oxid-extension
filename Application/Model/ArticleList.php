@@ -345,7 +345,7 @@ class ArticleList extends ArticleList_parent
      */
     public function setCustomSorting($sqlSorting)
     {
-        $trimedsqlSorting = is_string($sqlSorting) ? ltrim($sqlSorting, '`') : false;
+        $trimedsqlSorting = !is_string($sqlSorting) ? $sqlSorting : ltrim($sqlSorting, '`');
 
         if(!$sqlSorting || !$trimedsqlSorting || $this->_sxHelper->isEncodedOption($trimedsqlSorting)){
             $sqlSorting = false;
