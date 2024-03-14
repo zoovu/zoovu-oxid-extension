@@ -290,7 +290,7 @@ class UploadController
 
         foreach ($oxShopList->getArray() as $oxShop) {
 
-            if((int) $oxShop->oxshops__oxactive < 1) continue; // ignore inactive shops
+            if((int) $oxShop->oxshops__oxactive->value < 1) continue; // ignore inactive shops
 
             $shopId = (string) $oxShop->oxshops__oxid;
 
