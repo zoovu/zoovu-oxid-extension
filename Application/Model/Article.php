@@ -41,9 +41,12 @@ class Article extends Article_parent
         $sxHelper = new SxHelper();
 
         $lang = \OxidEsales\Eshop\Core\Registry::getLang()->getLanguageAbbr($this->getLanguage());
-        $masterConfig = $sxHelper->getMasterConfig([], $lang);
 
-        if (!isset($articleId) || (isset($masterConfig['sxIncrementalUpdatesActive']) && !$masterConfig['sxIncrementalUpdatesActive'])) return;
+        $configValues = $sxHelper->getConfig(ucfirst($lang));
+        $configValues = $sxHelper->getMasterConfig($configValues, ucfirst($lang));
+        $incrementalUpdatesActive =  (isset($configValues['incrementalUpdatesActive']) && $configValues['incrementalUpdatesActive']);
+
+        if (!isset($articleId) || !$incrementalUpdatesActive) return;
 
         $sxQueue = new SxQueue();
         if ($action == ACTION_DELETE) {
