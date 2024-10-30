@@ -33,7 +33,7 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "git@bitbucket.org:SEMKNOX/semknox-php-extension-core"
+      "url": "https://github.com/zoovu/zoovu-oxid-extension.git"
     }
   ],
   "require-dev": {
