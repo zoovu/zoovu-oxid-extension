@@ -410,6 +410,7 @@ class UploadController
         $transformerArgs['seoUrlsActive'] = $this->_sxHelper->get('sxSeoUrlsActive' . $sxLang, 0); //$this->_sxConfig->get('sxSeoUrlsActive');
         $transformerArgs['shopId'] = $shopId;
         $transformerArgs['langId'] = $langId;
+        $transformerArgs['lang'] = $sxLang ;
 
         foreach ($oxArticleList as $oxArticle) {
             $this->_sxUpdater->addProduct($oxArticle, $transformerArgs);
